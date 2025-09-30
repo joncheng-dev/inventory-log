@@ -1,3 +1,5 @@
+import DropdownMenu from './DropdownMenu';
+
 export default function Header() {
   return (
     <div className='w-full flex justify-between py-4 px-4 border border-amber-900'>
@@ -22,11 +24,7 @@ export default function Header() {
             Inventory
           </p>
         </div>
-        <div className='content-around ml-10 px-2 py-2'>
-          <svg className='cursor-pointer' width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 6H20M4 12H20M4 18H20" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <DropdownMenu />
       </div>
     </div>
   );
