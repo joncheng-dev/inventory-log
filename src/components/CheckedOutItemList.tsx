@@ -1,4 +1,3 @@
-import React from "react";
 import CheckedOutItem from "./CheckedOutItem";
 
 export default function CheckedOutItemList() {
