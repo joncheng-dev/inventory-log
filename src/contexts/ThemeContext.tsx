@@ -2,18 +2,28 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 interface ThemeContextType {
   isDarkMode: boolean;
+  theme: 'light' | 'dark';
   toggleTheme: () => void;
+  setTheme: (theme: 'light' | 'dark') => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+const THEME_STORAGE_KEY = 'inventory-log-theme';
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     // Check localStorage first, then system preference
-    const saved = localStorage.getItem('darkMode');
-    if (saved !== null) {
-      return JSON.parse(saved);
+    try {
+      const saved = localStorage.getItem(THEME_STORAGE_KEY);
+      if (saved !== null) {
+        return JSON.parse(saved);
+      }
+    } catch (error) {
+      console.warn('Failed to parse theme from localStorage:', error);
     }
+    
+    // Fallback to system preference
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
@@ -25,16 +35,26 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       document.documentElement.classList.remove('dark');
     }
     
-    // Save to localStorage
-    localStorage.setItem('darkMode', JSON.stringify(isDarkMode));
+    // Save to localStorage with error handling
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(isDarkMode));
+    } catch (error) {
+      console.warn('Failed to save theme to localStorage:', error);
+    }
   }, [isDarkMode]);
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
 
+  const setTheme = (theme: 'light' | 'dark') => {
+    setIsDarkMode(theme === 'dark');
+  };
+
+  const theme = isDarkMode ? 'dark' : 'light';
+
   return (
-    <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
+    <ThemeContext.Provider value={{ isDarkMode, theme, toggleTheme, setTheme }}>
       {children}
     </ThemeContext.Provider>
   );
