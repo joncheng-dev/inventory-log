@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function CheckedOutItem() {
   return (
     <li className="bg-white p-3 rounded shadow">

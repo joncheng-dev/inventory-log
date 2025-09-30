@@ -1,4 +1,3 @@
-import React from 'react';
 import Header from '../components/Header';
 import Filters from '../components/filter/Filters';
 import ItemList from '../components/ItemList';

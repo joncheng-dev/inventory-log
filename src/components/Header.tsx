@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function Header() {
   return (
     <div className='w-full flex justify-between py-4 px-4 border border-amber-900'>
