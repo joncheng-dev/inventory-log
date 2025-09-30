@@ -3,25 +3,25 @@ import DarkModeToggle from './DarkModeToggle';
 
 export default function Header() {
   return (
-    <div className='w-full flex justify-between py-4 px-4 border border-amber-900 dark:border-amber-600 bg-white dark:bg-gray-900 transition-colors duration-200'>
-      <div className='flex border border-3 border-amber-900 dark:border-amber-600'>
-        <div id="site-logo" className='border border-1 content-around px-2 py-2 bg-amber-50 dark:bg-amber-900'>
-          <span className="text-amber-900 dark:text-amber-100 font-bold">LM</span>
+    <div className='w-full flex justify-between py-4 px-4 border-b border-theme bg-theme text-theme-primary transition-colors duration-200'>
+      <div className='flex border border-theme rounded-lg overflow-hidden'>
+        <div id="site-logo" className='px-3 py-2 bg-primary-500 text-white'>
+          <span className="font-bold">LM</span>
         </div>
-        <div id="site-name" className='border border-1 content-around px-2 py-2 bg-amber-50 dark:bg-amber-900'>
-          <p className="text-lg text-amber-900 dark:text-amber-100">
+        <div id="site-name" className='px-3 py-2 bg-theme-surface text-theme-primary'>
+          <p className="text-lg font-medium">
             Lab Manager
           </p>
         </div>
       </div>
       <div className='flex items-center gap-4'>
-        <div className='content-around px-5 py-2'>
-          <p className="text-lg text-gray-900 dark:text-gray-100">
+        <div className='px-3 py-2 rounded-lg hover:bg-theme-surface transition-colors duration-200'>
+          <p className="text-lg text-theme-primary">
             Item Catalog
           </p>
         </div>
-        <div className='content-around px-5 py-2'>
-          <p className="text-lg text-gray-900 dark:text-gray-100">
+        <div className='px-3 py-2 rounded-lg hover:bg-theme-surface transition-colors duration-200'>
+          <p className="text-lg text-theme-primary">
             Inventory
           </p>
         </div>
