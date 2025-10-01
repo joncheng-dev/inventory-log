@@ -24,23 +24,24 @@ export default function DropdownMenu() {
       {isDropdownOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-theme-surface rounded-md shadow-lg border border-theme z-50">
           <div className="py-1">
+            <p className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors duration-200">Signed in as:</p>
             <a
               href="#"
               className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors duration-200"
             >
-              Inventory
-            </a>
-            <a
-              href="#"
-              className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors duration-200"
-            >
-              Sign In
+              Settings
             </a>
             <a
               href="#"
               className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors duration-200"
             >
               About
+            </a>
+            <a
+              href="#"
+              className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors duration-200"
+            >
+              Sign Out
             </a>
           </div>
         </div>
