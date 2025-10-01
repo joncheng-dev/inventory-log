@@ -59,6 +59,7 @@ export default {
       backgroundColor: {
         'theme': 'var(--color-background)',
         'theme-surface': 'var(--color-surface)',
+        'theme-focus': 'var(--color-focus)',
       },
       textColor: {
         'theme-primary': 'var(--color-text-primary)',
