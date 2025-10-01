@@ -1,7 +1,7 @@
 import Header from '../components/Header';
 import Filters from '../components/filter/Filters';
-import ItemList from '../components/ItemList';
-import CheckedOutItemList from '../components/CheckedOutItemList';
+import ItemList from '../components/ItemListDisplay';
+import CheckedOutItemList from '../components/checked-out-item-list/CheckedOutItemList';
 
 export default function InventoryPage() {
   return (

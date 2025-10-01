@@ -1,5 +1,5 @@
-import DropdownMenu from './DropdownMenu';
-import DarkModeToggle from './DarkModeToggle';
+import DropdownMenu from './ui/DropdownMenu';
+import DarkModeToggle from './ui/DarkModeToggle';
 
 export default function Header() {
   return (

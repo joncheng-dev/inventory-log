@@ -1,5 +1,3 @@
-
-
 interface CheckedOutItem {
   id: string;
   name: string;
