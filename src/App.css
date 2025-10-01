@@ -13,3 +13,30 @@ body, #root {
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
 }
+
+/* Theme CSS Variables */
+:root {
+  /* Light theme variables */
+  --color-background: #ffffff;
+  --color-surface: #f9fafb;
+  --color-text-primary: #111827;
+  --color-text-secondary: #6b7280;
+  --color-text-muted: #9ca3af;
+  --color-border: #d1d5db;
+  --color-border-light: #e5e7eb;
+  --color-focus: #3b82f6;
+  --color-focus-ring: #dbeafe;
+}
+
+.dark {
+  /* Dark theme variables */
+  --color-background: #111827;
+  --color-surface: #1f2937;
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #d1d5db;
+  --color-text-muted: #9ca3af;
+  --color-border: #374151;
+  --color-border-light: #4b5563;
+  --color-focus: #60a5fa;
+  --color-focus-ring: #1e3a8a;
+}
