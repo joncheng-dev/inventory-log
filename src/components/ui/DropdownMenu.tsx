@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 export default function DropdownMenu() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const currentUser = 'joncheng.dev@gmail.com';
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -22,9 +23,14 @@ export default function DropdownMenu() {
       </svg>
       
       {isDropdownOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-theme-surface rounded-md shadow-lg border border-theme z-50">
+        <div className="absolute right-0 mt-2 w-56 bg-theme-surface rounded-md shadow-lg border border-theme z-50">
+          <div className="py-2 px-4 border-b border-theme-muted">
+            <p className="text-xs text-theme-secondary mb-1">Signed in as</p>
+            <p className="text-sm font-medium text-theme-primary truncate">
+              {currentUser}
+            </p>
+          </div>
           <div className="py-1">
-            <p className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors duration-200">Signed in as:</p>
             <a
               href="#"
               className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors duration-200"
