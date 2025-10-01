@@ -28,14 +28,22 @@ const mockData = [
 ];
 
 export default function CheckedOutItemList() {
+  const checkedOutItems = mockData;
+
   return (
     <div className="p-4 border-l border-theme h-full overflow-y-auto">
-      <h2 className="text-lg font-semibold mb-4">Checked Out Items ({mockData.length})</h2>
-      <ul className="space-y-3">
-        {mockData.map(item => (
-          <CheckedOutItem key={item.id} item={item} />
-        ))}
-      </ul>
+      <h2 className="text-lg font-semibold mb-4">Checked Out Items ({checkedOutItems.length})</h2>
+        {checkedOutItems.length > 0 ? (
+          <ul className="space-y-3">
+            {checkedOutItems.map(item => (
+              <CheckedOutItem key={item.id} item={item} />
+            ))}
+          </ul>
+        ) : (
+          <div className="text-theme-secondary text-sm italic">
+            No items currently checked out.
+          </div>
+        )}
     </div>
   );
 }
