@@ -14,7 +14,7 @@ export default function InventoryPage() {
   console.log("selectedTags: ", selectedTags);
 
   return (
-    <div className="flex flex-col h-screen w-full bg-theme text-theme-primary transition-colors duration-200">
+    <div className="flex flex-col min-h-screen w-full bg-theme text-theme-primary transition-colors duration-200">
       <Header />
       <div className="flex w-full border-b border-theme">
         <Filters
@@ -27,7 +27,7 @@ export default function InventoryPage() {
       </div>
       <div className="flex flex-1 w-full">
         <div className="flex-1 border-r border-theme">
-          <ItemListDisplay viewMode={viewMode} />
+          <ItemListDisplay viewMode={viewMode} selectedTags={selectedTags} />
         </div>
         <div className="w-1/5">
           <CheckedOutItemList/>
