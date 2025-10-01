@@ -1,6 +1,8 @@
+import { AuthLayout } from '../layouts';
+
 export default function SignInPage() {
   return (
-    <div className="min-h-screen bg-theme text-theme-primary flex items-center justify-center">
+    <AuthLayout>
       <div className="bg-theme-surface p-8 rounded-lg border border-theme max-w-md w-full">
         <h1 className="text-3xl font-bold mb-6 text-center">Sign In</h1>
         
@@ -37,7 +39,7 @@ export default function SignInPage() {
           </button>
         </form>
       </div>
-    </div>
+    </AuthLayout>
   );
 }
 

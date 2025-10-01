@@ -1,6 +1,7 @@
+import type { ViewMode } from '../types';
 
 interface ItemListDisplayProps {
-  viewMode: 'grid-view' | 'list-view';
+  viewMode: ViewMode;
 }
 
 export default function ItemListDisplay({ viewMode }: ItemListDisplayProps) {

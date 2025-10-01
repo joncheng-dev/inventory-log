@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ROUTES, DEFAULT_USER_EMAIL } from '../../lib/constants';
 
 export default function DropdownMenu() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const currentUser = 'joncheng.dev@gmail.com';
+  const currentUser = DEFAULT_USER_EMAIL;
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -33,7 +34,7 @@ export default function DropdownMenu() {
           </div>
           <div className="py-1">
             <Link
-              to="/theme-viewer"
+              to={ROUTES.THEME_VIEWER}
               className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors duration-200"
             >
               Theme Viewer
@@ -51,7 +52,7 @@ export default function DropdownMenu() {
               About
             </a>
             <Link
-              to="/signin"
+              to={ROUTES.SIGNIN}
               className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors duration-200"
             >
               Sign Out

@@ -1,10 +1,9 @@
-import Header from '../components/Header';
+import { MainLayout } from '../layouts';
 import ThemeDebug from '../components/ThemeDebug';
 
 export default function ThemeViewerPage() {
   return (
-    <div className="min-h-screen bg-theme text-theme-primary">
-      <Header />
+    <MainLayout>
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">Theme Viewer</h1>
         
@@ -89,6 +88,6 @@ export default function ThemeViewerPage() {
           </div>
         </div>
       </div>
-    </div>
+    </MainLayout>
   );
 }
