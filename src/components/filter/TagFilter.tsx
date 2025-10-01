@@ -1,10 +1,13 @@
 import { useState } from "react";
 
-const availableFilterTags = ["Biology", "Chemistry", "Earth Science", "General", "Physics"];
+interface TagFilterProps {
+  availableFilterTags: Array<string>;
+  selectedTags: Array<string>;
+  setSelectedTags: React.Dispatch<React.SetStateAction<string[]>>;
+}
 
-export default function TagFilter() {
+export default function TagFilter({ availableFilterTags, selectedTags, setSelectedTags }: TagFilterProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
