@@ -16,7 +16,7 @@ export default function InventoryPage() {
 
   return (
     <MainLayout>
-      <div className="flex flex-col h-full w-full">
+      <div className="flex flex-col flex-1 w-full">
         <div className="flex w-full border-b border-theme">
           <Filters
             viewMode={viewMode}
