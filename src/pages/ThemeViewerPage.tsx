@@ -1,8 +1,10 @@
+import Header from '../components/Header';
 import ThemeDebug from '../components/ThemeDebug';
 
 export default function ThemeViewerPage() {
   return (
     <div className="min-h-screen bg-theme text-theme-primary">
+      <Header />
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">Theme Viewer</h1>
         
@@ -33,13 +35,13 @@ export default function ThemeViewerPage() {
               <div className="bg-theme-surface p-4 rounded-lg border border-theme">
                 <h3 className="font-semibold text-primary-500 mb-2">Light Theme</h3>
                 <p className="text-theme-secondary text-sm">
-                  Clean, bright interface optimized for daytime use.
+                  For daytime use.
                 </p>
               </div>
               <div className="bg-theme-surface p-4 rounded-lg border border-theme">
                 <h3 className="font-semibold text-primary-500 mb-2">Dark Theme</h3>
                 <p className="text-theme-secondary text-sm">
-                  Easy on the eyes, perfect for low-light environments.
+                  For low-light environments.
                 </p>
               </div>
             </div>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function DropdownMenu() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -31,6 +32,12 @@ export default function DropdownMenu() {
             </p>
           </div>
           <div className="py-1">
+            <Link
+              to="/theme-viewer"
+              className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors duration-200"
+            >
+              Theme Viewer
+            </Link>
             <a
               href="#"
               className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors duration-200"
@@ -43,12 +50,12 @@ export default function DropdownMenu() {
             >
               About
             </a>
-            <a
-              href="#"
+            <Link
+              to="/signin"
               className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors duration-200"
             >
               Sign Out
-            </a>
+            </Link>
           </div>
         </div>
       )}
