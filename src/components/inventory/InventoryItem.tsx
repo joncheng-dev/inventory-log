@@ -1,11 +1,14 @@
 import type { InventoryItem as InventoryItemType } from '../../types/inventory';
+import type { CatalogItem } from '../../types/catalog';
 
 interface InventoryItemProps {
   item: InventoryItemType;
+  catalogItem: CatalogItem;
+  quantityTotal: number;
   viewMode: 'grid-view' | 'list-view';
 }
 
-export default function InventoryItem({ item, viewMode }: InventoryItemProps) {
+export default function InventoryItem({ item, catalogItem, quantityTotal, viewMode }: InventoryItemProps) {
   const categoryColors: Record<string, string> = {
     Biology: 'text-green-800 dark:text-green-200',
     Chemistry: 'text-blue-800 dark:text-blue-200',
@@ -24,10 +27,10 @@ export default function InventoryItem({ item, viewMode }: InventoryItemProps) {
         <div className="flex flex-col h-full">
           <div className="flex-1">
             <h3 className="text-lg font-semibold text-theme-primary mb-2">
-              {item.name}
+              {catalogItem.displayName}
             </h3>
             <div className="flex flex-wrap gap-2 mb-3">
-              {item.categories.map((cat) => (
+              {catalogItem.tags.map((cat) => (
                 <span key={cat} className={`px-2 py-1 rounded text-xs font-medium ${categoryColors[cat] || categoryColors.General}`}>
                   {cat}
                 </span>
@@ -37,12 +40,12 @@ export default function InventoryItem({ item, viewMode }: InventoryItemProps) {
               </span>
             </div>
             <div className="text-sm text-theme-secondary space-y-1">
-              <p>SKU: {item.sku}</p>
-              {item.quantity && <p>Quantity: {item.quantity}</p>}
+              <p>SKU: {catalogItem.sku}</p>
+              {quantityTotal && <p>Quantity: {quantityTotal}</p>}
               {item.isCheckedOut && item.checkedOutBy && (
                 <p className="text-xs mt-2">
                   By: {item.checkedOutBy}
-                  {item.checkOutDate && <span className="block">Since: {item.checkOutDate}</span>}
+                  {item.dateCheckedOut && <span className="block">Since: {item.dateCheckedOut}</span>}
                 </p>
               )}
             </div>
@@ -66,16 +69,17 @@ export default function InventoryItem({ item, viewMode }: InventoryItemProps) {
       <div className="flex items-center gap-4">
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-theme-primary truncate">
-            {item.name}
+            {catalogItem.displayName}
           </h3>
-          <p className="text-sm text-theme-secondary">SKU: {item.sku}</p>
+          <p className="text-sm text-theme-secondary">SKU: {catalogItem.sku}</p>
+          {quantityTotal && <p>Quantity: {quantityTotal}</p>}
           <div className="flex gap-2 items-center mt-2">
             <button className="hover:bg-theme-surface transition-colors text-sm font-medium underline">
               Details
             </button>
             <div className='border-r border-theme-primary h-4 w-1'></div>
             <div className="flex flex-wrap gap-2 items-center">
-              {item.categories.map((cat) => (
+              {catalogItem.tags.map((cat) => (
                 <span key={cat} className={`rounded text-xs font-medium whitespace-nowrap ${categoryColors[cat] || categoryColors.General}`}>
                   {cat}
                 </span>
@@ -87,7 +91,7 @@ export default function InventoryItem({ item, viewMode }: InventoryItemProps) {
             {item.isCheckedOut && item.checkedOutBy && (
                 <div className="text-xs text-theme-secondary min-w-[150px]">
                 <p className="truncate">{item.checkedOutBy}</p>
-                {item.checkOutDate && <p>{item.checkOutDate}</p>}
+                {item.dateCheckedOut && <p>{item.dateCheckedOut}</p>}
                 </div>
             )}
             <span className={`px-2 py-1 rounded text-xs font-medium whitespace-nowrap min-w-[100px] text-center ${statusColor}`}>

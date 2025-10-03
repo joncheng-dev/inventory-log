@@ -1,129 +1,86 @@
 import type { InventoryItem } from '../types/inventory';
 import InventoryItemList from './inventory/InventoryItemList';
+import type { CatalogItem } from '../types/catalog';
 
 interface ItemListDisplayProps {
   viewMode: 'grid-view' | 'list-view';
   selectedTags: string[];
 }
 
-// Mock data for demonstration
-const mockInventoryItems: InventoryItem[] = [
+const mockCatalogItems: CatalogItem[] = [
   {
-    id: '1',
-    name: 'Microscope - Compound',
-    categories: ['Biology', 'General', 'Earth Science'],
-    sku: 'BIO-MICRO-001',
-    isCheckedOut: false,
-    quantity: 5,
-    description: 'High-quality compound microscope for cell observation',
+    id: 'cat-slinky',
+    displayName: 'Slinky',
+    sku: 'PHYS-SLIN-001',
+    description: 'A metal spring toy for physics demonstrations',
+    location: 'metal cabinet by stairs',
+    tags: ['Physics', 'General'],
   },
   {
-    id: '2',
-    name: 'Beaker Set (250ml)',
-    categories: ['Chemistry', '12'],
+    id: 'cat-beaker-set',
+    displayName: 'Beaker Set (250ml)',
     sku: 'CHEM-BEAK-250',
-    isCheckedOut: true,
-    checkedOutBy: 'sarah.jones@school.edu',
-    checkOutDate: 'Sept 28, 2025',
-    quantity: 12,
+    description: 'Standard glass beaker set for chemistry labs',
+    location: 'glass cabinet by sink',
+    tags: ['Chemistry', 'General'],
   },
   {
-    id: '3',
-    name: 'Digital Scale',
-    categories: ['General'],
-    sku: 'GEN-SCALE-001',
-    isCheckedOut: false,
-    quantity: 3,
-  },
-  {
-    id: '4',
-    name: 'Rock & Mineral Kit',
-    categories: ['Earth Science'],
-    sku: 'EARTH-ROCK-KIT',
-    isCheckedOut: false,
-    quantity: 8,
-  },
-  {
-    id: '5',
-    name: 'Bunsen Burner',
-    categories: ['Chemistry'],
+    id: 'cat-bunsen-burner',
+    displayName: 'Bunsen Burner',
     sku: 'CHEM-BURN-001',
-    isCheckedOut: true,
-    checkedOutBy: 'joncheng.dev@gmail.com',
-    checkOutDate: 'Sept 28, 2025',
-    quantity: 10,
-  },
-  {
-    id: '6',
-    name: 'Newton\'s Cradle',
-    categories: ['Physics'],
-    sku: 'PHYS-NEWT-001',
-    isCheckedOut: false,
-    quantity: 2,
-  },
-  {
-    id: '7',
-    name: 'Petri Dishes (100mm)',
-    categories: ['Biology'],
-    sku: 'BIO-PETRI-100',
-    isCheckedOut: false,
-    quantity: 50,
-  },
-  {
-    id: '8',
-    name: 'pH Test Strips',
-    categories: ['Chemistry', 'General'],
-    sku: 'CHEM-PH-STRIP',
-    isCheckedOut: true,
-    checkedOutBy: 'teacher@school.edu',
-    checkOutDate: 'Oct 1, 2025',
-    quantity: 20,
-  },
-  {
-    id: '9',
-    name: 'Telescope - Reflector',
-    categories: ['Physics'],
-    sku: 'PHYS-TELE-001',
-    isCheckedOut: false,
-    quantity: 1,
-  },
-  {
-    id: '10',
-    name: 'Soil Testing Kit',
-    categories: ['Earth Science', 'General'],
-    sku: 'EARTH-SOIL-KIT',
-    isCheckedOut: false,
-    quantity: 6,
-  },
-  {
-    id: '11',
-    name: 'Safety Goggles',
-    categories: ['General'],
-    sku: 'GEN-GOGG-001',
-    isCheckedOut: false,
-    quantity: 30,
-  },
-  {
-    id: '12',
-    name: 'Dissection Kit',
-    categories: ['Biology', 'General'],
-    sku: 'BIO-DISS-KIT',
-    isCheckedOut: true,
-    checkedOutBy: 'lab.assistant@school.edu',
-    checkOutDate: 'Sept 30, 2025',
-    quantity: 15,
+    description: 'Gas burner for heating experiments',
+    location: 'glass cabinet by sink, bottom shelf',
+    tags: ['Chemistry'],
   },
 ];
+
+const mockInventoryItems: InventoryItem[] = [
+  // 🌀 3 Slinkies (all available)
+  { id: 'inv-slinky-001', catalogItemId: 'cat-slinky', isCheckedOut: false },
+  { id: 'inv-slinky-002', catalogItemId: 'cat-slinky', isCheckedOut: false },
+  { id: 'inv-slinky-003', catalogItemId: 'cat-slinky', isCheckedOut: false },
+
+  // 🧪 12 Beaker Sets (2 checked out, 10 available)
+  { id: 'inv-beaker-001', catalogItemId: 'cat-beaker-set', isCheckedOut: true, checkedOutBy: 'sarah.jones@school.edu', dateCheckedOut: '2025-09-28' },
+  { id: 'inv-beaker-002', catalogItemId: 'cat-beaker-set', isCheckedOut: true, checkedOutBy: 'sarah.jones@school.edu', dateCheckedOut: '2025-09-28' },
+  { id: 'inv-beaker-003', catalogItemId: 'cat-beaker-set', isCheckedOut: false },
+  { id: 'inv-beaker-004', catalogItemId: 'cat-beaker-set', isCheckedOut: false },
+  { id: 'inv-beaker-005', catalogItemId: 'cat-beaker-set', isCheckedOut: false },
+  { id: 'inv-beaker-006', catalogItemId: 'cat-beaker-set', isCheckedOut: false },
+  { id: 'inv-beaker-007', catalogItemId: 'cat-beaker-set', isCheckedOut: false },
+  { id: 'inv-beaker-008', catalogItemId: 'cat-beaker-set', isCheckedOut: false },
+  { id: 'inv-beaker-009', catalogItemId: 'cat-beaker-set', isCheckedOut: false },
+  { id: 'inv-beaker-010', catalogItemId: 'cat-beaker-set', isCheckedOut: false },
+  { id: 'inv-beaker-011', catalogItemId: 'cat-beaker-set', isCheckedOut: false },
+  { id: 'inv-beaker-012', catalogItemId: 'cat-beaker-set', isCheckedOut: false },
+
+  // 🔥 10 Bunsen Burners (1 checked out, 9 available)
+  { id: 'inv-burner-001', catalogItemId: 'cat-bunsen-burner', isCheckedOut: true, checkedOutBy: 'joncheng.dev@gmail.com', dateCheckedOut: '2025-09-28' },
+  { id: 'inv-burner-002', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false },
+  { id: 'inv-burner-003', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false },
+  { id: 'inv-burner-004', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false },
+  { id: 'inv-burner-005', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false },
+  { id: 'inv-burner-006', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false },
+  { id: 'inv-burner-007', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false },
+  { id: 'inv-burner-008', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false },
+  { id: 'inv-burner-009', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false },
+  { id: 'inv-burner-010', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false },
+];
+
 
 export default function ItemListDisplay({ viewMode, selectedTags }: ItemListDisplayProps) {
   // Filter items based on selected tags
   const filteredItems = selectedTags.length === 0
     ? mockInventoryItems
-    : mockInventoryItems.filter(item => item.categories.some(c => selectedTags.includes(c)));
+    : mockInventoryItems.filter(invItem => {
+      const catalogItem = mockCatalogItems.find(catItem => catItem.id === invItem.catalogItemId);
+      if (!catalogItem) return false;
+      return catalogItem.tags.some(c => selectedTags.includes(c));
+    });
 
   return (
     <div className="h-full overflow-y-auto">
-      <InventoryItemList items={filteredItems} viewMode={viewMode} />
+      <InventoryItemList items={filteredItems} catalogItems={mockCatalogItems} viewMode={viewMode} />
     </div>
   );
 }

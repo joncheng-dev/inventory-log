@@ -1,12 +1,8 @@
 export interface InventoryItem {
   id: string;
-  name: string;
-  categories: string[];
-  sku: string;
+  catalogItemId: string;
   isCheckedOut: boolean;
   checkedOutBy?: string;
-  checkOutDate?: string;
-  quantity?: number;
-  description?: string;
+  dateCheckedOut?: string;
 }
 

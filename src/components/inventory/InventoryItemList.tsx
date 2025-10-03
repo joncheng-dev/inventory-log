@@ -1,12 +1,14 @@
-import type { InventoryItem as InventoryItemType } from '../../types/inventory';
 import InventoryItem from './InventoryItem';
+import type { InventoryItem as InventoryItemType } from '../../types/inventory';
+import type { CatalogItem } from '../../types/catalog';
 
 interface InventoryItemListProps {
   items: InventoryItemType[];
+  catalogItems: CatalogItem[];
   viewMode: 'grid-view' | 'list-view';
 }
 
-export default function InventoryItemList({ items, viewMode }: InventoryItemListProps) {
+export default function InventoryItemList({ items, catalogItems, viewMode }: InventoryItemListProps) {
   if (items.length === 0) {
     return (
       <div className="flex items-center justify-center h-64 text-theme-secondary">
@@ -18,12 +20,25 @@ export default function InventoryItemList({ items, viewMode }: InventoryItemList
     );
   }
 
+  const inventoryItemsGrouped: Record<string, InventoryItemType[]> = {};
+  items.forEach((invItem) => {
+    if (!inventoryItemsGrouped[invItem.catalogItemId]) {
+      inventoryItemsGrouped[invItem.catalogItemId] = [];
+    }
+    inventoryItemsGrouped[invItem.catalogItemId].push(invItem);
+  });
+
   if (viewMode === 'grid-view') {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-6">
-        {items.map((item) => (
-          <InventoryItem key={item.id} item={item} viewMode={viewMode} />
-        ))}
+        {Object.entries(inventoryItemsGrouped).map(([catalogItemId, groupedItems]) => {
+          const catalogItem = catalogItems.find(cat => cat.id === catalogItemId);
+          if (!catalogItem) return null;
+          const quantityTotal = groupedItems.length;
+          return (
+            <InventoryItem key={catalogItemId} item={groupedItems[0]} catalogItem={catalogItem} quantityTotal={quantityTotal} viewMode={viewMode} />
+          );
+        })}
       </div>
     );
   }
@@ -31,9 +46,14 @@ export default function InventoryItemList({ items, viewMode }: InventoryItemList
   // List view
   return (
     <div className="flex flex-col space-y-2 p-6">
-      {items.map((item) => (
-        <InventoryItem key={item.id} item={item} viewMode={viewMode} />
-      ))}
+      {Object.entries(inventoryItemsGrouped).map(([catalogItemId, groupedItems]) => {
+        const catalogItem = catalogItems.find(cat => cat.id === catalogItemId);
+        if (!catalogItem) return null;
+        const quantityTotal = groupedItems.length;
+        return(
+          <InventoryItem key={catalogItemId} item={groupedItems[0]} catalogItem={catalogItem} quantityTotal={quantityTotal} viewMode={viewMode} />
+        );
+      })}
     </div>
   );
 }
