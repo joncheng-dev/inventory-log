@@ -18,11 +18,11 @@ const mockCatalogItems: CatalogItem[] = [
   },
   {
     id: 'cat-beaker-set',
-    displayName: 'Beaker Set (250ml)',
+    displayName: 'Beaker Set (250ml) Beaker Set (250ml) Beaker Set (250ml) Beaker Set (250ml) Beaker Set (250ml) ',
     sku: 'CHEM-BEAK-250',
     description: 'Standard glass beaker set for chemistry labs',
     location: 'glass cabinet by sink',
-    tags: ['Chemistry', 'General'],
+    tags: ['Chemistry', 'General', 'Physics', 'Earth Science', 'Environmental Science', 'Biology', 'Zoology', 'Geology'],
   },
   {
     id: 'cat-bunsen-burner',
@@ -31,6 +31,14 @@ const mockCatalogItems: CatalogItem[] = [
     description: 'Gas burner for heating experiments',
     location: 'glass cabinet by sink, bottom shelf',
     tags: ['Chemistry'],
+  },
+  {
+    id: 'cat-magnifying-class',
+    displayName: 'Magnifying Glass',
+    sku: 'GEN-EQUIP-001',
+    description: 'Handheld lens for making smaller things appear larger',
+    location: 'cabinet by stairway, top shelf',
+    tags: ['Biology', 'General'],
   },
 ];
 
@@ -65,6 +73,10 @@ const mockInventoryItems: InventoryItem[] = [
   { id: 'inv-burner-008', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false },
   { id: 'inv-burner-009', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false },
   { id: 'inv-burner-010', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false },
+
+    // 2 Magnifying Glasses (2 checked out, 0 available)
+  { id: 'inv-mag-glass-001', catalogItemId: 'cat-magnifying-class', isCheckedOut: true, checkedOutBy: 'joncheng.dev@gmail.com', dateCheckedOut: '2025-10-08' },
+  { id: 'inv-mag-glass-001', catalogItemId: 'cat-magnifying-class', isCheckedOut: true, checkedOutBy: 'joncheng.dev@gmail.com', dateCheckedOut: '2025-10-08' },
 ];
 
 
