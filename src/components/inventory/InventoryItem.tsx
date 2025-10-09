@@ -7,9 +7,10 @@ interface InventoryItemProps {
   quantityTotal: number;
   quantityAvailable: number;
   viewMode: 'grid-view' | 'list-view';
+  setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemType | null>>;
 }
 
-export default function InventoryItem({ item, catalogItem, quantityTotal, quantityAvailable, viewMode }: InventoryItemProps) {
+export default function InventoryItem({ item, catalogItem, quantityTotal, quantityAvailable, viewMode, setSelectedItem }: InventoryItemProps) {
   const categoryColors: Record<string, string> = {
     Biology: 'text-green-800 dark:text-green-200',
     Chemistry: 'text-blue-800 dark:text-blue-200',
@@ -63,7 +64,10 @@ export default function InventoryItem({ item, catalogItem, quantityTotal, quanti
 
         {/* Action section */}
         <div className="px-4 py-3 bg-theme-secondary/10">
-          <button className="w-full px-3 py-2 border border-theme rounded hover:bg-theme-hover transition-colors text-sm font-medium">
+          <button
+            className="w-full px-3 py-2 border border-theme rounded hover:bg-theme-hover transition-colors text-sm font-medium"
+            onClick={() => setSelectedItem(item)}
+          >
             View Details
           </button>
         </div>
@@ -103,7 +107,10 @@ export default function InventoryItem({ item, catalogItem, quantityTotal, quanti
           <span className="text-theme-secondary">
             <span className={statusColor}>{quantityAvailable}</span> available
           </span>
-          <button className="px-3 py-1.5 border border-theme rounded hover:bg-theme-surface transition-colors text-sm font-medium">
+          <button
+            className="px-3 py-1.5 border border-theme rounded hover:bg-theme-surface transition-colors text-sm font-medium"
+            onClick={() => setSelectedItem(item)}
+          >
             Details
           </button>
         </div>

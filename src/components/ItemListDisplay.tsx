@@ -1,13 +1,14 @@
-import type { InventoryItem } from '../types/inventory';
+import type { InventoryItem as InventoryItemType } from '../types/inventory';
 import InventoryItemList from './inventory/InventoryItemList';
-import type { CatalogItem } from '../types/catalog';
+import type { CatalogItem as CatalogItemType } from '../types/catalog';
 
 interface ItemListDisplayProps {
   viewMode: 'grid-view' | 'list-view';
   selectedTags: string[];
+  setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemType | null>>;
 }
 
-const mockCatalogItems: CatalogItem[] = [
+const mockCatalogItems: CatalogItemType[] = [
   {
     id: 'cat-slinky',
     displayName: 'Slinky',
@@ -42,7 +43,7 @@ const mockCatalogItems: CatalogItem[] = [
   },
 ];
 
-const mockInventoryItems: InventoryItem[] = [
+const mockInventoryItems: InventoryItemType[] = [
   // 🌀 3 Slinkies (all available)
   { id: 'inv-slinky-001', catalogItemId: 'cat-slinky', isCheckedOut: false },
   { id: 'inv-slinky-002', catalogItemId: 'cat-slinky', isCheckedOut: false },
@@ -80,7 +81,7 @@ const mockInventoryItems: InventoryItem[] = [
 ];
 
 
-export default function ItemListDisplay({ viewMode, selectedTags }: ItemListDisplayProps) {
+export default function ItemListDisplay({ viewMode, selectedTags, setSelectedItem }: ItemListDisplayProps) {
   // Filter items based on selected tags
   const filteredItems = selectedTags.length === 0
     ? mockInventoryItems
@@ -92,7 +93,12 @@ export default function ItemListDisplay({ viewMode, selectedTags }: ItemListDisp
 
   return (
     <div className="h-full overflow-y-auto">
-      <InventoryItemList items={filteredItems} catalogItems={mockCatalogItems} viewMode={viewMode} />
+      <InventoryItemList
+        items={filteredItems}
+        catalogItems={mockCatalogItems}
+        viewMode={viewMode}
+        setSelectedItem={setSelectedItem}
+      />
     </div>
   );
 }

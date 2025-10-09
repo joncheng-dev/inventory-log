@@ -1,11 +1,12 @@
 import InventoryItem from './InventoryItem';
 import type { InventoryItem as InventoryItemType } from '../../types/inventory';
-import type { CatalogItem } from '../../types/catalog';
+import type { CatalogItem as CatalogItemType } from '../../types/catalog';
 
 interface InventoryItemListProps {
   items: InventoryItemType[];
-  catalogItems: CatalogItem[];
+  catalogItems: CatalogItemType[];
   viewMode: 'grid-view' | 'list-view';
+  setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemType | null>>;
 }
 
 function countAvailability(groupedItems: InventoryItemType[]): number {
@@ -17,9 +18,10 @@ function countAvailability(groupedItems: InventoryItemType[]): number {
 }
 
 function renderGroupedInventoryItems(
-  catalogItems: CatalogItem[],
+  catalogItems: CatalogItemType[],
   inventoryItems: Record<string, InventoryItemType[]>,
-  viewMode: 'grid-view' | 'list-view'
+  viewMode: 'grid-view' | 'list-view',
+  setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemType | null>>,
 ) {
   return Object.entries(inventoryItems).map(([catalogItemId, groupedItems]) => {
     const catalogItem = catalogItems.find(cat => cat.id === catalogItemId);
@@ -34,12 +36,13 @@ function renderGroupedInventoryItems(
         quantityTotal={quantityTotal}
         quantityAvailable={quantityAvailable}
         viewMode={viewMode}
+        setSelectedItem={setSelectedItem}
       />
     );
   })
 }
 
-export default function InventoryItemList({ items, catalogItems, viewMode }: InventoryItemListProps) {
+export default function InventoryItemList({ items, catalogItems, viewMode, setSelectedItem }: InventoryItemListProps) {
   if (items.length === 0) {
     return (
       <div className="flex items-center justify-center h-64 text-theme-secondary">
@@ -62,7 +65,7 @@ export default function InventoryItemList({ items, catalogItems, viewMode }: Inv
   if (viewMode === 'grid-view') {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-6">
-        {renderGroupedInventoryItems(catalogItems, inventoryItemsGrouped, viewMode)}
+        {renderGroupedInventoryItems(catalogItems, inventoryItemsGrouped, viewMode, setSelectedItem)}
       </div>
     );
   }
@@ -70,7 +73,7 @@ export default function InventoryItemList({ items, catalogItems, viewMode }: Inv
   // List view
   return (
     <div className="flex flex-col space-y-2 p-6">
-        {renderGroupedInventoryItems(catalogItems, inventoryItemsGrouped, viewMode)}
+        {renderGroupedInventoryItems(catalogItems, inventoryItemsGrouped, viewMode, setSelectedItem)}
     </div>
   );
 }
