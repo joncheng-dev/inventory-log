@@ -3,9 +3,10 @@ import Header from '../components/Header';
 import Filters from '../components/filter/Filters';
 import ItemListDisplay from '../components/ItemListDisplay';
 import CheckedOutItemList from '../components/checked-out-item-list/CheckedOutItemList';
-import type { InventoryItem as InventoryItemType } from '../types/inventory';
+import type { InventoryItem as InventoryItemType, InventoryItemDetailsType } from '../types/inventory';
 import InventoryItemDetail from '../components/inventory/InventoryItemDetail';
 import type { CatalogItem as CatalogItemType } from '../types/catalog';
+import { calculateInventoryQuantities, groupInventoryByCatalogItem } from '../utils/inventory';
 
 const mockCatalogItems: CatalogItemType[] = [
   {
@@ -76,7 +77,7 @@ const mockInventoryItems: InventoryItemType[] = [
 
     // 2 Magnifying Glasses (2 checked out, 0 available)
   { id: 'inv-mag-glass-001', catalogItemId: 'cat-magnifying-class', isCheckedOut: true, checkedOutBy: 'joncheng.dev@gmail.com', dateCheckedOut: '2025-10-08' },
-  { id: 'inv-mag-glass-001', catalogItemId: 'cat-magnifying-class', isCheckedOut: true, checkedOutBy: 'joncheng.dev@gmail.com', dateCheckedOut: '2025-10-08' },
+  { id: 'inv-mag-glass-002', catalogItemId: 'cat-magnifying-class', isCheckedOut: true, checkedOutBy: 'joncheng.dev@gmail.com', dateCheckedOut: '2025-10-08' },
 ];
 
 export default function InventoryPage() {
@@ -87,6 +88,50 @@ export default function InventoryPage() {
   // Filter via Tags
   const availableFilterTags = ["Biology", "Chemistry", "Earth Science", "General", "Physics"];
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
+  // Inventory Items all processed here before passing into child components
+  // Inventory Item List (all inventory items) comes in here
+  // - afterwards, that info is less relevant to indiv components
+  // - the child components will have repackaged relevant info passed in
+  // -- related items clustered into groups
+  // --- each related item has total quantity, available quantity
+  // ItemListDisplay 
+  // - all inventory items grouped by same catalog item id (called 'related items')
+  // - each of these grouped items need quantity total, quantity available 
+  // CheckedOutItemList - all inventory items grouped by same catalog item id (called 'related items'),
+  // but filtered to only be ones checkedOutBy current user
+  // - each of these grouped items should display quantity checked out by current user
+  
+  // InventoryItemDetail - all inventory items grouped by same catalog item id (called 'related items')
+  // - each of these grouped items need quantity total, quantity available
+  // - ItemDetails
+  
+  // groupedItems: An object of key:array pairs, where elements in the array are objects
+  const groupedItems = groupInventoryByCatalogItem(mockInventoryItems);
+  console.log('grouped items: ', groupedItems);
+  
+  // Inventory Item Details (props to pass in to component)
+  let selectedItemDetails: InventoryItemDetailsType | null = null;
+  let relatedItems: InventoryItemType[] = [];
+
+  if (selectedItem) {    
+    relatedItems = mockInventoryItems.filter((inv) => inv.catalogItemId === selectedItem.catalogItemId);
+    const { quantityTotal, quantityAvailable } = calculateInventoryQuantities(relatedItems);
+    const catalogItem = mockCatalogItems.find(cat => cat.id === selectedItem.catalogItemId);
+    if (catalogItem) {      
+      selectedItemDetails = {
+        catalogItemId: catalogItem.id,
+        displayName: catalogItem.displayName,
+        sku: catalogItem.sku,
+        description: catalogItem.description,
+        location: catalogItem.location,
+        tags: catalogItem.tags,
+        quantityTotal: quantityTotal,
+        quantityAvailable: quantityAvailable,
+      }
+    }
+  }
+
 
   return (
     <div className="flex flex-col min-h-screen w-full bg-theme text-theme-primary transition-colors duration-200">
@@ -111,14 +156,16 @@ export default function InventoryPage() {
           />
         </div>
         <div className="w-1/5">
-          <CheckedOutItemList/>
+          <CheckedOutItemList
+            // items checked out by current user (grouped up items by same catalog item id)
+            setSelectedItem={setSelectedItem}
+          />
         </div>
       </div>
-      {selectedItem && 
+      {selectedItem && selectedItemDetails && 
         <InventoryItemDetail
-          item={selectedItem}
-          allInventoryItems={mockInventoryItems}
-          catalogItems={mockCatalogItems}
+          selectedItemDetails={selectedItemDetails}
+          relatedItems={relatedItems}
           onClose={() => setSelectedItem(null)}
         />
       }

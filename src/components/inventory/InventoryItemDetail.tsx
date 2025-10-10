@@ -1,42 +1,27 @@
 import { useState } from 'react';
-import type { InventoryItem as InventoryItemType } from '../../types/inventory';
-import type { CatalogItem as CatalogItemType } from '../../types/catalog';
-import { calculateInventoryQuantities } from '../../utils/inventory';
+import type { InventoryItem as InventoryItemType, InventoryItemDetailsType } from '../../types/inventory';
 
 interface InventoryItemDetailProps {
-  item: InventoryItemType;
-  allInventoryItems: InventoryItemType[];
-  catalogItems: CatalogItemType[];
+  selectedItemDetails: InventoryItemDetailsType;
+  relatedItems: InventoryItemType[];
   onClose: React.Dispatch<React.SetStateAction<InventoryItemType | null>>;
 }
 
-// Purpose of this component
-// Display details of inventory item
-//
-// from InventoryItem entry:
-// catalogItemId (targets correct catalog item)
-// isCheckedOut (tally of total)
-// checkedOutBy (connects with count of isCheckedOut)
-// dateCheckedOut (connects with the above 2)
-
-// from CatalogItem entry (pull in details from here to display):
-// displayName
-// sku
-// description
-// location
-// tags (array)
-
-
-export default function InventoryItemDetail({ item, allInventoryItems, catalogItems, onClose }: InventoryItemDetailProps) {
+export default function InventoryItemDetail({ selectedItemDetails, relatedItems, onClose }: InventoryItemDetailProps) {
   const [checkoutQuantity, setCheckoutQuantity] = useState(1);
   const [checkedOutBy, setCheckedOutBy] = useState('');
   const currentUserEmail = 'joncheng.dev@gmail.com';
   
-  const relatedItems = allInventoryItems.filter((inv) => inv.catalogItemId === item.catalogItemId);
-  const { quantityTotal, quantityAvailable } = calculateInventoryQuantities(relatedItems);
-  const catalogItem = catalogItems.find(cat => cat.id === item.catalogItemId);
-
-  if (!catalogItem) return null;
+  const {
+    catalogItemId,
+    displayName,
+    sku,
+    description,
+    location,
+    tags,
+    quantityTotal,
+    quantityAvailable
+  } = selectedItemDetails;
 
   const categoryColors: Record<string, string> = {
     Biology: 'text-green-800 dark:text-green-200',
@@ -51,7 +36,6 @@ export default function InventoryItemDetail({ item, allInventoryItems, catalogIt
     : 'font-semibold text-red-600 dark:text-red-400';
 
   const handleCheckout = () => {
-    // Your checkout logic here
     console.log(`Checking out ${checkoutQuantity} items to ${checkedOutBy}`);
     // onCheckout(checkoutQuantity, checkedOutBy);
   };
@@ -76,10 +60,10 @@ export default function InventoryItemDetail({ item, allInventoryItems, catalogIt
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <h2 className="text-xl font-semibold text-theme-primary mb-2">
-                  {catalogItem.displayName}
+                  {displayName}
                 </h2>
                 <div className="flex gap-1.5 flex-wrap">
-                  {catalogItem.tags.map((cat) => (
+                  {tags.map((cat) => (
                     <span
                       key={cat}
                       className={`px-2 py-0.5 rounded-full text-xs font-medium ${categoryColors[cat] || categoryColors.General}`}
@@ -163,20 +147,20 @@ export default function InventoryItemDetail({ item, allInventoryItems, catalogIt
               <div className="space-y-4">
                 <div>
                   <label className="text-sm font-medium text-theme-secondary uppercase tracking-wide">SKU</label>
-                  <p className="mt-1 text-theme-primary font-mono">{catalogItem.sku}</p>
+                  <p className="mt-1 text-theme-primary font-mono">{sku}</p>
                 </div>
 
-                {catalogItem.location && (
+                {location && (
                   <div>
                     <label className="text-sm font-medium text-theme-secondary uppercase tracking-wide">Location</label>
-                    <p className="mt-1 text-theme-primary">{catalogItem.location}</p>
+                    <p className="mt-1 text-theme-primary">{location}</p>
                   </div>
                 )}
 
-                {catalogItem.description && (
+                {description && (
                   <div>
                     <label className="text-sm font-medium text-theme-secondary uppercase tracking-wide">Description</label>
-                    <p className="mt-1 text-theme-primary leading-relaxed">{catalogItem.description}</p>
+                    <p className="mt-1 text-theme-primary leading-relaxed">{description}</p>
                   </div>
                 )}
               </div>
