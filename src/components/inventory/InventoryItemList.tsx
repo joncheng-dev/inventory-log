@@ -1,20 +1,13 @@
 import InventoryItem from './InventoryItem';
 import type { InventoryItem as InventoryItemType } from '../../types/inventory';
 import type { CatalogItem as CatalogItemType } from '../../types/catalog';
+import { calculateInventoryQuantities, groupInventoryByCatalogItem } from '../../utils/inventory';
 
 interface InventoryItemListProps {
   items: InventoryItemType[];
   catalogItems: CatalogItemType[];
   viewMode: 'grid-view' | 'list-view';
   setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemType | null>>;
-}
-
-function countAvailability(groupedItems: InventoryItemType[]): number {
-  let numAvailable = 0;
-  groupedItems.forEach(item => {
-    if (item.isCheckedOut === false) numAvailable++;
-  });
-  return numAvailable;
 }
 
 function renderGroupedInventoryItems(
@@ -26,8 +19,9 @@ function renderGroupedInventoryItems(
   return Object.entries(inventoryItems).map(([catalogItemId, groupedItems]) => {
     const catalogItem = catalogItems.find(cat => cat.id === catalogItemId);
     if (!catalogItem) return null;
-    const quantityTotal = groupedItems.length;
-    const quantityAvailable = countAvailability(groupedItems);
+
+    const { quantityTotal, quantityAvailable } = calculateInventoryQuantities(groupedItems);
+    
     return (
       <InventoryItem
         key={catalogItemId}
@@ -54,13 +48,7 @@ export default function InventoryItemList({ items, catalogItems, viewMode, setSe
     );
   }
 
-  const inventoryItemsGrouped: Record<string, InventoryItemType[]> = {};
-  items.forEach((invItem) => {
-    if (!inventoryItemsGrouped[invItem.catalogItemId]) {
-      inventoryItemsGrouped[invItem.catalogItemId] = [];
-    }
-    inventoryItemsGrouped[invItem.catalogItemId].push(invItem);
-  });
+  const inventoryItemsGrouped = groupInventoryByCatalogItem(items);
 
   if (viewMode === 'grid-view') {
     return (
