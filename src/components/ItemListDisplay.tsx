@@ -1,30 +1,32 @@
-import type { InventoryItem as InventoryItemType } from '../types/inventory';
+import type { InventoryItemGroupedType } from '../types/inventory';
 import InventoryItemList from './inventory/InventoryItemList';
 import type { CatalogItem as CatalogItemType } from '../types/catalog';
 
 interface ItemListDisplayProps {
-  viewMode: 'grid-view' | 'list-view';
-  mockInventoryItems: InventoryItemType[];
-  mockCatalogItems: CatalogItemType[];
+  inventoryItemData: Record<string, InventoryItemGroupedType>;
+  catalogItems: CatalogItemType[];
   selectedTags: string[];
-  setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemType | null>>;
+  setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemGroupedType | null>>;
+  viewMode: 'grid-view' | 'list-view';
 }
 
-export default function ItemListDisplay({ mockInventoryItems, mockCatalogItems, viewMode, selectedTags, setSelectedItem }: ItemListDisplayProps) {
+export default function ItemListDisplay({ inventoryItemData, catalogItems, selectedTags, setSelectedItem, viewMode }: ItemListDisplayProps) {
   // Filter items based on selected tags
   const filteredItems = selectedTags.length === 0
-    ? mockInventoryItems
-    : mockInventoryItems.filter(invItem => {
-      const catalogItem = mockCatalogItems.find(catItem => catItem.id === invItem.catalogItemId);
-      if (!catalogItem) return false;
-      return catalogItem.tags.some(c => selectedTags.includes(c));
-    });
-
+    ? inventoryItemData
+    : Object.fromEntries(
+        Object.entries(inventoryItemData).filter(([key]) => {
+          const catalogItem = catalogItems.find(catItem => catItem.id === key);
+          if (!catalogItem) return false;
+          return selectedTags.every(tag => catalogItem.tags.includes(tag));
+        }
+      ));
+  
   return (
     <div className="h-full overflow-y-auto">
       <InventoryItemList
-        items={filteredItems}
-        catalogItems={mockCatalogItems}
+        inventoryItemsAfterFilter={filteredItems}
+        catalogItems={catalogItems}
         viewMode={viewMode}
         setSelectedItem={setSelectedItem}
       />

@@ -3,10 +3,10 @@ import Header from '../components/Header';
 import Filters from '../components/filter/Filters';
 import ItemListDisplay from '../components/ItemListDisplay';
 import CheckedOutItemList from '../components/checked-out-item-list/CheckedOutItemList';
-import type { InventoryItem as InventoryItemType, InventoryItemDetailsType } from '../types/inventory';
+import type { InventoryItem as InventoryItemType, InventoryItemGroupedType, CheckedOutItemDataType } from '../types/inventory';
 import InventoryItemDetail from '../components/inventory/InventoryItemDetail';
 import type { CatalogItem as CatalogItemType } from '../types/catalog';
-import { calculateInventoryQuantities, groupInventoryByCatalogItem } from '../utils/inventory';
+import { calculateInventoryQuantities, gatherInventoryItemData, groupInventoryByCatalogItem, gatherCheckoutItemQuantities } from '../utils/inventory';
 
 const mockCatalogItems: CatalogItemType[] = [
   {
@@ -51,9 +51,9 @@ const mockInventoryItems: InventoryItemType[] = [
 
   // 🧪 12 Beaker Sets (2 checked out, 10 available)
   { id: 'inv-beaker-001', catalogItemId: 'cat-beaker-set', isCheckedOut: true, checkedOutBy: 'sarah.jones@school.edu', dateCheckedOut: '2025-09-28' },
-  { id: 'inv-beaker-002', catalogItemId: 'cat-beaker-set', isCheckedOut: true, checkedOutBy: 'sarah.jones@school.edu', dateCheckedOut: '2025-09-28' },
-  { id: 'inv-beaker-003', catalogItemId: 'cat-beaker-set', isCheckedOut: false },
-  { id: 'inv-beaker-004', catalogItemId: 'cat-beaker-set', isCheckedOut: false },
+  { id: 'inv-beaker-002', catalogItemId: 'cat-beaker-set', isCheckedOut: true, checkedOutBy: 'joncheng.dev@gmail.com', dateCheckedOut: '2025-09-29' },
+  { id: 'inv-beaker-003', catalogItemId: 'cat-beaker-set', isCheckedOut: true, checkedOutBy: 'joncheng.dev@gmail.com', dateCheckedOut: '2025-09-29' },
+  { id: 'inv-beaker-004', catalogItemId: 'cat-beaker-set', isCheckedOut: true, checkedOutBy: 'joncheng.dev@gmail.com', dateCheckedOut: '2025-09-29' },
   { id: 'inv-beaker-005', catalogItemId: 'cat-beaker-set', isCheckedOut: false },
   { id: 'inv-beaker-006', catalogItemId: 'cat-beaker-set', isCheckedOut: false },
   { id: 'inv-beaker-007', catalogItemId: 'cat-beaker-set', isCheckedOut: false },
@@ -64,7 +64,7 @@ const mockInventoryItems: InventoryItemType[] = [
   { id: 'inv-beaker-012', catalogItemId: 'cat-beaker-set', isCheckedOut: false },
 
   // 🔥 10 Bunsen Burners (1 checked out, 9 available)
-  { id: 'inv-burner-001', catalogItemId: 'cat-bunsen-burner', isCheckedOut: true, checkedOutBy: 'joncheng.dev@gmail.com', dateCheckedOut: '2025-09-28' },
+  { id: 'inv-burner-001', catalogItemId: 'cat-bunsen-burner', isCheckedOut: true, checkedOutBy: 'joncheng.dev@gmail.com', dateCheckedOut: '2025-09-29' },
   { id: 'inv-burner-002', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false },
   { id: 'inv-burner-003', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false },
   { id: 'inv-burner-004', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false },
@@ -82,36 +82,34 @@ const mockInventoryItems: InventoryItemType[] = [
 
 export default function InventoryPage() {
   const [viewMode, setViewMode] = useState<'grid-view' | 'list-view'>('grid-view');
-  const [selectedItem, setSelectedItem] = useState<InventoryItemType | null>(null);
-  console.log('selectedItem: ', selectedItem);
+  const [selectedItem, setSelectedItem] = useState<InventoryItemGroupedType | null>(null);
+  const currentUserEmail = 'joncheng.dev@gmail.com';
 
   // Filter via Tags
   const availableFilterTags = ["Biology", "Chemistry", "Earth Science", "General", "Physics"];
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  // Inventory Items all processed here before passing into child components
-  // Inventory Item List (all inventory items) comes in here
-  // - afterwards, that info is less relevant to indiv components
-  // - the child components will have repackaged relevant info passed in
-  // -- related items clustered into groups
-  // --- each related item has total quantity, available quantity
-  // ItemListDisplay 
-  // - all inventory items grouped by same catalog item id (called 'related items')
-  // - each of these grouped items need quantity total, quantity available 
-  // CheckedOutItemList - all inventory items grouped by same catalog item id (called 'related items'),
-  // but filtered to only be ones checkedOutBy current user
-  // - each of these grouped items should display quantity checked out by current user
-  
-  // InventoryItemDetail - all inventory items grouped by same catalog item id (called 'related items')
-  // - each of these grouped items need quantity total, quantity available
-  // - ItemDetails
-  
-  // groupedItems: An object of key:array pairs, where elements in the array are objects
+  // CONVERT RAW INVENTORY ITEM DATA TO CONDENSED OBJECTS WITH QUANTITY
   const groupedItems = groupInventoryByCatalogItem(mockInventoryItems);
-  console.log('grouped items: ', groupedItems);
+  const inventoryItemData = gatherInventoryItemData(groupedItems, mockCatalogItems);
+  console.log('inventoryItemData: ', inventoryItemData);
+
+
+  // COUNT CHECKED OUT ITEMS  
+  let checkedOutItemQuantities: Record<string, CheckedOutItemDataType> | null = {};
+  if (inventoryItemData) {    
+    checkedOutItemQuantities = gatherCheckoutItemQuantities(currentUserEmail, mockInventoryItems, mockCatalogItems);
+  }
+  let filteredInventoryItemData = {};
+  if (checkedOutItemQuantities && inventoryItemData) {    
+    filteredInventoryItemData = Object.fromEntries(
+      Object.entries(inventoryItemData)
+        .filter(([key]) => Object.keys(checkedOutItemQuantities).includes(key))
+    );
+  }
   
   // Inventory Item Details (props to pass in to component)
-  let selectedItemDetails: InventoryItemDetailsType | null = null;
+  let selectedItemDetails: InventoryItemGroupedType | null = null;
   let relatedItems: InventoryItemType[] = [];
 
   if (selectedItem) {    
@@ -138,26 +136,27 @@ export default function InventoryPage() {
       <Header />
       <div className="flex w-full border-b border-theme">
         <Filters
-          viewMode={viewMode}
-          setViewMode={setViewMode}
           availableFilterTags={availableFilterTags}
           selectedTags={selectedTags}
           setSelectedTags={setSelectedTags}
+          viewMode={viewMode}
+          setViewMode={setViewMode}
         />
       </div>
       <div className="flex flex-1 w-full">
         <div className="flex-1 border-r border-theme">
           <ItemListDisplay
-            viewMode={viewMode}
+            inventoryItemData={inventoryItemData}
+            catalogItems={mockCatalogItems}
             selectedTags={selectedTags}
             setSelectedItem={setSelectedItem}
-            mockInventoryItems={mockInventoryItems}
-            mockCatalogItems={mockCatalogItems}
+            viewMode={viewMode}
           />
         </div>
         <div className="w-1/5">
           <CheckedOutItemList
-            // items checked out by current user (grouped up items by same catalog item id)
+            checkedOutItemsList={filteredInventoryItemData}
+            checkedOutItemQuantities={checkedOutItemQuantities}
             setSelectedItem={setSelectedItem}
           />
         </div>

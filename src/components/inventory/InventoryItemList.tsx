@@ -1,34 +1,29 @@
 import InventoryItem from './InventoryItem';
-import type { InventoryItem as InventoryItemType } from '../../types/inventory';
+import type { InventoryItemGroupedType } from '../../types/inventory';
 import type { CatalogItem as CatalogItemType } from '../../types/catalog';
-import { calculateInventoryQuantities, groupInventoryByCatalogItem } from '../../utils/inventory';
 
 interface InventoryItemListProps {
-  items: InventoryItemType[];
+  inventoryItemsAfterFilter: Record<string, InventoryItemGroupedType | null>;
   catalogItems: CatalogItemType[];
   viewMode: 'grid-view' | 'list-view';
-  setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemType | null>>;
+  setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemGroupedType | null>>;
 }
 
 function renderGroupedInventoryItems(
+  inventoryItems: Record<string, InventoryItemGroupedType | null>,
   catalogItems: CatalogItemType[],
-  inventoryItems: Record<string, InventoryItemType[]>,
   viewMode: 'grid-view' | 'list-view',
-  setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemType | null>>,
+  setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemGroupedType | null>>,
 ) {
-  return Object.entries(inventoryItems).map(([catalogItemId, groupedItems]) => {
+  return Object.entries(inventoryItems).map(([catalogItemId, item]) => {
     const catalogItem = catalogItems.find(cat => cat.id === catalogItemId);
     if (!catalogItem) return null;
 
-    const { quantityTotal, quantityAvailable } = calculateInventoryQuantities(groupedItems);
-    
     return (
       <InventoryItem
         key={catalogItemId}
-        item={groupedItems[0]}
+        item={item}
         catalogItem={catalogItem}
-        quantityTotal={quantityTotal}
-        quantityAvailable={quantityAvailable}
         viewMode={viewMode}
         setSelectedItem={setSelectedItem}
       />
@@ -36,8 +31,8 @@ function renderGroupedInventoryItems(
   })
 }
 
-export default function InventoryItemList({ items, catalogItems, viewMode, setSelectedItem }: InventoryItemListProps) {
-  if (items.length === 0) {
+export default function InventoryItemList({ inventoryItemsAfterFilter, catalogItems, viewMode, setSelectedItem }: InventoryItemListProps) {
+  if (Object.keys(inventoryItemsAfterFilter).length === 0) {
     return (
       <div className="flex items-center justify-center h-64 text-theme-secondary">
         <div className="text-center">
@@ -48,12 +43,10 @@ export default function InventoryItemList({ items, catalogItems, viewMode, setSe
     );
   }
 
-  const inventoryItemsGrouped = groupInventoryByCatalogItem(items);
-
   if (viewMode === 'grid-view') {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-6">
-        {renderGroupedInventoryItems(catalogItems, inventoryItemsGrouped, viewMode, setSelectedItem)}
+        {renderGroupedInventoryItems(inventoryItemsAfterFilter, catalogItems, viewMode, setSelectedItem)}
       </div>
     );
   }
@@ -61,7 +54,7 @@ export default function InventoryItemList({ items, catalogItems, viewMode, setSe
   // List view
   return (
     <div className="flex flex-col space-y-2 p-6">
-        {renderGroupedInventoryItems(catalogItems, inventoryItemsGrouped, viewMode, setSelectedItem)}
+        {renderGroupedInventoryItems(inventoryItemsAfterFilter, catalogItems, viewMode, setSelectedItem)}
     </div>
   );
 }

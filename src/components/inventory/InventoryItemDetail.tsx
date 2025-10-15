@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import type { InventoryItem as InventoryItemType, InventoryItemDetailsType } from '../../types/inventory';
+import type { InventoryItem as InventoryItemType, InventoryItemGroupedType } from '../../types/inventory';
 
 interface InventoryItemDetailProps {
-  selectedItemDetails: InventoryItemDetailsType;
+  selectedItemDetails: InventoryItemGroupedType;
   relatedItems: InventoryItemType[];
   onClose: React.Dispatch<React.SetStateAction<InventoryItemType | null>>;
 }

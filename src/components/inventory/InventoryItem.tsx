@@ -1,16 +1,16 @@
-import type { InventoryItem as InventoryItemType } from '../../types/inventory';
+import type { InventoryItemGroupedType } from '../../types/inventory';
 import type { CatalogItem } from '../../types/catalog';
 
 interface InventoryItemProps {
-  item: InventoryItemType;
+  item: InventoryItemGroupedType | null;
   catalogItem: CatalogItem;
-  quantityTotal: number;
-  quantityAvailable: number;
   viewMode: 'grid-view' | 'list-view';
-  setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemType | null>>;
+  setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemGroupedType | null>>;
 }
 
-export default function InventoryItem({ item, catalogItem, quantityTotal, quantityAvailable, viewMode, setSelectedItem }: InventoryItemProps) {
+export default function InventoryItem({ item, catalogItem, viewMode, setSelectedItem }: InventoryItemProps) {
+  if (!item) return null;
+
   const categoryColors: Record<string, string> = {
     Biology: 'text-green-800 dark:text-green-200',
     Chemistry: 'text-blue-800 dark:text-blue-200',
@@ -19,7 +19,7 @@ export default function InventoryItem({ item, catalogItem, quantityTotal, quanti
     Physics: 'text-purple-800 dark:text-purple-200',
   };
 
-  const statusColor = quantityAvailable > 0
+  const statusColor = item.quantityAvailable > 0
     ? 'ml-1.5 font-semibold text-emerald-600 dark:text-emerald-400'
     : 'ml-1.5 font-semibold text-red-600 dark:text-red-400';
 
@@ -53,11 +53,11 @@ export default function InventoryItem({ item, catalogItem, quantityTotal, quanti
           <div className="flex items-center justify-between text-sm">
             <div>
               <span className="text-theme-secondary">Total:</span>
-              <span className="ml-1.5 font-semibold text-theme-primary">{quantityTotal}</span>
+              <span className="ml-1.5 font-semibold text-theme-primary">{item.quantityTotal}</span>
             </div>
             <div>
               <span className="text-theme-secondary">Available:</span>
-              <span className={statusColor}>{quantityAvailable}</span>
+              <span className={statusColor}>{item.quantityAvailable}</span>
             </div>
           </div>
         </div>
@@ -102,10 +102,10 @@ export default function InventoryItem({ item, catalogItem, quantityTotal, quanti
 
         <div className="flex items-center gap-4 text-sm flex-shrink-0">
           <span className="text-theme-secondary">
-            <span className="font-semibold text-theme-primary">{quantityTotal}</span> total
+            <span className="font-semibold text-theme-primary">{item.quantityTotal}</span> total
           </span>
           <span className="text-theme-secondary">
-            <span className={statusColor}>{quantityAvailable}</span> available
+            <span className={statusColor}>{item.quantityAvailable}</span> available
           </span>
           <button
             className="px-3 py-1.5 border border-theme rounded hover:bg-theme-surface transition-colors text-sm font-medium"
