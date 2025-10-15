@@ -6,7 +6,7 @@ export interface InventoryItem {
   dateCheckedOut?: string;
 }
 
-export interface InventoryItemDetailsType {
+export interface InventoryItemGroupedType {
     catalogItemId: string;
     displayName: string;
     sku: string;
@@ -15,4 +15,8 @@ export interface InventoryItemDetailsType {
     tags: string[];
     quantityTotal: number;
     quantityAvailable: number;
+}
+
+export interface CheckedOutItemDataType {
+    quantityCheckedOut: number;
 }
