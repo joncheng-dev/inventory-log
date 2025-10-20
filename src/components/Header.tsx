@@ -16,12 +16,12 @@ export default function Header() {
         </div>
       </Link>
       <div className='flex items-center gap-4'>
-        <Link to="/" className='px-3 py-2 rounded-lg hover:bg-theme-surface transition-colors duration-200'>
+        <Link to="/catalog" className='px-3 py-2 rounded-lg hover:bg-theme-surface transition-colors duration-200'>
           <p className="text-lg text-theme-primary">
             Item Catalog
           </p>
         </Link>
-        <Link to="/" className='px-3 py-2 rounded-lg hover:bg-theme-surface transition-colors duration-200'>
+        <Link to="/inventory" className='px-3 py-2 rounded-lg hover:bg-theme-surface transition-colors duration-200'>
           <p className="text-lg text-theme-primary">
             Inventory
           </p>
