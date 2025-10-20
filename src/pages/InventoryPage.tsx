@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Header from '../components/Header';
+import PageLayout from './PageLayout';
 import Filters from '../components/filter/Filters';
 import ItemListDisplay from '../components/ItemListDisplay';
 import CheckedOutItemList from '../components/checked-out-item-list/CheckedOutItemList';
@@ -132,8 +132,7 @@ export default function InventoryPage() {
 
 
   return (
-    <div className="flex flex-col min-h-screen w-full bg-theme text-theme-primary transition-colors duration-200">
-      <Header />
+    <PageLayout>
       <div className="flex w-full border-b border-theme">
         <Filters
           availableFilterTags={availableFilterTags}
@@ -168,6 +167,6 @@ export default function InventoryPage() {
           onClose={() => setSelectedItem(null)}
         />
       }
-    </div>
+    </PageLayout>
   );
 }
