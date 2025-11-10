@@ -1,9 +1,9 @@
 import type { InventoryItemGroupedType } from '../../types/inventory';
-import type { CatalogItem } from '../../types/catalog';
+import type { CatalogItem as CatalogItemType } from '../../types/catalog';
 
 interface InventoryItemProps {
   item: InventoryItemGroupedType | null;
-  catalogItem: CatalogItem;
+  catalogItem: CatalogItemType;
   viewMode: 'grid-view' | 'list-view';
   setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemGroupedType | null>>;
 }

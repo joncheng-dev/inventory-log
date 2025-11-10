@@ -92,8 +92,6 @@ export default function InventoryPage() {
   // CONVERT RAW INVENTORY ITEM DATA TO CONDENSED OBJECTS WITH QUANTITY
   const groupedItems = groupInventoryByCatalogItem(mockInventoryItems);
   const inventoryItemData = gatherInventoryItemData(groupedItems, mockCatalogItems);
-  console.log('inventoryItemData: ', inventoryItemData);
-
 
   // COUNT CHECKED OUT ITEMS  
   let checkedOutItemQuantities: Record<string, CheckedOutItemDataType> | null = {};

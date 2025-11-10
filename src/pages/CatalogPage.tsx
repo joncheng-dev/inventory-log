@@ -3,6 +3,7 @@ import PageLayout from './PageLayout';
 import Filters from '../components/filter/Filters';
 import type { CatalogItem as CatalogItemType } from '../types/catalog';
 import CatalogListDisplay from '../components/CatalogListDisplay';
+import CatalogItemDetail from '../components/catalog/CatalogItemDetail';
 
 const mockCatalogItems: CatalogItemType[] = [
   {
@@ -41,12 +42,13 @@ const mockCatalogItems: CatalogItemType[] = [
 
 export default function CatalogPage() {
   const [viewMode, setViewMode] = useState<'grid-view' | 'list-view'>('grid-view');
+  const [selectedTemplate, setSelectedTemplate] = useState<CatalogItemType | null>(null);
   const currentUserEmail = 'joncheng.dev@gmail.com';
 
   // Filter via Tags
   const availableFilterTags = ["Biology", "Chemistry", "Earth Science", "General", "Physics"];
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-    
+
   return (
     <PageLayout>
       <div className="flex w-full border-b border-theme">
@@ -64,8 +66,15 @@ export default function CatalogPage() {
             catalogItems={mockCatalogItems}
             selectedTags={selectedTags}
             viewMode={viewMode}
+            setSelectedTemplate={setSelectedTemplate}
           />
         </div>
+        {selectedTemplate && 
+          <CatalogItemDetail
+            selectedTemplate={selectedTemplate}
+            onClose={() => setSelectedTemplate(null)}
+          />
+        }
       </div>
     </PageLayout>
   );

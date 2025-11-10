@@ -1,11 +1,12 @@
-import type { CatalogItem } from '../../types/catalog';
+import type { CatalogItem as CatalogItemType } from '../../types/catalog';
 
 interface CatalogItemProps {
-  catalogItem: CatalogItem;
+  catalogItem: CatalogItemType;
   viewMode: 'grid-view' | 'list-view';
+  setSelectedTemplate: React.Dispatch<React.SetStateAction<CatalogItemType | null>>;
 }
 
-export default function CatalogItem({ catalogItem, viewMode }: CatalogItemProps) {
+export default function CatalogItem({ catalogItem, viewMode, setSelectedTemplate }: CatalogItemProps) {
   if (!catalogItem) return null;
 
   const categoryColors: Record<string, string> = {
@@ -56,6 +57,7 @@ export default function CatalogItem({ catalogItem, viewMode }: CatalogItemProps)
         <div className="px-4 py-3 bg-blue-50 dark:bg-blue-950/30">
           <button
             className="w-full px-3 py-2 border-2 border-blue-400 dark:border-blue-600 rounded hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors text-sm font-medium text-blue-700 dark:text-blue-300"
+            onClick={() => setSelectedTemplate(catalogItem)}
           >
             View Template
           </button>
@@ -95,6 +97,7 @@ export default function CatalogItem({ catalogItem, viewMode }: CatalogItemProps)
         <div className="flex items-center gap-4 text-sm flex-shrink-0">
           <button
             className="px-3 py-1.5 border-2 border-blue-400 dark:border-blue-600 rounded hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors text-sm font-medium text-blue-700 dark:text-blue-300"
+            onClick={() => setSelectedTemplate(catalogItem)}
           >
             View Template
           </button>
