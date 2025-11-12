@@ -2,10 +2,11 @@ import type { CatalogItem as CatalogItemType } from "../../types/catalog";
 
 interface CatalogItemDetailProps {
   selectedTemplate: CatalogItemType;
+  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   onClose: React.Dispatch<React.SetStateAction<CatalogItemType | null>>;
 }
 
-export default function CatalogItemDetail({ selectedTemplate, onClose }: CatalogItemDetailProps) {
+export default function CatalogItemDetail({ selectedTemplate, setEditMode, onClose }: CatalogItemDetailProps) {
 
   const {
     displayName,
@@ -139,11 +140,19 @@ return (
             >
               Close
             </button>
-            <button
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded transition-colors text-sm font-medium"
-            >
-              Add to Inventory
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={() => {setEditMode(true)}}
+                className="px-4 py-2 border-2 border-blue-400 dark:border-blue-600 rounded hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors text-sm font-medium text-blue-700 dark:text-blue-300"
+              >
+                Edit Template
+              </button>
+              <button
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded transition-colors text-sm font-medium"
+              >
+                Add to Inventory
+              </button>
+            </div>
           </div>
         </div>
       </div>
