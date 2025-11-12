@@ -1,47 +1,13 @@
 import { useState } from 'react';
+import { useCatalog } from '../contexts/CatalogContext';
 import PageLayout from './PageLayout';
 import Filters from '../components/filter/Filters';
 import ItemListDisplay from '../components/ItemListDisplay';
 import CheckedOutItemList from '../components/checked-out-item-list/CheckedOutItemList';
 import type { InventoryItem as InventoryItemType, InventoryItemGroupedType, CheckedOutItemDataType } from '../types/inventory';
 import InventoryItemDetail from '../components/inventory/InventoryItemDetail';
-import type { CatalogItem as CatalogItemType } from '../types/catalog';
 import { calculateInventoryQuantities, gatherInventoryItemData, groupInventoryByCatalogItem, gatherCheckoutItemQuantities } from '../utils/inventory';
 
-const mockCatalogItems: CatalogItemType[] = [
-  {
-    id: 'cat-slinky',
-    displayName: 'Slinky',
-    sku: 'PHYS-SLIN-001',
-    description: 'A metal spring toy for physics demonstrations',
-    location: 'metal cabinet by stairs',
-    tags: ['Physics', 'General'],
-  },
-  {
-    id: 'cat-beaker-set',
-    displayName: 'Beaker Set (250ml) Beaker Set (250ml) Beaker Set (250ml) Beaker Set (250ml) Beaker Set (250ml) ',
-    sku: 'CHEM-BEAK-250',
-    description: 'Standard glass beaker set for chemistry labs',
-    location: 'glass cabinet by sink',
-    tags: ['Chemistry', 'General', 'Physics', 'Earth Science', 'Environmental Science', 'Biology', 'Zoology', 'Geology'],
-  },
-  {
-    id: 'cat-bunsen-burner',
-    displayName: 'Bunsen Burner',
-    sku: 'CHEM-BURN-001',
-    description: 'Gas burner for heating experiments',
-    location: 'glass cabinet by sink, bottom shelf',
-    tags: ['Chemistry'],
-  },
-  {
-    id: 'cat-magnifying-class',
-    displayName: 'Magnifying Glass',
-    sku: 'GEN-EQUIP-001',
-    description: 'Handheld lens for making smaller things appear larger',
-    location: 'cabinet by stairway, top shelf',
-    tags: ['Biology', 'General'],
-  },
-];
 
 const mockInventoryItems: InventoryItemType[] = [
   // 🌀 3 Slinkies (all available)
@@ -76,11 +42,14 @@ const mockInventoryItems: InventoryItemType[] = [
   { id: 'inv-burner-010', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false },
 
     // 2 Magnifying Glasses (2 checked out, 0 available)
-  { id: 'inv-mag-glass-001', catalogItemId: 'cat-magnifying-class', isCheckedOut: true, checkedOutBy: 'joncheng.dev@gmail.com', dateCheckedOut: '2025-10-08' },
-  { id: 'inv-mag-glass-002', catalogItemId: 'cat-magnifying-class', isCheckedOut: true, checkedOutBy: 'joncheng.dev@gmail.com', dateCheckedOut: '2025-10-08' },
+  { id: 'inv-mag-glass-001', catalogItemId: 'cat-magnifying-glass', isCheckedOut: true, checkedOutBy: 'joncheng.dev@gmail.com', dateCheckedOut: '2025-10-08' },
+  { id: 'inv-mag-glass-002', catalogItemId: 'cat-magnifying-glass', isCheckedOut: true, checkedOutBy: 'joncheng.dev@gmail.com', dateCheckedOut: '2025-10-08' },
+  { id: 'inv-mag-glass-003', catalogItemId: 'cat-magnifying-glass', isCheckedOut: false },
 ];
 
 export default function InventoryPage() {
+  const { catalogItems } = useCatalog();
+
   const [viewMode, setViewMode] = useState<'grid-view' | 'list-view'>('grid-view');
   const [selectedItem, setSelectedItem] = useState<InventoryItemGroupedType | null>(null);
   const currentUserEmail = 'joncheng.dev@gmail.com';
@@ -91,12 +60,12 @@ export default function InventoryPage() {
 
   // CONVERT RAW INVENTORY ITEM DATA TO CONDENSED OBJECTS WITH QUANTITY
   const groupedItems = groupInventoryByCatalogItem(mockInventoryItems);
-  const inventoryItemData = gatherInventoryItemData(groupedItems, mockCatalogItems);
-
+  const inventoryItemData = gatherInventoryItemData(groupedItems, catalogItems);
+  
   // COUNT CHECKED OUT ITEMS  
   let checkedOutItemQuantities: Record<string, CheckedOutItemDataType> | null = {};
   if (inventoryItemData) {    
-    checkedOutItemQuantities = gatherCheckoutItemQuantities(currentUserEmail, mockInventoryItems, mockCatalogItems);
+    checkedOutItemQuantities = gatherCheckoutItemQuantities(currentUserEmail, mockInventoryItems, catalogItems);
   }
   let filteredInventoryItemData = {};
   if (checkedOutItemQuantities && inventoryItemData) {    
@@ -113,7 +82,7 @@ export default function InventoryPage() {
   if (selectedItem) {    
     relatedItems = mockInventoryItems.filter((inv) => inv.catalogItemId === selectedItem.catalogItemId);
     const { quantityTotal, quantityAvailable } = calculateInventoryQuantities(relatedItems);
-    const catalogItem = mockCatalogItems.find(cat => cat.id === selectedItem.catalogItemId);
+    const catalogItem = catalogItems.find(cat => cat.id === selectedItem.catalogItemId);
     if (catalogItem) {      
       selectedItemDetails = {
         catalogItemId: catalogItem.id,
@@ -144,7 +113,7 @@ export default function InventoryPage() {
         <div className="flex-1 border-r border-theme">
           <ItemListDisplay
             inventoryItemData={inventoryItemData}
-            catalogItems={mockCatalogItems}
+            catalogItems={catalogItems}
             selectedTags={selectedTags}
             setSelectedItem={setSelectedItem}
             viewMode={viewMode}

@@ -4,7 +4,7 @@ import type { CatalogItem as CatalogItemType } from "../../types/catalog";
 interface CatalogItemEditProps {
   template: CatalogItemType;
   onClose: () => void;
-  onSave: () => void;
+  onSave: (updatedItem: CatalogItemType) => void;
 }
 
 export default function CatalogItemEdit({ template, onClose, onSave }: CatalogItemEditProps) {
@@ -20,11 +20,10 @@ export default function CatalogItemEdit({ template, onClose, onSave }: CatalogIt
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave();
-    // onSave({
-    //   ...template,
-    //   ...formData,
-    // });
+    onSave({
+      ...template,
+      ...formData,
+    });
   };
 
   const toggleTag = (tag: string) => {
