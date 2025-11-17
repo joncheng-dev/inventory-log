@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { CatalogItem as CatalogItemType } from "../../types/catalog";
 
 interface CatalogItemEditProps {
@@ -17,6 +17,18 @@ export default function CatalogItemEdit({ template, onClose, onSave }: CatalogIt
   });
 
   const availableTags = ['Biology', 'Chemistry', 'Earth Science', 'General', 'Physics'];
+
+  // Escape key to close
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

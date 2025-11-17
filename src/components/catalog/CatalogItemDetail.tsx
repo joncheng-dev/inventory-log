@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import type { CatalogItem as CatalogItemType } from "../../types/catalog";
 
 interface CatalogItemDetailProps {
@@ -7,6 +8,18 @@ interface CatalogItemDetailProps {
 }
 
 export default function CatalogItemDetail({ selectedTemplate, setEditMode, onClose }: CatalogItemDetailProps) {
+
+  // Escape key to close
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose(null);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   const {
     displayName,
