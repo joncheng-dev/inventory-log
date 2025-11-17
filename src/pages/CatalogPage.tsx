@@ -6,13 +6,15 @@ import type { CatalogItem as CatalogItemType } from '../types/catalog';
 import CatalogListDisplay from '../components/CatalogListDisplay';
 import CatalogItemDetail from '../components/catalog/CatalogItemDetail';
 import CatalogItemEdit from '../components/catalog/CatalogItemEdit';
+import CatalogItemNew from '../components/catalog/CatalogItemNew';
 
 export default function CatalogPage() {
-  const { catalogItems, updateCatalogItem } = useCatalog();
+  const { catalogItems, addNewCatalogItem, updateCatalogItem } = useCatalog();
 
   const [viewMode, setViewMode] = useState<'grid-view' | 'list-view'>('grid-view');
   const [selectedTemplate, setSelectedTemplate] = useState<CatalogItemType | null>(null);
   const [editMode, setEditMode] = useState<true | false>(false);
+  const [newMode, setNewMode] = useState<true | false>(false);
   const currentUserEmail = 'joncheng.dev@gmail.com';
 
   // Filter via Tags
@@ -24,9 +26,18 @@ export default function CatalogPage() {
     setEditMode(false);
   }
 
-  const handleSave = (updatedItem: CatalogItemType) => {
+  const handleSaveEdit = (updatedItem: CatalogItemType) => {
     updateCatalogItem(updatedItem);
     closeEditModal();
+  }
+  
+  const closeNewModal = () => {
+    setNewMode(false);
+  } 
+
+  const handleSaveNew = (newItem: CatalogItemType) => {
+    addNewCatalogItem(newItem);
+    closeNewModal();
   }
 
   return (
@@ -38,6 +49,7 @@ export default function CatalogPage() {
           setSelectedTags={setSelectedTags}
           viewMode={viewMode}
           setViewMode={setViewMode}
+          onNewClick={setNewMode}
         />
       </div>
       <div className="flex flex-1 w-full">
@@ -60,10 +72,15 @@ export default function CatalogPage() {
           <CatalogItemEdit
             template={selectedTemplate}
             onClose={() => closeEditModal()}
-            onSave={handleSave}
+            onSave={handleSaveEdit}
           />
         }
-        
+        {newMode &&
+          <CatalogItemNew
+            onClose={() => closeNewModal()}
+            onSave={handleSaveNew}
+          />
+        }
       </div>
     </PageLayout>
   );

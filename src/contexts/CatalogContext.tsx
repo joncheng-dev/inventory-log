@@ -1,11 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import type { CatalogItem as CatalogItemType } from '../types/catalog';
+import type { CatalogItem, CatalogItem as CatalogItemType } from '../types/catalog';
 import {mockCatalogItems} from '../mockData/catalogItems';
 
 interface CatalogContextType {
   catalogItems: CatalogItemType[];
   fetchCatalogItems: () => Promise<void>;
   updateCatalogItem: (updated: CatalogItemType) => Promise<void>;
+  addNewCatalogItem: (newItem: CatalogItemType) => Promise<void>;
 }
 
 const CatalogContext = createContext<CatalogContextType | null>(null);
@@ -17,6 +18,11 @@ export const CatalogProvider = ({ children }: { children: React.ReactNode; }) =>
   const fetchCatalogItems = async () => {
     await new Promise(r => setTimeout(r, 300));
     setCatalogItems(mockCatalogItems);
+  };
+
+  const addNewCatalogItem = async (newItem: CatalogItemType) => {
+    await new Promise(r => setTimeout(r, 300));
+    setCatalogItems(prev => [...prev, newItem]);
   };
 
   const updateCatalogItem = async (updated: CatalogItemType) => {
@@ -33,7 +39,7 @@ export const CatalogProvider = ({ children }: { children: React.ReactNode; }) =>
 
   return (
     <CatalogContext.Provider
-      value={{ catalogItems, fetchCatalogItems, updateCatalogItem }}
+      value={{ catalogItems, fetchCatalogItems, updateCatalogItem, addNewCatalogItem }}
     >
       {children}
     </CatalogContext.Provider>
