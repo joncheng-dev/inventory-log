@@ -49,6 +49,7 @@ export default function CatalogPage() {
           setSelectedTags={setSelectedTags}
           viewMode={viewMode}
           setViewMode={setViewMode}
+          showAddCatalogButton={true}
           onNewClick={setNewMode}
         />
       </div>

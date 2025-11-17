@@ -107,6 +107,7 @@ export default function InventoryPage() {
           setSelectedTags={setSelectedTags}
           viewMode={viewMode}
           setViewMode={setViewMode}
+          showAddCatalogButton={false}
         />
       </div>
       <div className="flex flex-1 w-full">
