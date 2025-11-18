@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import type { CatalogItem, CatalogItem as CatalogItemType } from '../types/catalog';
+import type { CatalogItem as CatalogItemType } from '../types/catalog';
 import {mockCatalogItems} from '../mockData/catalogItems';
 
 interface CatalogContextType {
