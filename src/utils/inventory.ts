@@ -72,8 +72,36 @@ export function gatherCheckoutItemDetails(groupedItems: Record<string, Inventory
   return data;
 }
 
-export function gatherCheckoutItemQuantities(userEmail: string, inventoryItemData: InventoryItemType[], catalogItems: CatalogItemType[]) {
+export function gatherCheckoutItemQuantities(
+  userEmail: string,
+  inventoryItemData: InventoryItemType[],
+  catalogItems: CatalogItemType[])
+  : Record<string, CheckedOutItemDataType> {
   const itemsTiedToUser: InventoryItemType[] = inventoryItemData.filter((item) => item.checkedOutBy === userEmail);
   const groupedByCategory = groupInventoryByCatalogItem(itemsTiedToUser);
-  return gatherCheckoutItemDetails(groupedByCategory, catalogItems);
+  return gatherCheckoutItemDetails(groupedByCategory, catalogItems) || {};
+}
+
+export function buildInventoryView(
+  userEmail: string,
+  inventoryItems: InventoryItemType[],
+  catalogItems: CatalogItemType[]
+): {
+    aggregatedItems: Record<string, InventoryItemGroupedType>;
+    checkedOutQty: Record<string, CheckedOutItemDataType>;
+    filteredCheckedOutItems: Record<string, InventoryItemGroupedType>;
+  } {
+  const rawGroupedItems = groupInventoryByCatalogItem(inventoryItems);
+  const aggregatedItems = gatherInventoryItemData(rawGroupedItems, catalogItems);
+  const checkedOutQty = gatherCheckoutItemQuantities(
+    userEmail,
+    inventoryItems,
+    catalogItems
+  ) || {};
+
+  const filteredCheckedOutItems = Object.fromEntries(
+    Object.entries(aggregatedItems).filter(([id]) => id in checkedOutQty)
+  );
+
+  return { aggregatedItems, checkedOutQty, filteredCheckedOutItems };
 }
