@@ -26,7 +26,7 @@ export default function Filters({ availableFilterTags, selectedTags, setSelected
           onClick={() => onNewClick(true)}
           className="px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-theme-focus-ring transition-colors duration-200 font-medium"
         > 
-          Add Catalog Item
+          Add New Template
         </button>
       )}
       <ViewToggle viewMode={viewMode} setViewMode={setViewMode}/>

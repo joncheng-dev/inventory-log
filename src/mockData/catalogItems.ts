@@ -15,7 +15,7 @@ export const mockCatalogItems: CatalogItemType[] = [
     sku: 'CHEM-BEAK-250',
     description: 'Standard glass beaker set for chemistry labs',
     location: 'glass cabinet by sink',
-    tags: ['Chemistry', 'General'],
+    tags: ['Chemistry', 'General', 'Earth Science'],
   },
   {
     id: 'cat-bunsen-burner',
