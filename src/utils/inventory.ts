@@ -102,6 +102,36 @@ export function buildInventoryView(
   const filteredCheckedOutItems = Object.fromEntries(
     Object.entries(aggregatedItems).filter(([id]) => id in checkedOutQty)
   );
-
   return { aggregatedItems, checkedOutQty, filteredCheckedOutItems };
+}
+
+export function buildSelectedItemDetails(
+  inventoryItems: InventoryItemType[],
+  catalogItems: CatalogItemType[],
+  selectedItem: InventoryItemGroupedType
+): {
+  itemDetails: InventoryItemGroupedType | null;
+  relatedItems: InventoryItemType[];
+} {
+
+    let itemDetails: InventoryItemGroupedType | null = null;
+    let relatedItems: InventoryItemType[] = [];
+
+    relatedItems = inventoryItems.filter((inv) => inv.catalogItemId === selectedItem.catalogItemId);
+    const { quantityTotal, quantityAvailable } = calculateInventoryQuantities(relatedItems);
+    const catalogItem = catalogItems.find(cat => cat.id === selectedItem.catalogItemId);
+    if (catalogItem) {      
+      itemDetails = {
+        catalogItemId: catalogItem.id,
+        displayName: catalogItem.displayName,
+        sku: catalogItem.sku,
+        description: catalogItem.description,
+        location: catalogItem.location,
+        tags: catalogItem.tags,
+        quantityTotal: quantityTotal,
+        quantityAvailable: quantityAvailable,
+      }
+  }
+  
+  return {itemDetails, relatedItems};
 }
