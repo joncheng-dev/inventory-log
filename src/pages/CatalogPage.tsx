@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useCatalog } from '../contexts/CatalogContext';
+import { useInventory } from '../contexts/InventoryContext';
 import PageLayout from './PageLayout';
 import Filters from '../components/filter/Filters';
 import type { CatalogItem as CatalogItemType } from '../types/catalog';
@@ -7,14 +8,21 @@ import CatalogListDisplay from '../components/CatalogListDisplay';
 import CatalogItemDetail from '../components/catalog/CatalogItemDetail';
 import CatalogItemEdit from '../components/catalog/CatalogItemEdit';
 import CatalogItemNew from '../components/catalog/CatalogItemNew';
+import DeleteConfirmationModal from '../components/catalog/DeleteConfirmationModal';
 
 export default function CatalogPage() {
   const { catalogItems, addNewCatalogItem, updateCatalogItem } = useCatalog();
+  const { inventoryItems, fetchInventoryCountsforCatalog } = useInventory(); 
 
   const [viewMode, setViewMode] = useState<'grid-view' | 'list-view'>('grid-view');
   const [selectedTemplate, setSelectedTemplate] = useState<CatalogItemType | null>(null);
   const [editMode, setEditMode] = useState<true | false>(false);
   const [newMode, setNewMode] = useState<true | false>(false);
+  const [deleteMode, setDeleteMode] = useState<true | false>(false);
+  const [deleteInfo, setDeleteInfo] = useState<{
+    totalItemCount: number,
+    checkedOutCount: number
+  } | null>(null);
   const currentUserEmail = 'joncheng.dev@gmail.com';
 
   // Filter via Tags
@@ -38,6 +46,24 @@ export default function CatalogPage() {
   const handleSaveNew = (newItem: CatalogItemType) => {
     addNewCatalogItem(newItem);
     closeNewModal();
+  }
+
+  const handleDeleteTemplate = async (selectedTemplate: CatalogItemType) => {
+    let data = await fetchInventoryCountsforCatalog(selectedTemplate.id, inventoryItems);
+    const { totalItemCount, checkedOutCount } = data;
+    setDeleteInfo({
+      totalItemCount,
+      checkedOutCount
+    });
+    setDeleteMode(true);
+  }
+
+  const handleDeleteConfirm = () => {
+    console.log('clicked DELETE confirm');
+  }
+
+  const handleCancel = () => {
+    console.log('clicked CANCEL');
   }
 
   return (
@@ -67,8 +93,18 @@ export default function CatalogPage() {
             selectedTemplate={selectedTemplate}
             setEditMode={setEditMode}
             onClose={() => setSelectedTemplate(null)}
+            onDelete={handleDeleteTemplate}
           />
         }
+        {selectedTemplate && deleteMode && deleteInfo && (
+          <DeleteConfirmationModal
+            template={selectedTemplate}
+            inventoryItemCount={deleteInfo.totalItemCount}
+            checkedOutCount={deleteInfo.checkedOutCount}
+            onConfirm={handleDeleteConfirm}
+            onCancel={handleCancel}
+          />
+        )}
         {selectedTemplate && editMode && 
           <CatalogItemEdit
             template={selectedTemplate}

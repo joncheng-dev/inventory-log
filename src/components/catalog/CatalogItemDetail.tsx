@@ -5,10 +5,27 @@ interface CatalogItemDetailProps {
   selectedTemplate: CatalogItemType;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   onClose: React.Dispatch<React.SetStateAction<CatalogItemType | null>>;
+  onDelete: (selectedTemplate: CatalogItemType) => void;
 }
 
-export default function CatalogItemDetail({ selectedTemplate, setEditMode, onClose }: CatalogItemDetailProps) {
+export default function CatalogItemDetail({ selectedTemplate, setEditMode, onClose, onDelete }: CatalogItemDetailProps) {
 
+  const {
+    displayName,
+    sku,
+    description,
+    location,
+    tags
+  } = selectedTemplate;
+  
+  const categoryColors: Record<string, string> = {
+    Biology: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200',
+    Chemistry: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200',
+    'Earth Science': 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200',
+    General: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-200',
+    Physics: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-200',
+  };
+  
   // Escape key to close
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -20,25 +37,8 @@ export default function CatalogItemDetail({ selectedTemplate, setEditMode, onClo
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
-
-  const {
-    displayName,
-    sku,
-    description,
-    location,
-    tags
-  } = selectedTemplate;
-
-  const categoryColors: Record<string, string> = {
-    Biology: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200',
-    Chemistry: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200',
-    'Earth Science': 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200',
-    General: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-200',
-    Physics: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-200',
-  };
-
   
-return (
+  return (
     <>
       {/* Backdrop */}
       <div 
@@ -147,6 +147,12 @@ return (
 
           {/* Footer Actions */}
           <div className="px-6 py-4 border-t-2 border-dashed border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30 flex gap-3 justify-end">
+            <button
+              onClick={() => onDelete(selectedTemplate)}
+              className="px-4 py-2 border-2 border-red-400 dark:border-red-600 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-sm font-medium text-red-700 dark:text-red-300"
+            >
+              Delete Template
+            </button>
             <button
               onClick={() => onClose(null)}
               className="px-4 py-2 border border-theme rounded hover:bg-theme-hover transition-colors text-sm font-medium"
