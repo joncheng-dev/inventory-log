@@ -1,8 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { InventoryItem as InventoryItemType, CheckedOutItemDataType, InventoryItemGroupedType } from "../types/inventory";
+import type { CatalogItemInventoryCounts } from '../types/catalog';
 import { mockInventoryItems } from "../mockData/inventoryItems";
 import { useCatalog } from "./CatalogContext";
-import { buildInventoryView, buildSelectedItemDetails } from '../utils/inventory';
+import { buildInventoryView, buildSelectedItemDetails, getInventoryCountsforCatalog } from '../utils/inventory';
 
 interface InventoryContextType {
   inventoryLoading: boolean;
@@ -14,6 +15,11 @@ interface InventoryContextType {
   fetchSelectedItemDetails: (selectedItem: InventoryItemGroupedType) => Promise<void>;
   selectedItemDetails: InventoryItemGroupedType | null;
   relatedItems: InventoryItemType[];
+  fetchInventoryCountsforCatalog: (
+    catalogItemId: string,
+    inventoryItems: InventoryItemType[],
+  ) => Promise<CatalogItemInventoryCounts>;
+  // fetchInventoryCountsforCatalog: (catalogItemId: string) => Promise<CatalogItemInventoryCounts>;
 }
 
 const InventoryContext = createContext<InventoryContextType | null>(null);
@@ -71,6 +77,16 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
     setSelectedItemLoading(false);
   }
 
+// Promise<CatalogItemInventoryCounts>
+
+  const fetchInventoryCountsforCatalog = async (
+    catalogItemId: string,
+    inventoryItems: InventoryItemType[],
+  ): Promise<CatalogItemInventoryCounts> => {
+    let data = getInventoryCountsforCatalog(catalogItemId, inventoryItems);
+    return data;
+  }
+
   useEffect(() => {
     fetchInventoryItems();
   }, []);
@@ -91,6 +107,7 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
         fetchSelectedItemDetails,
         selectedItemDetails,
         relatedItems,
+        fetchInventoryCountsforCatalog
       }}
     >
       {children}

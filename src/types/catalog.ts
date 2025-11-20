@@ -5,5 +5,11 @@ export interface CatalogItem {
   description: string;
   location: string;
   tags: string[];
+  archived?: boolean;
+  archivedAt?: string;
 }
 
+export interface CatalogItemInventoryCounts {
+  totalItemCount: number;
+  checkedOutCount: number;
+}
