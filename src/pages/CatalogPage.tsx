@@ -8,7 +8,7 @@ import CatalogListDisplay from '../components/CatalogListDisplay';
 import CatalogItemDetail from '../components/catalog/CatalogItemDetail';
 import CatalogItemEdit from '../components/catalog/CatalogItemEdit';
 import CatalogItemNew from '../components/catalog/CatalogItemNew';
-import DeleteConfirmationModal from '../components/catalog/DeleteConfirmationModal';
+import ArchiveConfirmationModal from '../components/catalog/ArchiveConfirmationModal';
 
 export default function CatalogPage() {
   const { catalogItems, addNewCatalogItem, updateCatalogItem } = useCatalog();
@@ -30,7 +30,7 @@ export default function CatalogPage() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const closeEditModal = () => {
-    setSelectedTemplate(null);
+    // setSelectedTemplate(null);
     setEditMode(false);
   }
 
@@ -62,8 +62,8 @@ export default function CatalogPage() {
     console.log('clicked DELETE confirm');
   }
 
-  const handleCancel = () => {
-    console.log('clicked CANCEL');
+  const handleDeleteCancel = () => {
+    setDeleteMode(false);
   }
 
   return (
@@ -96,15 +96,15 @@ export default function CatalogPage() {
             onDelete={handleDeleteTemplate}
           />
         }
-        {selectedTemplate && deleteMode && deleteInfo && (
-          <DeleteConfirmationModal
+        {selectedTemplate && deleteMode && deleteInfo && 
+          <ArchiveConfirmationModal
             template={selectedTemplate}
             inventoryItemCount={deleteInfo.totalItemCount}
             checkedOutCount={deleteInfo.checkedOutCount}
             onConfirm={handleDeleteConfirm}
-            onCancel={handleCancel}
+            onCancel={handleDeleteCancel}
           />
-        )}
+        }
         {selectedTemplate && editMode && 
           <CatalogItemEdit
             template={selectedTemplate}

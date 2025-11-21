@@ -149,9 +149,9 @@ export default function CatalogItemDetail({ selectedTemplate, setEditMode, onClo
           <div className="px-6 py-4 border-t-2 border-dashed border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30 flex gap-3 justify-end">
             <button
               onClick={() => onDelete(selectedTemplate)}
-              className="px-4 py-2 border-2 border-red-400 dark:border-red-600 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-sm font-medium text-red-700 dark:text-red-300"
+              className="px-4 py-2 border-2 border-amber-300 dark:border-amber-700 rounded hover:bg-amber-50 dark:hover:bg-amber-950/20 transition-colors text-sm font-medium text-amber-700 dark:text-amber-300"
             >
-              Delete Template
+              Archive Template
             </button>
             <button
               onClick={() => onClose(null)}
