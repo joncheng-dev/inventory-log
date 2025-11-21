@@ -5,7 +5,7 @@ interface ArchiveConfirmationModalProps {
   template: CatalogItemType;
   inventoryItemCount: number;
   checkedOutCount: number;
-  onConfirm: () => void;
+  onArchiveConfirm: (selectedItem: CatalogItemType) => void;
   onCancel: () => void;
 }
 
@@ -13,7 +13,7 @@ export default function ArchiveConfirmationModal({
   template, 
   inventoryItemCount, 
   checkedOutCount,
-  onConfirm, 
+  onArchiveConfirm, 
   onCancel 
 }: ArchiveConfirmationModalProps) {
   // Escape key to close
@@ -102,7 +102,7 @@ export default function ArchiveConfirmationModal({
             </button>
             <button
               type="button"
-              onClick={onConfirm}
+              onClick={() => onArchiveConfirm(template)}
               className="px-4 py-2 bg-amber-600 hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700 text-white rounded transition-colors text-sm font-medium"
             >
               Archive Template

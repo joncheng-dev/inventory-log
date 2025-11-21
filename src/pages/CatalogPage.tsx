@@ -11,15 +11,15 @@ import CatalogItemNew from '../components/catalog/CatalogItemNew';
 import ArchiveConfirmationModal from '../components/catalog/ArchiveConfirmationModal';
 
 export default function CatalogPage() {
-  const { catalogItems, addNewCatalogItem, updateCatalogItem } = useCatalog();
+  const { catalogItems, addNewCatalogItem, updateCatalogItem, archiveCatalogItem } = useCatalog();
   const { inventoryItems, fetchInventoryCountsforCatalog } = useInventory(); 
 
   const [viewMode, setViewMode] = useState<'grid-view' | 'list-view'>('grid-view');
   const [selectedTemplate, setSelectedTemplate] = useState<CatalogItemType | null>(null);
   const [editMode, setEditMode] = useState<true | false>(false);
   const [newMode, setNewMode] = useState<true | false>(false);
-  const [deleteMode, setDeleteMode] = useState<true | false>(false);
-  const [deleteInfo, setDeleteInfo] = useState<{
+  const [archiveMode, setArchiveMode] = useState<true | false>(false);
+  const [archiveInfo, setArchiveInfo] = useState<{
     totalItemCount: number,
     checkedOutCount: number
   } | null>(null);
@@ -30,7 +30,6 @@ export default function CatalogPage() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const closeEditModal = () => {
-    // setSelectedTemplate(null);
     setEditMode(false);
   }
 
@@ -48,22 +47,23 @@ export default function CatalogPage() {
     closeNewModal();
   }
 
-  const handleDeleteTemplate = async (selectedTemplate: CatalogItemType) => {
+  const handleArchiveClick = async (selectedTemplate: CatalogItemType) => {
     let data = await fetchInventoryCountsforCatalog(selectedTemplate.id, inventoryItems);
     const { totalItemCount, checkedOutCount } = data;
-    setDeleteInfo({
+    setArchiveInfo({
       totalItemCount,
       checkedOutCount
     });
-    setDeleteMode(true);
+    setArchiveMode(true);
   }
 
-  const handleDeleteConfirm = () => {
-    console.log('clicked DELETE confirm');
+  const handleArchiveConfirm = (selectedItem: CatalogItemType) => {
+    console.log('clicked Archive confirm');
+    archiveCatalogItem(selectedItem);
   }
 
-  const handleDeleteCancel = () => {
-    setDeleteMode(false);
+  const handleArchiveCancel = () => {
+    setArchiveMode(false);
   }
 
   return (
@@ -93,16 +93,16 @@ export default function CatalogPage() {
             selectedTemplate={selectedTemplate}
             setEditMode={setEditMode}
             onClose={() => setSelectedTemplate(null)}
-            onDelete={handleDeleteTemplate}
+            onArchiveClick={handleArchiveClick}
           />
         }
-        {selectedTemplate && deleteMode && deleteInfo && 
+        {selectedTemplate && archiveMode && archiveInfo && 
           <ArchiveConfirmationModal
             template={selectedTemplate}
-            inventoryItemCount={deleteInfo.totalItemCount}
-            checkedOutCount={deleteInfo.checkedOutCount}
-            onConfirm={handleDeleteConfirm}
-            onCancel={handleDeleteCancel}
+            inventoryItemCount={archiveInfo.totalItemCount}
+            checkedOutCount={archiveInfo.checkedOutCount}
+            onArchiveConfirm={handleArchiveConfirm}
+            onCancel={handleArchiveCancel}
           />
         }
         {selectedTemplate && editMode && 

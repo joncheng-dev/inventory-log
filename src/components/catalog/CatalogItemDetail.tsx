@@ -5,10 +5,10 @@ interface CatalogItemDetailProps {
   selectedTemplate: CatalogItemType;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   onClose: React.Dispatch<React.SetStateAction<CatalogItemType | null>>;
-  onDelete: (selectedTemplate: CatalogItemType) => void;
+  onArchiveClick: (selectedTemplate: CatalogItemType) => void;
 }
 
-export default function CatalogItemDetail({ selectedTemplate, setEditMode, onClose, onDelete }: CatalogItemDetailProps) {
+export default function CatalogItemDetail({ selectedTemplate, setEditMode, onClose, onArchiveClick }: CatalogItemDetailProps) {
 
   const {
     displayName,
@@ -148,7 +148,7 @@ export default function CatalogItemDetail({ selectedTemplate, setEditMode, onClo
           {/* Footer Actions */}
           <div className="px-6 py-4 border-t-2 border-dashed border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30 flex gap-3 justify-end">
             <button
-              onClick={() => onDelete(selectedTemplate)}
+              onClick={() => onArchiveClick(selectedTemplate)}
               className="px-4 py-2 border-2 border-amber-300 dark:border-amber-700 rounded hover:bg-amber-50 dark:hover:bg-amber-950/20 transition-colors text-sm font-medium text-amber-700 dark:text-amber-300"
             >
               Archive Template
