@@ -10,7 +10,7 @@ import CatalogItemEdit from '../components/catalog/CatalogItemEdit';
 import CatalogItemNew from '../components/catalog/CatalogItemNew';
 import ArchiveConfirmationModal from '../components/catalog/ArchiveConfirmationModal';
 
-export default function CatalogPage() {
+export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   const { catalogItems, addNewCatalogItem, updateCatalogItem, archiveCatalogItem } = useCatalog();
   const { inventoryItems, fetchInventoryCountsforCatalog } = useInventory(); 
 
@@ -24,6 +24,11 @@ export default function CatalogPage() {
     checkedOutCount: number
   } | null>(null);
   const currentUserEmail = 'joncheng.dev@gmail.com';
+
+  const itemsToDisplay = view === 'active'
+    ? catalogItems.filter(item => !item.archived)
+    : catalogItems.filter(item => item.archived);
+
 
   // Filter via Tags
   const availableFilterTags = ["Biology", "Chemistry", "Earth Science", "General", "Physics"];
@@ -58,8 +63,8 @@ export default function CatalogPage() {
   }
 
   const handleArchiveConfirm = (selectedItem: CatalogItemType) => {
-    console.log('clicked Archive confirm');
     archiveCatalogItem(selectedItem);
+    setSelectedTemplate(null);
   }
 
   const handleArchiveCancel = () => {
@@ -82,7 +87,7 @@ export default function CatalogPage() {
       <div className="flex flex-1 w-full">
         <div className="flex-1 border-r border-theme">
           <CatalogListDisplay
-            catalogItems={catalogItems}
+            catalogItems={itemsToDisplay}
             selectedTags={selectedTags}
             viewMode={viewMode}
             setSelectedTemplate={setSelectedTemplate}

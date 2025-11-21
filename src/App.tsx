@@ -18,7 +18,8 @@ function App() {
             <Route path="/" element={<InventoryPage />} />
             <Route path="/signin" element={<SignInPage />} />
             <Route path="/inventory" element={<InventoryPage />} />
-            <Route path="/catalog" element={<CatalogPage />} />
+            <Route path="/catalog" element={<CatalogPage view="active"/>} />
+            <Route path="/catalog/archived" element={<CatalogPage view="archived"/>} />
             <Route path="/theme-viewer" element={<ThemeViewerPage />} />
           </Routes>
         </InventoryProvider>
