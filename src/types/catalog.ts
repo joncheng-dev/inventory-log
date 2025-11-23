@@ -11,5 +11,6 @@ export interface CatalogItem {
 
 export interface CatalogItemInventoryCounts {
   totalItemCount: number;
+  availableCount: number;
   checkedOutCount: number;
 }

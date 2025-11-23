@@ -143,8 +143,10 @@ export function getInventoryCountsforCatalog(
   let itemsMatchingCatalogEntry = inventoryItems.filter((item) => item.catalogItemId === catalogItemId);
   let totalItemCount = itemsMatchingCatalogEntry.length;
   let checkedOutCount = itemsMatchingCatalogEntry.filter((item) => item.isCheckedOut).length;
+  let availableCount = itemsMatchingCatalogEntry.filter((item) => !item.isCheckedOut).length;
   return {
     totalItemCount: totalItemCount,
+    availableCount: availableCount,
     checkedOutCount: checkedOutCount
   }
 }

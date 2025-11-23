@@ -3,10 +3,10 @@ import type { CatalogItem as CatalogItemType } from '../../types/catalog';
 interface CatalogItemProps {
   catalogItem: CatalogItemType;
   viewMode: 'grid-view' | 'list-view';
-  setSelectedTemplate: React.Dispatch<React.SetStateAction<CatalogItemType | null>>;
+  onSelectTemplate: (selectedTemplate: CatalogItemType) => Promise<void>;
 }
 
-export default function CatalogItem({ catalogItem, viewMode, setSelectedTemplate }: CatalogItemProps) {
+export default function CatalogItem({ catalogItem, viewMode, onSelectTemplate }: CatalogItemProps) {
   if (!catalogItem) return null;
 
   const {
@@ -82,7 +82,7 @@ if (viewMode === 'grid-view') {
         <div className={`px-4 py-3 ${styles.footer}`}>
           <button
             className={`w-full px-3 py-2 border-2 rounded transition-colors text-sm font-medium ${styles.button}`}
-            onClick={() => setSelectedTemplate(catalogItem)}
+            onClick={() => onSelectTemplate(catalogItem)}
           >
             {archived ? 'View Archived' : 'View Template'}
           </button>
@@ -122,7 +122,7 @@ if (viewMode === 'grid-view') {
         <div className="flex items-center gap-4 text-sm flex-shrink-0">
           <button
             className={`px-3 py-1.5 border-2 rounded transition-colors text-sm font-medium ${styles.button}`}
-            onClick={() => setSelectedTemplate(catalogItem)}
+            onClick={() => onSelectTemplate(catalogItem)}
           >
             {archived ? 'View Archived' : 'View Template'}
           </button>

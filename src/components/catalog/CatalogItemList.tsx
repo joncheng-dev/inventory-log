@@ -4,13 +4,13 @@ import type { CatalogItem as CatalogItemType } from '../../types/catalog';
 interface CatalogItemListProps {
   catalogItemsAfterFilter: CatalogItemType[];
   viewMode: 'grid-view' | 'list-view';
-  setSelectedTemplate: React.Dispatch<React.SetStateAction<CatalogItemType | null>>;
+  onSelectTemplate: (selectedTemplate: CatalogItemType) => Promise<void>;
 }
 
 function renderCatalogItems(
   catalogItems: CatalogItemType[],
   viewMode: 'grid-view' | 'list-view',
-  setSelectedTemplate: React.Dispatch<React.SetStateAction<CatalogItemType | null>>,
+  onSelectTemplate: (selectedTemplate: CatalogItemType) => Promise<void>,
 ) {
   return catalogItems.map((item) => {
     return (
@@ -18,13 +18,13 @@ function renderCatalogItems(
         key={item.id}
         catalogItem={item}
         viewMode={viewMode}
-        setSelectedTemplate={setSelectedTemplate}
+        onSelectTemplate={onSelectTemplate}
       />
     );
   })
 }
 
-export default function CatalogItemList({ catalogItemsAfterFilter, viewMode, setSelectedTemplate }: CatalogItemListProps) {
+export default function CatalogItemList({ catalogItemsAfterFilter, viewMode, onSelectTemplate }: CatalogItemListProps) {
 
   if (catalogItemsAfterFilter.length === 0) {
     return (
@@ -40,7 +40,7 @@ export default function CatalogItemList({ catalogItemsAfterFilter, viewMode, set
   if (viewMode === 'grid-view') {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-6">
-        {renderCatalogItems(catalogItemsAfterFilter, viewMode, setSelectedTemplate)}
+        {renderCatalogItems(catalogItemsAfterFilter, viewMode, onSelectTemplate)}
       </div>
     );
   }
@@ -48,7 +48,7 @@ export default function CatalogItemList({ catalogItemsAfterFilter, viewMode, set
   // List view
   return (
     <div className="flex flex-col space-y-2 p-6">
-        {renderCatalogItems(catalogItemsAfterFilter, viewMode, setSelectedTemplate)}
+        {renderCatalogItems(catalogItemsAfterFilter, viewMode, onSelectTemplate)}
     </div>
   );
   
