@@ -6,7 +6,7 @@ export interface CatalogItem {
   location: string;
   tags: string[];
   archived?: boolean;
-  archivedAt?: string;
+  archivedAt?: string | null;
 }
 
 export interface CatalogItemInventoryCounts {

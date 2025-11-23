@@ -11,7 +11,7 @@ import CatalogItemNew from '../components/catalog/CatalogItemNew';
 import ArchiveConfirmationModal from '../components/catalog/ArchiveConfirmationModal';
 
 export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
-  const { catalogItems, addNewCatalogItem, updateCatalogItem, archiveCatalogItem } = useCatalog();
+  const { catalogItems, addNewCatalogItem, updateCatalogItem, archiveCatalogItem, unarchiveCatalogItem } = useCatalog();
   const { inventoryItems, fetchInventoryCountsforCatalog } = useInventory(); 
 
   const [viewMode, setViewMode] = useState<'grid-view' | 'list-view'>('grid-view');
@@ -67,6 +67,11 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
     setSelectedTemplate(null);
   }
 
+  const handleRestoreClick = (selectedTemplate: CatalogItemType) => {
+    unarchiveCatalogItem(selectedTemplate);
+    setSelectedTemplate(null);
+  }
+
   const handleArchiveCancel = () => {
     setArchiveMode(false);
   }
@@ -99,6 +104,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
             setEditMode={setEditMode}
             onClose={() => setSelectedTemplate(null)}
             onArchiveClick={handleArchiveClick}
+            onRestoreClick={handleRestoreClick}
           />
         }
         {selectedTemplate && archiveMode && archiveInfo && 

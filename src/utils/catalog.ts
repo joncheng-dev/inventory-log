@@ -9,3 +9,13 @@ export function archiveItem(
     archivedAt: new Date().toISOString(),
   };
 }
+
+export function unarchiveItem(
+  selectedItem: CatalogItemType
+): CatalogItemType {
+  return {
+    ...selectedItem,
+    archived: false,
+    archivedAt: null
+  }
+}

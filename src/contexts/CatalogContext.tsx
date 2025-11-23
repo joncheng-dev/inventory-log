@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { CatalogItem as CatalogItemType } from '../types/catalog';
-import { archiveItem } from '../utils/catalog';
+import { archiveItem, unarchiveItem } from '../utils/catalog';
 import { mockCatalogItems } from '../mockData/catalogItems';
 
 interface CatalogContextType {
@@ -9,6 +9,7 @@ interface CatalogContextType {
   updateCatalogItem: (updated: CatalogItemType) => Promise<void>;
   addNewCatalogItem: (newItem: CatalogItemType) => Promise<void>;
   archiveCatalogItem: (selectedItem: CatalogItemType) => Promise<void>;
+  unarchiveCatalogItem: (selectedItem: CatalogItemType) => Promise<void>;
 }
 
 const CatalogContext = createContext<CatalogContextType | null>(null);
@@ -38,6 +39,16 @@ export const CatalogProvider = ({ children }: { children: React.ReactNode; }) =>
   const archiveCatalogItem = async (selectedItem: CatalogItemType) => {
     await new Promise(r => setTimeout(r, 300));
     const updatedItem = archiveItem(selectedItem);
+    console.log('archivedItem: ', updatedItem);
+    setCatalogItems(prev =>
+      prev.map(item => item.id === updatedItem.id ? updatedItem : item)
+    );
+  }
+  
+  const unarchiveCatalogItem = async (selectedItem: CatalogItemType) => {
+    await new Promise(r => setTimeout(r, 300));
+    const updatedItem = unarchiveItem(selectedItem);
+    console.log('unarchivedItem: ', updatedItem);
     setCatalogItems(prev =>
       prev.map(item => item.id === updatedItem.id ? updatedItem : item)
     );
@@ -54,7 +65,8 @@ export const CatalogProvider = ({ children }: { children: React.ReactNode; }) =>
         fetchCatalogItems,
         updateCatalogItem,
         addNewCatalogItem,
-        archiveCatalogItem
+        archiveCatalogItem,
+        unarchiveCatalogItem
       }}
     >
       {children}
