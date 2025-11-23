@@ -6,16 +6,24 @@ interface CatalogItemDetailProps {
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   onClose: React.Dispatch<React.SetStateAction<CatalogItemType | null>>;
   onArchiveClick: (selectedTemplate: CatalogItemType) => void;
+  onRestoreClick: (selectedTemplate: CatalogItemType) => void;
 }
 
-export default function CatalogItemDetail({ selectedTemplate, setEditMode, onClose, onArchiveClick }: CatalogItemDetailProps) {
+export default function CatalogItemDetail({ 
+  selectedTemplate, 
+  setEditMode, 
+  onClose, 
+  onArchiveClick,
+  onRestoreClick 
+}: CatalogItemDetailProps) {
 
   const {
     displayName,
     sku,
     description,
     location,
-    tags
+    tags,
+    archived
   } = selectedTemplate;
   
   const categoryColors: Record<string, string> = {
@@ -26,6 +34,26 @@ export default function CatalogItemDetail({ selectedTemplate, setEditMode, onClo
     Physics: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-200',
   };
   
+  const archivedStyles = {
+    border: 'border-gray-300 dark:border-gray-600',
+    badge: 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400',
+    headerBorder: 'border-gray-200 dark:border-gray-700',
+    headerBg: 'bg-gray-50 dark:bg-gray-900/30',
+    infoBox: 'border-gray-300 dark:border-gray-600 bg-gray-50/50 dark:bg-gray-900/20',
+    infoText: 'text-gray-700 dark:text-gray-300'
+  };
+
+  const activeStyles = {
+    border: 'border-blue-300 dark:border-blue-700',
+    badge: 'bg-blue-100 dark:bg-blue-900/50 border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-300',
+    headerBorder: 'border-blue-200 dark:border-blue-800',
+    headerBg: 'bg-blue-50 dark:bg-blue-950/30',
+    infoBox: 'border-blue-300 dark:border-blue-700 bg-blue-50/50 dark:bg-blue-950/20',
+    infoText: 'text-blue-700 dark:text-blue-300'
+  };
+
+  const styles = archived ? archivedStyles : activeStyles;
+
   // Escape key to close
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -41,38 +69,37 @@ export default function CatalogItemDetail({ selectedTemplate, setEditMode, onClo
   return (
     <>
       {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
-      />
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" />
+      
       {/* Modal */}
       <div
         className="fixed inset-0 z-50 flex items-center justify-center p-4"
         onClick={() => onClose(null)}
       >
         <div 
-          className="bg-theme-surface border-2 border-dashed border-blue-300 dark:border-blue-700 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+          className={`bg-theme-surface border-2 border-dashed ${styles.border} rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col`}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header with Template Badge */}
-          <div className="px-6 py-4 border-b-2 border-dashed border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30">
+          <div className={`px-6 py-4 border-b-2 border-dashed ${styles.headerBorder} ${styles.headerBg}`}>
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="px-2.5 py-1 bg-blue-100 dark:bg-blue-900/50 border border-blue-300 dark:border-blue-700 rounded text-sm font-medium text-blue-700 dark:text-blue-300">
-                    Template
+                  <span className={`px-2.5 py-1 border rounded text-sm font-medium ${styles.badge}`}>
+                    {archived ? 'Archived Template' : 'Template'}
                   </span>
                 </div>
-                <h2 className="text-2xl font-bold text-theme-primary mb-2">
+                <h2 className={`text-2xl font-bold mb-2 ${archived ? 'text-theme-secondary' : 'text-theme-primary'}`}>
                   {displayName}
                 </h2>
                 <p className="text-sm text-theme-secondary mb-2">
-                  Catalog item definition
+                  {archived ? 'Archived catalog item' : 'Catalog item definition'}
                 </p>
                 <div className="flex gap-1.5 flex-wrap">
                   {tags.map((cat) => (
                     <span
                       key={cat}
-                      className={`px-3 py-1.5 rounded-full text-sm font-medium ${categoryColors[cat] || categoryColors.General}`}
+                      className={`px-3 py-1.5 rounded-full text-sm font-medium ${archived ? 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400' : categoryColors[cat] || categoryColors.General}`}
                     >
                       {cat}
                     </span>
@@ -136,42 +163,71 @@ export default function CatalogItemDetail({ selectedTemplate, setEditMode, onClo
               </div>
 
               {/* Info Box */}
-              <div className="border-2 border-dashed border-blue-300 dark:border-blue-700 rounded-lg p-4 bg-blue-50/50 dark:bg-blue-950/20">
-                <p className="text-sm text-blue-700 dark:text-blue-300">
-                  <span className="font-semibold">Note:</span> This is a catalog template. 
-                  To create actual inventory items based on this template, use the "Add to Inventory" button below.
+              <div className={`border-2 border-dashed rounded-lg p-4 ${styles.infoBox}`}>
+                <p className={`text-sm ${styles.infoText}`}>
+                  {archived ? (
+                    <>
+                      <span className="font-semibold">This template is archived.</span>{' '}
+                      It's hidden from the catalog and no new inventory items can be created from it. 
+                      Restore it to make it available again.
+                    </>
+                  ) : (
+                    <>
+                      <span className="font-semibold">Note:</span> This is a catalog template. 
+                      To create actual inventory items based on this template, use the "Add to Inventory" button below.
+                    </>
+                  )}
                 </p>
               </div>
             </div>
           </div>
 
           {/* Footer Actions */}
-          <div className="px-6 py-4 border-t-2 border-dashed border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30 flex gap-3 justify-end">
-            <button
-              onClick={() => onArchiveClick(selectedTemplate)}
-              className="px-4 py-2 border-2 border-amber-300 dark:border-amber-700 rounded hover:bg-amber-50 dark:hover:bg-amber-950/20 transition-colors text-sm font-medium text-amber-700 dark:text-amber-300"
-            >
-              Archive Template
-            </button>
-            <button
-              onClick={() => onClose(null)}
-              className="px-4 py-2 border border-theme rounded hover:bg-theme-hover transition-colors text-sm font-medium"
-            >
-              Close
-            </button>
-            <div className="flex gap-3">
-              <button
-                onClick={() => {setEditMode(true)}}
-                className="px-4 py-2 border-2 border-blue-400 dark:border-blue-600 rounded hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors text-sm font-medium text-blue-700 dark:text-blue-300"
-              >
-                Edit Template
-              </button>
-              <button
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded transition-colors text-sm font-medium"
-              >
-                Add to Inventory
-              </button>
-            </div>
+          <div className={`px-6 py-4 border-t-2 border-dashed ${styles.headerBorder} ${styles.headerBg} flex gap-3 justify-end`}>
+            {archived ? (
+              <>
+                <button
+                  onClick={() => onClose(null)}
+                  className="px-4 py-2 border border-theme rounded hover:bg-theme-hover transition-colors text-sm font-medium"
+                >
+                  Close
+                </button>
+                <button
+                  onClick={() => onRestoreClick(selectedTemplate)}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded transition-colors text-sm font-medium"
+                >
+                  Restore to Catalog
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => onArchiveClick(selectedTemplate)}
+                  className="px-4 py-2 border-2 border-amber-300 dark:border-amber-700 rounded hover:bg-amber-50 dark:hover:bg-amber-950/20 transition-colors text-sm font-medium text-amber-700 dark:text-amber-300"
+                >
+                  Archive Template
+                </button>
+                <button
+                  onClick={() => onClose(null)}
+                  className="px-4 py-2 border border-theme rounded hover:bg-theme-hover transition-colors text-sm font-medium"
+                >
+                  Close
+                </button>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setEditMode(true)}
+                    className="px-4 py-2 border-2 border-blue-400 dark:border-blue-600 rounded hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors text-sm font-medium text-blue-700 dark:text-blue-300"
+                  >
+                    Edit Template
+                  </button>
+                  <button
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded transition-colors text-sm font-medium"
+                  >
+                    Add to Inventory
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
