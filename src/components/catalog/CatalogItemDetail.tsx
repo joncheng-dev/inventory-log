@@ -7,6 +7,7 @@ interface CatalogItemDetailProps {
   onClose: React.Dispatch<React.SetStateAction<CatalogItemType | null>>;
   onArchiveClick: (selectedTemplate: CatalogItemType) => void;
   onRestoreClick: (selectedTemplate: CatalogItemType) => void;
+  onAddItemClick: (selectedTemplate: CatalogItemType) => void;
 }
 
 export default function CatalogItemDetail({ 
@@ -14,7 +15,8 @@ export default function CatalogItemDetail({
   setEditMode, 
   onClose, 
   onArchiveClick,
-  onRestoreClick 
+  onRestoreClick,
+  onAddItemClick
 }: CatalogItemDetailProps) {
 
   const {
@@ -220,7 +222,8 @@ export default function CatalogItemDetail({
                   >
                     Edit Template
                   </button>
-                  <button
+                    <button
+                      onClick={() => onAddItemClick(selectedTemplate)}
                     className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded transition-colors text-sm font-medium"
                   >
                     Add to Inventory

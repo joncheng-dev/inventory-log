@@ -9,12 +9,12 @@ import CatalogListDisplay from '../components/CatalogListDisplay';
 import CatalogItemDetail from '../components/catalog/CatalogItemDetail';
 import CatalogItemEdit from '../components/catalog/CatalogItemEdit';
 import CatalogItemNew from '../components/catalog/CatalogItemNew';
-import AddToInventoryModal from '../components/catalog/AddtoInventoryModal';
+import AddToInventoryModal from '../components/catalog/AddToInventoryModal';
 import ArchiveConfirmationModal from '../components/catalog/ArchiveConfirmationModal';
 
 export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   const { catalogItems, addNewCatalogItem, updateCatalogItem, archiveCatalogItem, unarchiveCatalogItem } = useCatalog();
-  const { inventoryItems, fetchInventoryCountsforCatalog } = useInventory(); 
+  const { inventoryItems, fetchInventoryCountsforCatalog, addItemsToInventory } = useInventory(); 
 
   const [viewMode, setViewMode] = useState<'grid-view' | 'list-view'>('grid-view');
   const [selectedTemplate, setSelectedTemplate] = useState<CatalogItemType | null>(null);
@@ -94,11 +94,13 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
     setAddItemsMode(true);
   }
 
-  const handleAddItemConfirm = (items: Omit<InventoryItemType, 'id'>[]) => {
-    console.log('CatalogPage handleAddItemConfirm, button clicked, items: ', items);
-    // double check catalogItemId, archived should be not true
-    // take in quantity
-    // utility function adds items
+  const handleAddItemConfirm = (quantity: number) => {
+    if (!selectedTemplate) {
+      console.error("Attempted to add item without a selected template.");
+      return;
+    }
+    addItemsToInventory(selectedTemplate.id, quantity);
+    setAddItemsMode(false);
   }
 
   const handleCloseAddItemModal = () => {

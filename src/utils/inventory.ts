@@ -150,3 +150,20 @@ export function getInventoryCountsforCatalog(
     checkedOutCount: checkedOutCount
   }
 }
+
+export function generateNewInventoryItems(
+  catalogItemId: string,
+  quantity: number
+): InventoryItemType[] {
+  let items = [];
+  for (let i = 0; i < quantity; i++) {
+    items.push({
+      id: crypto.randomUUID(),
+      catalogItemId: catalogItemId,
+      isCheckedOut: false,
+      checkedOutBy: null,
+      dateCheckedOut: null
+    });
+  }
+  return items;
+}

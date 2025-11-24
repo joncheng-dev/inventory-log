@@ -3,7 +3,7 @@ import type { InventoryItem as InventoryItemType, CheckedOutItemDataType, Invent
 import type { CatalogItemInventoryCounts } from '../types/catalog';
 import { mockInventoryItems } from "../mockData/inventoryItems";
 import { useCatalog } from "./CatalogContext";
-import { buildInventoryView, buildSelectedItemDetails, getInventoryCountsforCatalog } from '../utils/inventory';
+import { generateNewInventoryItems, buildInventoryView, buildSelectedItemDetails, getInventoryCountsforCatalog } from '../utils/inventory';
 
 interface InventoryContextType {
   inventoryLoading: boolean;
@@ -19,7 +19,7 @@ interface InventoryContextType {
     catalogItemId: string,
     inventoryItems: InventoryItemType[],
   ) => Promise<CatalogItemInventoryCounts>;
-  // fetchInventoryCountsforCatalog: (catalogItemId: string) => Promise<CatalogItemInventoryCounts>;
+  addItemsToInventory: (catalogItemId: string, quantity: number) => Promise<void>;
 }
 
 const InventoryContext = createContext<InventoryContextType | null>(null);
@@ -77,14 +77,21 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
     setSelectedItemLoading(false);
   }
 
-// Promise<CatalogItemInventoryCounts>
-
   const fetchInventoryCountsforCatalog = async (
     catalogItemId: string,
     inventoryItems: InventoryItemType[],
   ): Promise<CatalogItemInventoryCounts> => {
     let data = getInventoryCountsforCatalog(catalogItemId, inventoryItems);
     return data;
+  }
+
+  const addItemsToInventory = async(
+    catalogItemId: string,
+    quantity: number    
+  ): Promise<void> => {
+    await new Promise(r => setTimeout(r, 300));
+    let newItems = generateNewInventoryItems(catalogItemId, quantity);
+    setInventoryItems(prev => [...prev, ...newItems]);
   }
 
   useEffect(() => {
@@ -107,7 +114,8 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
         fetchSelectedItemDetails,
         selectedItemDetails,
         relatedItems,
-        fetchInventoryCountsforCatalog
+        fetchInventoryCountsforCatalog,
+        addItemsToInventory
       }}
     >
       {children}

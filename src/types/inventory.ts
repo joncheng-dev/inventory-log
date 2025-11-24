@@ -2,8 +2,8 @@ export interface InventoryItem {
   id: string;
   catalogItemId: string;
   isCheckedOut: boolean;
-  checkedOutBy?: string;
-  dateCheckedOut?: string;
+  checkedOutBy?: string | null;
+  dateCheckedOut?: string | null;
 }
 
 export interface InventoryItemGroupedType {
