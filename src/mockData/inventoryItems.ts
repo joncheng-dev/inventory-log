@@ -32,7 +32,7 @@ export const mockInventoryItems: InventoryItemType[] = [
   { id: 'inv-burner-009', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false },
   { id: 'inv-burner-010', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false },
 
-    // 2 Magnifying Glasses (2 checked out, 0 available)
+    // 3 Magnifying Glasses (2 checked out, 1 available)
   { id: 'inv-mag-glass-001', catalogItemId: 'cat-magnifying-glass', isCheckedOut: true, checkedOutBy: 'joncheng.dev@gmail.com', dateCheckedOut: '2025-10-08' },
   { id: 'inv-mag-glass-002', catalogItemId: 'cat-magnifying-glass', isCheckedOut: true, checkedOutBy: 'joncheng.dev@gmail.com', dateCheckedOut: '2025-10-08' },
   { id: 'inv-mag-glass-003', catalogItemId: 'cat-magnifying-glass', isCheckedOut: false },

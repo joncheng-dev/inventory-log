@@ -90,6 +90,13 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
     quantity: number    
   ): Promise<void> => {
     await new Promise(r => setTimeout(r, 300));
+    let template = catalogItems.find((item) => item.id === catalogItemId);
+    if (!template) {
+      throw new Error(`Catalog template with ID ${catalogItemId} not found.`);
+    }
+    if (template.archived) {
+        throw new Error("Cannot add inventory to an archived template."); 
+    }
     let newItems = generateNewInventoryItems(catalogItemId, quantity);
     setInventoryItems(prev => [...prev, ...newItems]);
   }
