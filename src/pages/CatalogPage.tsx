@@ -3,7 +3,6 @@ import { useCatalog } from '../contexts/CatalogContext';
 import { useInventory } from '../contexts/InventoryContext';
 import PageLayout from './PageLayout';
 import Filters from '../components/filter/Filters';
-import type { InventoryItem as InventoryItemType } from '../types/inventory';
 import type { CatalogItem as CatalogItemType } from '../types/catalog';
 import CatalogListDisplay from '../components/CatalogListDisplay';
 import CatalogItemDetail from '../components/catalog/CatalogItemDetail';
@@ -11,21 +10,17 @@ import CatalogItemEdit from '../components/catalog/CatalogItemEdit';
 import CatalogItemNew from '../components/catalog/CatalogItemNew';
 import AddToInventoryModal from '../components/catalog/AddToInventoryModal';
 import ArchiveConfirmationModal from '../components/catalog/ArchiveConfirmationModal';
+import { getInventoryCountsforCatalog } from '../utils/inventory';
 
 export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   const { catalogItems, addNewCatalogItem, updateCatalogItem, archiveCatalogItem, unarchiveCatalogItem } = useCatalog();
-  const { inventoryItems, fetchInventoryCountsforCatalog, addItemsToInventory } = useInventory(); 
+  const { inventoryItems, addItemsToInventory } = useInventory(); 
 
   const [viewMode, setViewMode] = useState<'grid-view' | 'list-view'>('grid-view');
   const [selectedTemplate, setSelectedTemplate] = useState<CatalogItemType | null>(null);
   const [editMode, setEditMode] = useState<true | false>(false);
   const [newMode, setNewMode] = useState<true | false>(false);
   const [archiveMode, setArchiveMode] = useState<true | false>(false);
-  const [templateInfo, setTemplateInfo] = useState<{
-    totalItemCount: number,
-    availableCount: number,
-    checkedOutCount: number
-  } | null>(null);
   const [addItemsMode, setAddItemsMode] = useState<true | false>(false);
   const currentUserEmail = 'joncheng.dev@gmail.com';
 
@@ -38,6 +33,11 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   const availableFilterTags = ["Biology", "Chemistry", "Earth Science", "General", "Physics"];
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
+  const templateCounts = selectedTemplate
+    ? getInventoryCountsforCatalog(selectedTemplate.id, inventoryItems)
+    : null;
+  console.log('templateCounts: ', templateCounts);
+  
   const closeEditModal = () => {
     setEditMode(false);
   }
@@ -58,18 +58,6 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
 
   const handleSelectTemplate = async (selectedTemplate: CatalogItemType) => {
     setSelectedTemplate(selectedTemplate);
-    let data = await fetchInventoryCountsforCatalog(selectedTemplate.id, inventoryItems);
-    const { totalItemCount, availableCount, checkedOutCount } = data;
-    setTemplateInfo({
-      totalItemCount,
-      availableCount,
-      checkedOutCount
-    });
-  }
-
-  const handleUnselectTemplate = () => {
-    setSelectedTemplate(null);
-    setTemplateInfo(null);
   }
 
   const handleArchiveClick = () => {
@@ -78,12 +66,12 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
 
   const handleArchiveConfirm = (selectedItem: CatalogItemType) => {
     archiveCatalogItem(selectedItem);
-    handleUnselectTemplate();
+    setSelectedTemplate(null);
   }
 
   const handleRestoreClick = (selectedTemplate: CatalogItemType) => {
     unarchiveCatalogItem(selectedTemplate);
-    handleUnselectTemplate();
+    setSelectedTemplate(null);
   }
 
   const handleArchiveCancel = () => {
@@ -133,26 +121,24 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
           <CatalogItemDetail
             selectedTemplate={selectedTemplate}
             setEditMode={setEditMode}
-            onClose={() => handleUnselectTemplate()}
+            onClose={() => setSelectedTemplate(null)}
             onArchiveClick={handleArchiveClick}
             onRestoreClick={handleRestoreClick}
             onAddItemClick={handleShowAddItemModal}
           />
         }
-        {selectedTemplate && addItemsMode && templateInfo && 
+        {selectedTemplate && addItemsMode && templateCounts && 
           <AddToInventoryModal
             template={selectedTemplate}
-            currentInventoryCount={templateInfo.totalItemCount}
-            currentAvailableCount={templateInfo.availableCount}
+            counts={templateCounts}
             onClose={handleCloseAddItemModal}
             onConfirm={handleAddItemConfirm}
           />
         }
-        {selectedTemplate && archiveMode && templateInfo && 
+        {selectedTemplate && archiveMode && templateCounts && 
           <ArchiveConfirmationModal
             template={selectedTemplate}
-            inventoryItemCount={templateInfo.totalItemCount}
-            checkedOutCount={templateInfo.checkedOutCount}
+            counts={templateCounts}
             onArchiveConfirm={handleArchiveConfirm}
             onCancel={handleArchiveCancel}
           />

@@ -1,21 +1,21 @@
 import { useEffect } from 'react';
-import type { CatalogItem as CatalogItemType } from "../../types/catalog";
+import type { CatalogItem as CatalogItemType, InventoryCounts } from "../../types/catalog";
 
 interface ArchiveConfirmationModalProps {
   template: CatalogItemType;
-  inventoryItemCount: number;
-  checkedOutCount: number;
+  counts: InventoryCounts;
   onArchiveConfirm: (selectedItem: CatalogItemType) => void;
   onCancel: () => void;
 }
 
 export default function ArchiveConfirmationModal({ 
   template, 
-  inventoryItemCount, 
-  checkedOutCount,
+  counts,
   onArchiveConfirm, 
   onCancel 
 }: ArchiveConfirmationModalProps) {
+  const { total, checkedOut } = counts;
+  
   // Escape key to close
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -75,11 +75,11 @@ export default function ArchiveConfirmationModal({
             </p>
             
             <div className="border-2 border-dashed border-amber-300 dark:border-amber-700 rounded-lg p-4 bg-amber-50/50 dark:bg-amber-950/20 space-y-2 text-sm text-amber-800 dark:text-amber-200">
-              {inventoryItemCount > 0 ? (
+              {total > 0 ? (
                 <p>
-                  This template has <span className="font-semibold">{inventoryItemCount} inventory {inventoryItemCount === 1 ? 'item' : 'items'}</span>
-                  {checkedOutCount > 0 && (
-                    <span> ({checkedOutCount} currently checked out)</span>
+                  This template has <span className="font-semibold">{total} inventory {total === 1 ? 'item' : 'items'}</span>
+                  {checkedOut > 0 && (
+                    <span> ({checkedOut} currently checked out)</span>
                   )}. Existing items and checkouts are unaffected.
                 </p>
               ) : (

@@ -1,23 +1,22 @@
 import { useState } from 'react';
-import type { CatalogItem } from '../../types/catalog';
+import type { CatalogItem, InventoryCounts } from '../../types/catalog';
 
 interface AddToInventoryModalProps {
   template: CatalogItem;
-  currentInventoryCount: number;
-  currentAvailableCount: number;
+  counts: InventoryCounts;
   onClose: () => void;
   onConfirm: (quantity: number) => void;
 }
 
 export default function AddToInventoryModal({ 
   template, 
-  currentInventoryCount,
-  currentAvailableCount,
+  counts,
   onClose, 
   onConfirm 
 }: AddToInventoryModalProps) {
   const [quantity, setQuantity] = useState(1);
   const MAX_QUANTITY = 100;
+  const { total, available } = counts;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,11 +82,11 @@ export default function AddToInventoryModal({
                   <div className="flex items-center gap-2 text-xs">
                     <span className="text-theme-secondary">Current inventory:</span>
                     <span className="px-2 py-0.5 bg-theme-secondary/10 border border-theme rounded font-mono font-semibold text-theme-primary">
-                      {currentInventoryCount}
+                      {total}
                     </span>
-                    {currentAvailableCount < currentInventoryCount && (
+                    {available < total && (
                       <span className="text-theme-secondary">
-                        ({currentAvailableCount} available)
+                        ({available} available)
                       </span>
                     )}
                   </div>
@@ -154,13 +153,13 @@ export default function AddToInventoryModal({
                   <span className="font-semibold">Creating:</span> {quantity} new inventory {quantity === 1 ? 'item' : 'items'}
                 </p>
                 <div className="flex items-center gap-2 text-sm text-theme-secondary">
-                  <span className="font-mono">{currentInventoryCount}</span>
+                  <span className="font-mono">{total}</span>
                   <span>current</span>
                   <span className="text-lg">+</span>
                   <span className="font-mono font-semibold text-theme-primary">{quantity}</span>
                   <span>new</span>
                   <span className="text-lg">=</span>
-                  <span className="font-mono font-semibold text-theme-primary">{currentInventoryCount + quantity}</span>
+                  <span className="font-mono font-semibold text-theme-primary">{total + quantity}</span>
                   <span>total</span>
                 </div>
                 <p className="text-xs text-theme-secondary mt-2">

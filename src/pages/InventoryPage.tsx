@@ -19,7 +19,7 @@ export default function InventoryPage() {
     selectedItemLoading,
     fetchSelectedItemDetails,
     selectedItemDetails,
-    relatedItems
+    relatedItems,
   } = useInventory();
 
   const [viewMode, setViewMode] = useState<'grid-view' | 'list-view'>('grid-view');
