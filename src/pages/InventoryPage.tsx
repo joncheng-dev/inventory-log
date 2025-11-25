@@ -7,6 +7,7 @@ import ItemListDisplay from '../components/ItemListDisplay';
 import CheckedOutItemList from '../components/checked-out-item-list/CheckedOutItemList';
 import type { InventoryItemGroupedType } from '../types/inventory';
 import InventoryItemDetail from '../components/inventory/InventoryItemDetail';
+import AdjustStockModal from '../components/inventory/AdjustStockModal';
 
 export default function InventoryPage() {
   const { catalogItems } = useCatalog();
@@ -29,10 +30,19 @@ export default function InventoryPage() {
 
   // Inventory Item Details (props to pass in to component)
   const [selectedItem, setSelectedItem] = useState<InventoryItemGroupedType | null>(null);
+  const [adjustQtyMode, setAdjustQtyMode] = useState<true | false>(false);
 
   useEffect(() => {
     if(selectedItem) fetchSelectedItemDetails(selectedItem);
   }, [selectedItem]);
+
+  const handleConfirmAdjustStock = (
+    catalogItemId: string,
+    newTotalQuantity: number
+  ) => {
+    console.log('AdjustStockModal onConfirm clicked, catalogItemId', catalogItemId);
+    console.log('newTotalQuantity: ', newTotalQuantity);
+  }
 
   return (
     <PageLayout>
@@ -79,6 +89,7 @@ export default function InventoryPage() {
         <InventoryItemDetail
           selectedItemDetails={selectedItemDetails}
           relatedItems={relatedItems}
+          setAdjustQtyMode={setAdjustQtyMode}
           onClose={() => setSelectedItem(null)}
         />
       )}
@@ -89,6 +100,13 @@ export default function InventoryPage() {
           </div>
         </div>
       )}
+      {selectedItem && selectedItemDetails && adjustQtyMode && 
+        <AdjustStockModal
+          item={selectedItem}
+          onClose={() => setAdjustQtyMode(false)}
+          onConfirm={handleConfirmAdjustStock}
+        />
+      }
     </PageLayout>
   );
 }

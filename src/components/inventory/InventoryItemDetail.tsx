@@ -4,10 +4,11 @@ import type { InventoryItem as InventoryItemType, InventoryItemGroupedType } fro
 interface InventoryItemDetailProps {
   selectedItemDetails: InventoryItemGroupedType;
   relatedItems: InventoryItemType[];
+  setAdjustQtyMode: React.Dispatch<React.SetStateAction<true | false>>;
   onClose: React.Dispatch<React.SetStateAction<InventoryItemType | null>>;
 }
 
-export default function InventoryItemDetail({ selectedItemDetails, relatedItems, onClose }: InventoryItemDetailProps) {
+export default function InventoryItemDetail({ selectedItemDetails, relatedItems, setAdjustQtyMode, onClose }: InventoryItemDetailProps) {
   const [checkoutQuantity, setCheckoutQuantity] = useState(1);
   const [checkedOutBy, setCheckedOutBy] = useState('');
   const currentUserEmail = 'joncheng.dev@gmail.com';
@@ -200,12 +201,18 @@ export default function InventoryItemDetail({ selectedItemDetails, relatedItems,
 
           {/* Footer */}
           <div className="px-6 py-4 border-t border-theme/50 bg-theme-secondary/5">
-            <div className="flex justify-end">
+            <div className="flex gap-3 justify-end">
               <button
                 onClick={() => onClose(null)}
                 className="px-4 py-2 border border-theme rounded hover:bg-theme-hover transition-colors text-sm font-medium"
               >
                 Close
+              </button>
+              <button
+                onClick={() => setAdjustQtyMode(true)}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded transition-colors text-sm font-medium"
+              >
+                Adjust Stock
               </button>
             </div>
           </div>
