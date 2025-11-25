@@ -1,5 +1,5 @@
 import type { InventoryItem as InventoryItemType , InventoryItemGroupedType, CheckedOutItemDataType} from "../types/inventory";
-import type { CatalogItem as CatalogItemType, CatalogItemInventoryCounts } from '../types/catalog';
+import type { CatalogItem as CatalogItemType, InventoryCounts } from '../types/catalog';
 
 export function countInventoryItemAvailability(groupedItems: InventoryItemType[]): number {
   let numAvailable = 0;
@@ -139,15 +139,15 @@ export function buildSelectedItemDetails(
 export function getInventoryCountsforCatalog(
   catalogItemId: string,
   inventoryItems: InventoryItemType[]
-): CatalogItemInventoryCounts {
+): InventoryCounts {
   let itemsMatchingCatalogEntry = inventoryItems.filter((item) => item.catalogItemId === catalogItemId);
   let totalItemCount = itemsMatchingCatalogEntry.length;
   let checkedOutCount = itemsMatchingCatalogEntry.filter((item) => item.isCheckedOut).length;
   let availableCount = itemsMatchingCatalogEntry.filter((item) => !item.isCheckedOut).length;
   return {
-    totalItemCount: totalItemCount,
-    availableCount: availableCount,
-    checkedOutCount: checkedOutCount
+    total: totalItemCount,
+    available: availableCount,
+    checkedOut: checkedOutCount
   }
 }
 

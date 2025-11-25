@@ -9,8 +9,8 @@ export interface CatalogItem {
   archivedAt?: string | null;
 }
 
-export interface CatalogItemInventoryCounts {
-  totalItemCount: number;
-  availableCount: number;
-  checkedOutCount: number;
+export interface InventoryCounts {
+  total: number;
+  available: number;
+  checkedOut: number;
 }
