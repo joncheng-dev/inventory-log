@@ -7,7 +7,7 @@ import ItemListDisplay from '../components/ItemListDisplay';
 import CheckedOutItemList from '../components/checked-out-item-list/CheckedOutItemList';
 import type { InventoryItemGroupedType } from '../types/inventory';
 import InventoryItemDetail from '../components/inventory/InventoryItemDetail';
-import AdjustStockModal from '../components/inventory/AdjustStockModal';
+import AdjustQuantityModal from '../components/inventory/AdjustQuantityModal';
 
 export default function InventoryPage() {
   const { catalogItems } = useCatalog();
@@ -101,7 +101,7 @@ export default function InventoryPage() {
         </div>
       )}
       {selectedItem && selectedItemDetails && adjustQtyMode && 
-        <AdjustStockModal
+        <AdjustQuantityModal
           item={selectedItem}
           onClose={() => setAdjustQtyMode(false)}
           onConfirm={handleConfirmAdjustStock}

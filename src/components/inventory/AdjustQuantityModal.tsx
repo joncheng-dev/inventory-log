@@ -8,12 +8,13 @@ interface AdjustQuantityModalProps {
 }
 
 export default function AdjustQuantityModal({ item, onClose, onConfirm }: AdjustQuantityModalProps) {
-  const [newTotal, setNewTotal] = useState(item.quantityTotal);
+  const { catalogItemId, displayName, sku, quantityTotal, quantityAvailable } = item;
+  const [newTotal, setNewTotal] = useState(quantityTotal);
 
   // Reset when item changes
   useEffect(() => {
-    setNewTotal(item.quantityTotal);
-  }, [item.catalogItemId, item.quantityTotal]);
+    setNewTotal(quantityTotal);
+  }, [catalogItemId, quantityTotal]);
 
   // Escape key to close
   useEffect(() => {
@@ -28,13 +29,13 @@ export default function AdjustQuantityModal({ item, onClose, onConfirm }: Adjust
   }, [onClose]);
 
   // Calculate values
-  const quantityCheckedOut = item.quantityTotal - item.quantityAvailable;
+  const quantityCheckedOut = quantityTotal - quantityAvailable;
   const minAllowed = quantityCheckedOut;
   const projectedAvailable = newTotal - quantityCheckedOut;
-  const difference = newTotal - item.quantityTotal;
+  const difference = newTotal - quantityTotal;
 
   const handleSave = () => {
-    onConfirm(item.catalogItemId, newTotal);
+    onConfirm(catalogItemId, newTotal);
     onClose();
   };
 
@@ -62,10 +63,10 @@ export default function AdjustQuantityModal({ item, onClose, onConfirm }: Adjust
                   </span>
                 </div>
                 <h2 className="text-xl font-bold text-theme-primary mb-1">
-                  {item.displayName}
+                  {displayName}
                 </h2>
                 <p className="text-sm text-theme-secondary font-mono">
-                  {item.sku}
+                  {sku}
                 </p>
               </div>
               <button
@@ -91,11 +92,11 @@ export default function AdjustQuantityModal({ item, onClose, onConfirm }: Adjust
               <div className="grid grid-cols-3 gap-3">
                 <div className="border border-theme rounded-lg p-3 bg-theme-secondary/5 text-center">
                   <div className="text-xs text-theme-secondary mb-1">Total</div>
-                  <div className="text-2xl font-bold text-theme-primary">{item.quantityTotal}</div>
+                  <div className="text-2xl font-bold text-theme-primary">{quantityTotal}</div>
                 </div>
                 <div className="border border-theme rounded-lg p-3 bg-theme-secondary/5 text-center">
                   <div className="text-xs text-theme-secondary mb-1">Available</div>
-                  <div className="text-2xl font-bold text-green-600 dark:text-green-400">{item.quantityAvailable}</div>
+                  <div className="text-2xl font-bold text-green-600 dark:text-green-400">{quantityAvailable}</div>
                 </div>
                 <div className="border border-theme rounded-lg p-3 bg-theme-secondary/5 text-center">
                   <div className="text-xs text-theme-secondary mb-1">Out</div>
@@ -193,7 +194,7 @@ export default function AdjustQuantityModal({ item, onClose, onConfirm }: Adjust
             <button
               type="button"
               onClick={handleSave}
-              disabled={newTotal === item.quantityTotal}
+              disabled={newTotal === quantityTotal}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded transition-colors text-sm font-medium"
             >
               Save Changes

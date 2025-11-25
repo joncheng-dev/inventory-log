@@ -36,7 +36,6 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   const templateCounts = selectedTemplate
     ? getInventoryCountsforCatalog(selectedTemplate.id, inventoryItems)
     : null;
-  console.log('templateCounts: ', templateCounts);
   
   const closeEditModal = () => {
     setEditMode(false);

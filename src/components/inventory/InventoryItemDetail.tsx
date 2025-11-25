@@ -212,7 +212,7 @@ export default function InventoryItemDetail({ selectedItemDetails, relatedItems,
                 onClick={() => setAdjustQtyMode(true)}
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded transition-colors text-sm font-medium"
               >
-                Adjust Stock
+                Adjust Quantity
               </button>
             </div>
           </div>
