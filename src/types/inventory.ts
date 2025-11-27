@@ -4,6 +4,7 @@ export interface InventoryItem {
   isCheckedOut: boolean;
   checkedOutBy?: string | null;
   dateCheckedOut?: string | null;
+  createdAt: string;
 }
 
 export interface InventoryItemGroupedType {
