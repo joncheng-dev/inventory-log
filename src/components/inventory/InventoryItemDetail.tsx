@@ -6,9 +6,16 @@ interface InventoryItemDetailProps {
   relatedItems: InventoryItemType[];
   setAdjustQtyMode: React.Dispatch<React.SetStateAction<true | false>>;
   onClose: React.Dispatch<React.SetStateAction<InventoryItemType | null>>;
+  isBlurred?: boolean;
 }
 
-export default function InventoryItemDetail({ selectedItemDetails, relatedItems, setAdjustQtyMode, onClose }: InventoryItemDetailProps) {
+export default function InventoryItemDetail({
+  selectedItemDetails,
+  relatedItems,
+  setAdjustQtyMode,
+  onClose,
+  isBlurred = false
+}: InventoryItemDetailProps) {
   const [checkoutQuantity, setCheckoutQuantity] = useState(1);
   const [checkedOutBy, setCheckedOutBy] = useState('');
   const currentUserEmail = 'joncheng.dev@gmail.com';
@@ -50,10 +57,12 @@ export default function InventoryItemDetail({ selectedItemDetails, relatedItems,
       {/* Modal */}
       <div
         className="fixed inset-0 z-50 flex items-center justify-center p-4"
-        onClick={() => onClose(null)}
+        onClick={() => !isBlurred && onClose(null)}
       >
         <div 
-          className="bg-theme-surface border border-theme rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+          className={`bg-theme-surface border border-theme rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col transition-all duration-200 
+            ${ isBlurred ? 'blur-sm opacity-50 pointer-events-none' : ''}
+          `}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
