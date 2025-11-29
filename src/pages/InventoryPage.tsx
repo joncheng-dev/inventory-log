@@ -12,6 +12,7 @@ import AdjustQuantityModal from '../components/inventory/AdjustQuantityModal';
 export default function InventoryPage() {
   const { catalogItems } = useCatalog();
   const {
+    inventoryItems,
     inventoryLoading,
     aggregatedInventory,
     checkedOutQty,
@@ -20,6 +21,8 @@ export default function InventoryPage() {
     fetchSelectedItemDetails,
     selectedItemDetails,
     relatedItems,
+    addItemsToInventory,
+    removeItemsFromInventory
   } = useInventory();
 
   const [viewMode, setViewMode] = useState<'grid-view' | 'list-view'>('grid-view');
@@ -34,14 +37,26 @@ export default function InventoryPage() {
 
   useEffect(() => {
     if(selectedItem) fetchSelectedItemDetails(selectedItem);
-  }, [selectedItem]);
+  }, [inventoryItems, selectedItem]);
+
+  const selectedCatalogTemplate = selectedItem
+    ? catalogItems.find((item) => item.id === selectedItem.catalogItemId)
+    : null;
 
   const handleConfirmAdjustStock = (
     catalogItemId: string,
     newTotalQuantity: number
   ) => {
-    console.log('AdjustStockModal onConfirm clicked, catalogItemId', catalogItemId);
-    console.log('newTotalQuantity: ', newTotalQuantity);
+    if (selectedItem) {      
+      const adjustQty = newTotalQuantity - selectedItem.quantityTotal;
+      if (adjustQty > 0) {
+        addItemsToInventory(catalogItemId, adjustQty);
+      } else if (adjustQty < 0) {
+        removeItemsFromInventory(catalogItemId, Math.abs(adjustQty));
+      } else {
+        throw new Error("Cannot update. New quantity is the same as the previous quantity."); 
+      }
+    }
   }
 
   return (
@@ -91,6 +106,7 @@ export default function InventoryPage() {
           relatedItems={relatedItems}
           setAdjustQtyMode={setAdjustQtyMode}
           onClose={() => setSelectedItem(null)}
+          isBlurred={adjustQtyMode}
         />
       )}
       {selectedItem && selectedItemLoading && (
@@ -100,9 +116,10 @@ export default function InventoryPage() {
           </div>
         </div>
       )}
-      {selectedItem && selectedItemDetails && adjustQtyMode && 
+      {selectedItem && selectedItemDetails && adjustQtyMode && selectedCatalogTemplate && 
         <AdjustQuantityModal
           item={selectedItem}
+          catalogTemplate={selectedCatalogTemplate}
           onClose={() => setAdjustQtyMode(false)}
           onConfirm={handleConfirmAdjustStock}
         />

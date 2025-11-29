@@ -163,14 +163,38 @@ export function generateNewInventoryItems(
   quantity: number
 ): InventoryItemType[] {
   let items = [];
+  const createdAt = new Date().toISOString();
   for (let i = 0; i < quantity; i++) {
     items.push({
       id: crypto.randomUUID(),
       catalogItemId: catalogItemId,
       isCheckedOut: false,
       checkedOutBy: null,
-      dateCheckedOut: null
+      dateCheckedOut: null,
+      createdAt,
     });
   }
   return items;
 }
+
+export function removeInventoryItems(
+  inventoryItems: InventoryItemType[],
+  catalogItemId: string,
+  quantity: number
+): InventoryItemType[] {
+  let currentInventory = [... inventoryItems];
+  // catalogItemId, match inventoryItems, filter these.
+  let targetType = inventoryItems.filter((item) => item.catalogItemId === catalogItemId && !item.isCheckedOut);
+
+  targetType.sort(
+    (a, b) =>
+      new Date(b.createdAt).getTime() -
+      new Date(a.createdAt).getTime()
+  );
+
+  const itemsToRemove = targetType.slice(0, quantity);
+  console.log('itemsToRemove: ', itemsToRemove);
+  const updatedInventory = currentInventory.filter((item) => !itemsToRemove.includes(item));
+  console.log('updatedInventory: ', updatedInventory);
+  return updatedInventory;
+} 

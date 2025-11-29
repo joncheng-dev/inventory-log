@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import type { InventoryItem as InventoryItemType, CheckedOutItemDataType, InventoryItemGroupedType } from "../types/inventory";
 import { mockInventoryItems } from "../mockData/inventoryItems";
 import { useCatalog } from "./CatalogContext";
-import { generateNewInventoryItems, buildInventoryView, buildSelectedItemDetails } from '../utils/inventory';
+import { generateNewInventoryItems, buildInventoryView, buildSelectedItemDetails, removeInventoryItems } from '../utils/inventory';
 
 interface InventoryContextType {
   inventoryLoading: boolean;
@@ -15,6 +15,7 @@ interface InventoryContextType {
   selectedItemDetails: InventoryItemGroupedType | null;
   relatedItems: InventoryItemType[];
   addItemsToInventory: (catalogItemId: string, quantity: number) => Promise<void>;
+  removeItemsFromInventory: (catalogItemId: string, quantity: number) => Promise<void>;
 }
 
 const InventoryContext = createContext<InventoryContextType | null>(null);
@@ -88,6 +89,20 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
     setInventoryItems(prev => [...prev, ...newItems]);
   }
 
+  const removeItemsFromInventory = async (
+    catalogItemId: string,
+    quantity: number
+  ): Promise<void> => {
+    await new Promise(r => setTimeout(r, 300));
+    let template = catalogItems.find((item) => item.id === catalogItemId);
+    console.log('removeItemsFromInventory, template: ', template);
+    if (!template) {
+      throw new Error(`Catalog template with ID ${catalogItemId} not found.`);
+    }
+    let updatedList = removeInventoryItems(inventoryItems, catalogItemId, quantity);
+    setInventoryItems(updatedList);
+  }
+
   useEffect(() => {
     fetchInventoryItems();
   }, []);
@@ -108,7 +123,8 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
         fetchSelectedItemDetails,
         selectedItemDetails,
         relatedItems,
-        addItemsToInventory
+        addItemsToInventory,
+        removeItemsFromInventory
       }}
     >
       {children}
