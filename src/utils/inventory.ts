@@ -199,6 +199,18 @@ export function removeInventoryItems(
   return updatedInventory;
 } 
 
+export function returnAllInventoryItems(
+  userEmail: string,
+  inventoryItems: InventoryItemType[],
+  catalogItemId: string
+): InventoryItemType[] {
+  return inventoryItems.map((item) => 
+    (item.checkedOutBy === userEmail) && (item.catalogItemId === catalogItemId)
+      ? { ...item, isCheckedOut: false, checkedOutBy: null, dateCheckedOut: null }
+      : item
+  );
+}
+
 export function returnInventoryItem(
   inventoryItems: InventoryItemType[],
   itemId: string

@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import type { InventoryItem as InventoryItemType, CheckedOutItemDataType, InventoryItemGroupedType } from "../types/inventory";
 import { mockInventoryItems } from "../mockData/inventoryItems";
 import { useCatalog } from "./CatalogContext";
-import { generateNewInventoryItems, buildInventoryView, buildSelectedItemDetails, removeInventoryItems, returnInventoryItem } from '../utils/inventory';
+import { generateNewInventoryItems, buildInventoryView, buildSelectedItemDetails, removeInventoryItems, returnAllInventoryItems, returnInventoryItem } from '../utils/inventory';
 
 interface InventoryContextType {
   inventoryLoading: boolean;
@@ -16,6 +16,7 @@ interface InventoryContextType {
   relatedItems: InventoryItemType[];
   addItemsToInventory: (catalogItemId: string, quantity: number) => Promise<void>;
   removeItemsFromInventory: (catalogItemId: string, quantity: number) => Promise<void>;
+  returnAllItems: (catalogItemId: string) => Promise<void>;
   returnItem: (itemId: string) => Promise<void>;
 }
 
@@ -104,6 +105,11 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
     setInventoryItems(updatedList);
   }
 
+  const returnAllItems = async (catalogItemId: string): Promise<void> => {
+    await new Promise(r => setTimeout(r, 300));
+    setInventoryItems(returnAllInventoryItems(currentUserEmail, inventoryItems, catalogItemId));
+  }
+
   const returnItem = async (itemId: string): Promise<void> => {
     await new Promise(r => setTimeout(r, 300));
     setInventoryItems(returnInventoryItem(inventoryItems, itemId));
@@ -131,6 +137,7 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
         relatedItems,
         addItemsToInventory,
         removeItemsFromInventory,
+        returnAllItems,
         returnItem
       }}
     >

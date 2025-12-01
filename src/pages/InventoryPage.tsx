@@ -23,6 +23,7 @@ export default function InventoryPage() {
     relatedItems,
     addItemsToInventory,
     removeItemsFromInventory,
+    returnAllItems,
     returnItem
   } = useInventory();
 
@@ -65,12 +66,12 @@ export default function InventoryPage() {
   }
 
   const handleReturnItem = (itemId: string) => {
-    console.log(`InventoryPage, Returning item ${itemId}`);
     returnItem(itemId);
   }
 
   const handleReturnAllMyItems = () => {
-    console.log(`InventoryPage, Returning all my items`);
+    if (!selectedItem?.catalogItemId) return;
+    returnAllItems(selectedItem.catalogItemId);
   }
 
   return (
