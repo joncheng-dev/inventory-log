@@ -5,7 +5,10 @@ interface InventoryItemDetailProps {
   selectedItemDetails: InventoryItemGroupedType;
   relatedItems: InventoryItemType[];
   setAdjustQtyMode: React.Dispatch<React.SetStateAction<true | false>>;
-  onClose: React.Dispatch<React.SetStateAction<InventoryItemType | null>>;
+  onCheckout: () => void;
+  onReturnItem: (itemId: string) => void;
+  onReturnAllMyItems: () => void;
+  onClose: () => void;
   isBlurred?: boolean;
 }
 
@@ -13,15 +16,17 @@ export default function InventoryItemDetail({
   selectedItemDetails,
   relatedItems,
   setAdjustQtyMode,
+  onCheckout,
+  onReturnItem,
+  onReturnAllMyItems,
   onClose,
   isBlurred = false
 }: InventoryItemDetailProps) {
   const [checkoutQuantity, setCheckoutQuantity] = useState(1);
-  const [checkedOutBy, setCheckedOutBy] = useState('');
+  
   const currentUserEmail = 'joncheng.dev@gmail.com';
   
   const {
-    catalogItemId,
     displayName,
     sku,
     description,
@@ -43,25 +48,41 @@ export default function InventoryItemDetail({
     ? 'font-semibold text-emerald-600 dark:text-emerald-400'
     : 'font-semibold text-red-600 dark:text-red-400';
 
-  const handleCheckout = () => {
-    console.log(`Checking out ${checkoutQuantity} items to ${checkedOutBy}`);
-    // onCheckout(checkoutQuantity, checkedOutBy);
+  // Group checked out items
+  const checkedOutItems = relatedItems
+    .filter(item => item.isCheckedOut)
+    .reduce((acc, item) => {
+      const user = item.checkedOutBy || 'Unknown';
+      if (!acc[user]) acc[user] = [];
+      acc[user].push(item);
+      return acc;
+    }, {} as Record<string, InventoryItemType[]>);
+
+  const myItems = checkedOutItems[currentUserEmail] || [];
+  const otherUsersItems = Object.entries(checkedOutItems)
+    .filter(([user]) => user !== currentUserEmail);
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
   };
 
   return (
     <>
       {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
-      />
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" />
+
       {/* Modal */}
       <div
         className="fixed inset-0 z-50 flex items-center justify-center p-4"
-        onClick={() => !isBlurred && onClose(null)}
+        onClick={() => !isBlurred && onClose()}
       >
         <div 
           className={`bg-theme-surface border border-theme rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col transition-all duration-200 
-            ${ isBlurred ? 'blur-sm opacity-50 pointer-events-none' : ''}
+            ${isBlurred ? 'blur-sm opacity-50 pointer-events-none' : ''}
           `}
           onClick={(e) => e.stopPropagation()}
         >
@@ -84,7 +105,7 @@ export default function InventoryItemDetail({
                 </div>
               </div>
               <button
-                onClick={() => onClose(null)}
+                onClick={() => onClose()}
                 className="text-theme-secondary hover:text-theme-primary transition-colors p-1"
                 aria-label="Close"
               >
@@ -98,7 +119,7 @@ export default function InventoryItemDetail({
           {/* Content */}
           <div className="flex-1 overflow-y-auto px-6 py-4">
             <div className="space-y-6">
-              {/* Quantities - Prominent display */}
+              {/* Quantities */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-theme-secondary/10 rounded-lg p-4 border border-theme/30">
                   <div className="text-sm text-theme-secondary mb-1">Total Quantity</div>
@@ -112,7 +133,7 @@ export default function InventoryItemDetail({
 
               {/* Checkout Section */}
               {quantityAvailable > 0 && (
-                <div className="bg-primary-500/5 border border-primary-500/20 rounded-lg p-4">
+                <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/50 rounded-lg p-4">
                   <h3 className="text-sm font-medium text-theme-primary mb-3">Check Out Items</h3>
                   
                   <div className="space-y-3">
@@ -127,7 +148,7 @@ export default function InventoryItemDetail({
                           max={quantityAvailable}
                           value={checkoutQuantity}
                           onChange={(e) => setCheckoutQuantity(Math.min(parseInt(e.target.value) || 1, quantityAvailable))}
-                          className="w-24 px-3 py-2 bg-theme-surface border border-theme rounded focus:ring-2 focus:ring-primary-500 focus:outline-none text-theme-primary"
+                          className="w-24 px-3 py-2 bg-theme-surface border border-theme rounded focus:ring-2 focus:ring-amber-500 focus:outline-none text-theme-primary"
                         />
                         <span className="text-sm text-theme-secondary">
                           of {quantityAvailable} available
@@ -135,7 +156,6 @@ export default function InventoryItemDetail({
                       </div>
                     </div>
 
-                    {/* Read-only display */}
                     <div className="flex items-center gap-2 text-sm text-theme-secondary bg-theme-secondary/10 rounded px-3 py-2">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -144,8 +164,8 @@ export default function InventoryItemDetail({
                     </div>
 
                     <button
-                      onClick={handleCheckout}
-                      className="w-full px-4 py-2 bg-primary-500 text-white rounded hover:bg-primary-600 transition-colors font-medium"
+                      onClick={onCheckout}
+                      className="w-full px-4 py-2 bg-amber-600 dark:bg-amber-600 text-white rounded hover:bg-amber-700 dark:hover:bg-amber-700 transition-colors font-medium"
                     >
                       Check Out {checkoutQuantity > 1 ? `${checkoutQuantity} Items` : 'Item'}
                     </button>
@@ -176,32 +196,105 @@ export default function InventoryItemDetail({
               </div>
 
               {/* Currently Checked Out Items */}
-              {relatedItems.some(item => item.isCheckedOut) && (
+              {Object.keys(checkedOutItems).length > 0 && (
                 <div>
                   <h3 className="text-sm font-medium text-theme-secondary uppercase tracking-wide mb-3">
                     Currently Checked Out ({relatedItems.filter(i => i.isCheckedOut).length})
                   </h3>
-                  <div className="space-y-2">
-                    {relatedItems.filter(invItem => invItem.isCheckedOut).map((invItem) => (
-                      <div 
-                        key={invItem.id}
-                        className="bg-theme-secondary/5 rounded border border-theme/30 p-3 text-sm"
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <p className="text-theme-primary font-medium">{invItem.checkedOutBy}</p>
-                            {invItem.dateCheckedOut && (
-                              <p className="text-xs text-theme-secondary mt-0.5">
-                                Since: {invItem.dateCheckedOut}
-                              </p>
+                  
+                  <div className="space-y-4">
+                    {/* Your Items */}
+                    {myItems.length > 0 && (
+                      <div className="border border-theme rounded-lg overflow-hidden">
+                        <div className="bg-theme-secondary/10 px-4 py-2 border-b border-theme/50">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <svg className="w-4 h-4 text-theme-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                              </svg>
+                              <span className="text-sm font-medium text-theme-primary">
+                                Your Items ({myItems.length})
+                              </span>
+                            </div>
+                            {myItems.length > 1 && (
+                              <button
+                                onClick={onReturnAllMyItems}
+                                className="text-xs px-3 py-1 border border-theme text-theme-primary rounded hover:bg-theme-hover transition-colors font-medium"
+                              >
+                                Return All ({myItems.length})
+                              </button>
                             )}
                           </div>
-                          <button className="px-3 py-1.5 text-sm border border-theme rounded hover:bg-theme-hover transition-colors">
-                            Return
-                          </button>
+                        </div>
+                        
+                        <div className="divide-y divide-theme/50">
+                          {myItems.map((item) => (
+                            <div key={item.id} className="px-4 py-3 hover:bg-theme-hover transition-colors">
+                              <div className="flex items-center justify-between">
+                                <div className="flex-1">
+                                  <p className="text-sm text-theme-primary font-medium">
+                                    {item.checkedOutBy}
+                                  </p>
+                                  {item.dateCheckedOut && (
+                                    <p className="text-xs text-theme-secondary mt-0.5">
+                                      Checked out: {formatDate(item.dateCheckedOut)}
+                                    </p>
+                                  )}
+                                </div>
+                                <button
+                                  onClick={() => onReturnItem(item.id)}
+                                  className="px-3 py-1.5 text-sm border border-theme text-theme-primary rounded hover:bg-theme-hover transition-colors font-medium"
+                                >
+                                  Return
+                                </button>
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
-                    ))}
+                    )}
+
+                    {/* Other Users' Items */}
+                    {otherUsersItems.length > 0 && (
+                      <div className="border border-theme rounded-lg overflow-hidden">
+                        <div className="bg-theme-secondary/10 px-4 py-2 border-b border-theme/50">
+                          <div className="flex items-center gap-2">
+                            <svg className="w-4 h-4 text-theme-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            <span className="text-sm font-medium text-theme-primary">
+                              Other Users ({otherUsersItems.reduce((sum, [_, items]) => sum + items.length, 0)})
+                            </span>
+                          </div>
+                        </div>
+                        
+                        <div className="divide-y divide-theme/50">
+                          {otherUsersItems.map(([user, items]) => (
+                            <div key={user}>
+                              {items.map((item) => (
+                                <div key={item.id} className="px-4 py-3 bg-theme-secondary/5">
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex-1">
+                                      <p className="text-sm text-theme-primary font-medium">
+                                        {item.checkedOutBy}
+                                      </p>
+                                      {item.dateCheckedOut && (
+                                        <p className="text-xs text-theme-secondary mt-0.5">
+                                          Checked out: {formatDate(item.dateCheckedOut)}
+                                        </p>
+                                      )}
+                                    </div>
+                                    <span className="text-xs text-theme-secondary italic">
+                                      View only
+                                    </span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -212,7 +305,7 @@ export default function InventoryItemDetail({
           <div className="px-6 py-4 border-t border-theme/50 bg-theme-secondary/5">
             <div className="flex gap-3 justify-end">
               <button
-                onClick={() => onClose(null)}
+                onClick={() => onClose()}
                 className="px-4 py-2 border border-theme rounded hover:bg-theme-hover transition-colors text-sm font-medium"
               >
                 Close

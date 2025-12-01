@@ -22,11 +22,11 @@ export const mockInventoryItems: InventoryItemType[] = [
 
   // 🔥 10 Bunsen Burners (1 checked out, 9 available)
   { id: 'inv-burner-001', catalogItemId: 'cat-bunsen-burner', isCheckedOut: true, checkedOutBy: 'joncheng.dev@gmail.com', dateCheckedOut: '2025-09-29', createdAt: '2025-01-03T11:00:00Z' },
-  { id: 'inv-burner-002', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false, createdAt: '2025-01-03T11:01:00Z' },
-  { id: 'inv-burner-003', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false, createdAt: '2025-01-03T11:02:00Z' },
-  { id: 'inv-burner-004', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false, createdAt: '2025-01-03T11:03:00Z' },
-  { id: 'inv-burner-005', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false, createdAt: '2025-01-03T11:04:00Z' },
-  { id: 'inv-burner-006', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false, createdAt: '2025-01-03T11:05:00Z' },
+  { id: 'inv-burner-002', catalogItemId: 'cat-bunsen-burner', isCheckedOut: true, checkedOutBy: 'darren@school.edu', dateCheckedOut: '2025-09-28', createdAt: '2025-01-02T09:00:00Z' },
+  { id: 'inv-burner-003', catalogItemId: 'cat-bunsen-burner', isCheckedOut: true, checkedOutBy: 'darren@school.edu', dateCheckedOut: '2025-09-29', createdAt: '2025-01-02T09:00:00Z' },
+  { id: 'inv-burner-004', catalogItemId: 'cat-bunsen-burner', isCheckedOut: true, checkedOutBy: 'cindy@school.edu', dateCheckedOut: '2025-09-28', createdAt: '2025-01-02T09:00:00Z' },
+  { id: 'inv-burner-005', catalogItemId: 'cat-bunsen-burner', isCheckedOut: true, checkedOutBy: 'darren@school.edu', dateCheckedOut: '2025-09-29', createdAt: '2025-01-02T09:00:00Z' },
+  { id: 'inv-burner-006', catalogItemId: 'cat-bunsen-burner', isCheckedOut: true, checkedOutBy: 'cindy@school.edu', dateCheckedOut: '2025-09-28', createdAt: '2025-01-02T09:00:00Z' },
   { id: 'inv-burner-007', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false, createdAt: '2025-01-03T11:06:00Z' },
   { id: 'inv-burner-008', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false, createdAt: '2025-01-03T11:07:00Z' },
   { id: 'inv-burner-009', catalogItemId: 'cat-bunsen-burner', isCheckedOut: false, createdAt: '2025-01-03T11:08:00Z' },

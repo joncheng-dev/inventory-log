@@ -22,7 +22,8 @@ export default function InventoryPage() {
     selectedItemDetails,
     relatedItems,
     addItemsToInventory,
-    removeItemsFromInventory
+    removeItemsFromInventory,
+    returnItem
   } = useInventory();
 
   const [viewMode, setViewMode] = useState<'grid-view' | 'list-view'>('grid-view');
@@ -43,7 +44,7 @@ export default function InventoryPage() {
     ? catalogItems.find((item) => item.id === selectedItem.catalogItemId)
     : null;
 
-  const handleConfirmAdjustStock = (
+  const handleConfirmAdjustQty = (
     catalogItemId: string,
     newTotalQuantity: number
   ) => {
@@ -57,6 +58,19 @@ export default function InventoryPage() {
         throw new Error("Cannot update. New quantity is the same as the previous quantity."); 
       }
     }
+  }
+
+  const handleCheckout = () => {
+    console.log('InventoryPage, check out clicked');
+  }
+
+  const handleReturnItem = (itemId: string) => {
+    console.log(`InventoryPage, Returning item ${itemId}`);
+    returnItem(itemId);
+  }
+
+  const handleReturnAllMyItems = () => {
+    console.log(`InventoryPage, Returning all my items`);
   }
 
   return (
@@ -105,6 +119,9 @@ export default function InventoryPage() {
           selectedItemDetails={selectedItemDetails}
           relatedItems={relatedItems}
           setAdjustQtyMode={setAdjustQtyMode}
+          onCheckout={handleCheckout}
+          onReturnItem={handleReturnItem}
+          onReturnAllMyItems={handleReturnAllMyItems}
           onClose={() => setSelectedItem(null)}
           isBlurred={adjustQtyMode}
         />
@@ -121,7 +138,7 @@ export default function InventoryPage() {
           item={selectedItem}
           catalogTemplate={selectedCatalogTemplate}
           onClose={() => setAdjustQtyMode(false)}
-          onConfirm={handleConfirmAdjustStock}
+          onConfirm={handleConfirmAdjustQty}
         />
       }
     </PageLayout>

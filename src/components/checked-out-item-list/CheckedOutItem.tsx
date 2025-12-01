@@ -19,7 +19,7 @@ export default function CheckedOutItem({ checkedOutItem, checkedOutItemQuantitie
         >
           View
         </button>
-        <button className="text-primary-500 text-sm hover:underline">Return</button>
+        {/* <button className="text-primary-500 text-sm hover:underline">Return</button> */}
       </div>
     </li>
   );

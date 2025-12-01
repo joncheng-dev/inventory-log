@@ -198,3 +198,14 @@ export function removeInventoryItems(
   console.log('updatedInventory: ', updatedInventory);
   return updatedInventory;
 } 
+
+export function returnInventoryItem(
+  inventoryItems: InventoryItemType[],
+  itemId: string
+): InventoryItemType[] {
+  return inventoryItems.map((item) => 
+    item.id === itemId
+    ? { ...item, isCheckedOut: false, checkedOutBy: null, dateCheckedOut: null }
+    : item
+  );
+}
