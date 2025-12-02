@@ -5,7 +5,7 @@ interface InventoryItemDetailProps {
   selectedItemDetails: InventoryItemGroupedType;
   relatedItems: InventoryItemType[];
   setAdjustQtyMode: React.Dispatch<React.SetStateAction<true | false>>;
-  onCheckout: () => void;
+  onCheckout: (qtyToCheckOut: number) => void;
   onReturnItem: (itemId: string) => void;
   onReturnAllMyItems: () => void;
   onClose: () => void;
@@ -164,7 +164,7 @@ export default function InventoryItemDetail({
                     </div>
 
                     <button
-                      onClick={onCheckout}
+                      onClick={() => onCheckout(checkoutQuantity)}
                       className="w-full px-4 py-2 bg-amber-600 dark:bg-amber-600 text-white rounded hover:bg-amber-700 dark:hover:bg-amber-700 transition-colors font-medium"
                     >
                       Check Out {checkoutQuantity > 1 ? `${checkoutQuantity} Items` : 'Item'}

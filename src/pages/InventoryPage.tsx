@@ -23,6 +23,7 @@ export default function InventoryPage() {
     relatedItems,
     addItemsToInventory,
     removeItemsFromInventory,
+    checkOutItems,
     returnAllItems,
     returnItem
   } = useInventory();
@@ -61,8 +62,9 @@ export default function InventoryPage() {
     }
   }
 
-  const handleCheckout = () => {
-    console.log('InventoryPage, check out clicked');
+  const handleCheckout = (qtyToCheckOut: number) => {
+    if (!selectedItem?.catalogItemId) return;
+    checkOutItems(selectedItem.catalogItemId, qtyToCheckOut);
   }
 
   const handleReturnItem = (itemId: string) => {

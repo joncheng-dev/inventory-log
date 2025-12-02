@@ -199,6 +199,36 @@ export function removeInventoryItems(
   return updatedInventory;
 } 
 
+export function checkOutInventoryItems(
+  userEmail: string,
+  inventoryItems: InventoryItemType[],
+  catalogItemId: string,
+  qtyToCheckOut: number
+): InventoryItemType[] {
+  if (qtyToCheckOut <= 0) throw new Error('Quantity must be greater than 0.');
+  if (!userEmail || !catalogItemId) throw new Error('User email and catalog item ID are required.');
+
+  const availableItems = inventoryItems.filter((item) =>
+    (item.catalogItemId === catalogItemId) && !item.isCheckedOut);
+
+  if (availableItems.length < qtyToCheckOut) {
+    throw new Error(`Insufficient inventory. Requested: ${qtyToCheckOut}, Available: ${availableItems.length}`);
+  }
+
+  const itemsToCheckOut = availableItems.slice(0, qtyToCheckOut);
+  const idsToCheckOut = new Set(itemsToCheckOut.map(item => item.id));
+  return inventoryItems.map((item) => 
+    idsToCheckOut.has(item.id)
+    ? {
+        ...item,
+        isCheckedOut: true,
+        checkedOutBy: userEmail,
+        dateCheckedOut: new Date().toISOString()
+      }
+    : item
+  );
+} 
+
 export function returnAllInventoryItems(
   userEmail: string,
   inventoryItems: InventoryItemType[],
