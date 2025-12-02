@@ -23,7 +23,7 @@ export default function InventoryItemDetail({
   isBlurred = false
 }: InventoryItemDetailProps) {
   const [checkoutQuantity, setCheckoutQuantity] = useState(1);
-  
+  const isAdmin = true;
   const currentUserEmail = 'joncheng.dev@gmail.com';
   
   const {
@@ -315,12 +315,14 @@ export default function InventoryItemDetail({
               >
                 Close
               </button>
-              <button
-                onClick={() => setAdjustQtyMode(true)}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded transition-colors text-sm font-medium"
-              >
-                Adjust Quantity
-              </button>
+              {isAdmin &&
+                <button
+                  onClick={() => setAdjustQtyMode(true)}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded transition-colors text-sm font-medium"
+                >
+                  Adjust Quantity
+                </button>
+              }
             </div>
           </div>
         </div>
