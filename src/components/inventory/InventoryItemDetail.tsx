@@ -70,6 +70,11 @@ export default function InventoryItemDetail({
     });
   };
 
+  const onCheckoutClick = () => {
+    setCheckoutQuantity(1);
+    onCheckout(checkoutQuantity);
+  }
+
   return (
     <>
       {/* Backdrop */}
@@ -164,7 +169,7 @@ export default function InventoryItemDetail({
                     </div>
 
                     <button
-                      onClick={() => onCheckout(checkoutQuantity)}
+                      onClick={() => onCheckoutClick()}
                       className="w-full px-4 py-2 bg-amber-600 dark:bg-amber-600 text-white rounded hover:bg-amber-700 dark:hover:bg-amber-700 transition-colors font-medium"
                     >
                       Check Out {checkoutQuantity > 1 ? `${checkoutQuantity} Items` : 'Item'}
