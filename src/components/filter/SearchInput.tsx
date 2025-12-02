@@ -1,4 +1,9 @@
-export default function SearchInput() {
+interface SearchInputProps {
+  searchTerm: string;
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export default function SearchInput({ searchTerm, setSearchTerm }: SearchInputProps)  {
   return (
     <div className='relative'>
       <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
@@ -9,6 +14,8 @@ export default function SearchInput() {
       <input
         type="text"
         placeholder="Search"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
         className="pl-10 pr-4 py-2 w-full border border-theme rounded-md focus:outline-none focus:ring-2 focus:ring-theme-focus-ring bg-theme text-theme-primary placeholder-theme-muted transition-colors duration-200"
       />          
     </div>

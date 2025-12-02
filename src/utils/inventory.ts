@@ -193,9 +193,7 @@ export function removeInventoryItems(
   );
 
   const itemsToRemove = targetType.slice(0, quantity);
-  console.log('itemsToRemove: ', itemsToRemove);
   const updatedInventory = currentInventory.filter((item) => !itemsToRemove.includes(item));
-  console.log('updatedInventory: ', updatedInventory);
   return updatedInventory;
 } 
 

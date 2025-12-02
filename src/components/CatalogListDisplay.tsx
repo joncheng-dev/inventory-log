@@ -3,17 +3,33 @@ import CatalogItemList from './catalog/CatalogItemList';
 
 interface CatalogListDisplayProps {
   catalogItems: CatalogItemType[];
+  searchTerm: string;
   selectedTags: string[];
   viewMode: 'grid-view' | 'list-view';
   onSelectTemplate: (selectedTemplate: CatalogItemType) => Promise<void>;
 }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
 
-export default function CatalogListDisplay({ catalogItems, selectedTags, viewMode, onSelectTemplate }: CatalogListDisplayProps) {
-  const filteredItems = selectedTags.length === 0 ? catalogItems
-    : catalogItems
-        .filter((entry) => selectedTags.every(tag => entry.tags.includes(tag))
-    );
-  
+export default function CatalogListDisplay({ catalogItems, searchTerm, selectedTags, viewMode, onSelectTemplate }: CatalogListDisplayProps) {
+  let search = '';
+  if (searchTerm.length > 1) {
+    search = searchTerm.toLowerCase();
+  }  
+
+  const filteredItems = catalogItems
+    .filter((item) =>
+      selectedTags.length === 0 ||
+      selectedTags.every(tag => item.tags.includes(tag))
+    )
+    .filter((item) => {
+      if (searchTerm === '') return true;
+      return (
+        item.displayName.toLowerCase().includes(search) ||
+        item.sku.toLowerCase().includes(search) ||
+        item.description.toLowerCase().includes(search)
+      );    
+    })
+  ;
+    
   return (
     <div className='h-full overflow-y-auto'>
       <CatalogItemList

@@ -22,13 +22,13 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   const [newMode, setNewMode] = useState<true | false>(false);
   const [archiveMode, setArchiveMode] = useState<true | false>(false);
   const [addItemsMode, setAddItemsMode] = useState<true | false>(false);
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const currentUserEmail = 'joncheng.dev@gmail.com';
 
   const itemsToDisplay = view === 'active'
     ? catalogItems.filter(item => !item.archived)
     : catalogItems.filter(item => item.archived);
-
-
+  
   // Filter via Tags
   const availableFilterTags = ["Biology", "Chemistry", "Earth Science", "General", "Physics"];
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -99,6 +99,8 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
       <div className="flex w-full border-b border-theme">
         <Filters
           availableFilterTags={availableFilterTags}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
           selectedTags={selectedTags}
           setSelectedTags={setSelectedTags}
           viewMode={viewMode}
@@ -111,6 +113,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
         <div className="flex-1 border-r border-theme">
           <CatalogListDisplay
             catalogItems={itemsToDisplay}
+            searchTerm={searchTerm}
             selectedTags={selectedTags}
             viewMode={viewMode}
             onSelectTemplate={handleSelectTemplate}

@@ -5,22 +5,29 @@ import type { CatalogItem as CatalogItemType } from '../types/catalog';
 interface ItemListDisplayProps {
   inventoryItemData: Record<string, InventoryItemGroupedType>;
   catalogItems: CatalogItemType[];
+  searchTerm: string;
   selectedTags: string[];
   setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemGroupedType | null>>;
   viewMode: 'grid-view' | 'list-view';
 }
 
-export default function ItemListDisplay({ inventoryItemData, catalogItems, selectedTags, setSelectedItem, viewMode }: ItemListDisplayProps) {
-  // Filter items based on selected tags
-  const filteredItems = selectedTags.length === 0
-    ? inventoryItemData
-    : Object.fromEntries(
-        Object.entries(inventoryItemData).filter(([key]) => {
-          const catalogItem = catalogItems.find(catItem => catItem.id === key);
-          if (!catalogItem) return false;
-          return selectedTags.every(tag => catalogItem.tags.includes(tag));
-        }
-      ));
+export default function ItemListDisplay({ inventoryItemData, catalogItems, searchTerm, selectedTags, setSelectedItem, viewMode }: ItemListDisplayProps) {
+  let search = '';
+  if (searchTerm.length > 1) {
+    search = searchTerm.toLowerCase();
+  }  
+
+  const filteredItems = Object.fromEntries(
+    Object.entries(inventoryItemData).filter(([_, item]) => {
+      const tagMatches = selectedTags.length === 0 ||
+        selectedTags.every(tag => item.tags.includes(tag));
+      const searchMatches = searchTerm === '' ||
+        item.displayName.toLowerCase().includes(search) ||
+        item.sku.toLowerCase().includes(search) ||
+        item.description.toLowerCase().includes(search)
+      return tagMatches && searchMatches;
+    })
+  );
   
   return (
     <div className="h-full overflow-y-auto">

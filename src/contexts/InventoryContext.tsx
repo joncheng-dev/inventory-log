@@ -98,7 +98,6 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
   ): Promise<void> => {
     await new Promise(r => setTimeout(r, 300));
     let template = catalogItems.find((item) => item.id === catalogItemId);
-    console.log('removeItemsFromInventory, template: ', template);
     if (!template) {
       throw new Error(`Catalog template with ID ${catalogItemId} not found.`);
     }

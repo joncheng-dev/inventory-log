@@ -29,7 +29,7 @@ export default function InventoryPage() {
   } = useInventory();
 
   const [viewMode, setViewMode] = useState<'grid-view' | 'list-view'>('grid-view');
-
+  const [searchTerm, setSearchTerm] = useState<string>('');
   // Filter via Tags
   const availableFilterTags = ["Biology", "Chemistry", "Earth Science", "General", "Physics"];
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -90,6 +90,8 @@ export default function InventoryPage() {
           <div className="flex w-full border-b border-theme">
             <Filters
               availableFilterTags={availableFilterTags}
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
               selectedTags={selectedTags}
               setSelectedTags={setSelectedTags}
               viewMode={viewMode}
@@ -102,6 +104,7 @@ export default function InventoryPage() {
               <ItemListDisplay
                 inventoryItemData={aggregatedInventory}
                 catalogItems={catalogItems}
+                searchTerm={searchTerm}
                 selectedTags={selectedTags}
                 setSelectedItem={setSelectedItem}
                 viewMode={viewMode}

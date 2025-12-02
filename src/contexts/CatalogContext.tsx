@@ -39,7 +39,6 @@ export const CatalogProvider = ({ children }: { children: React.ReactNode; }) =>
   const archiveCatalogItem = async (selectedItem: CatalogItemType) => {
     await new Promise(r => setTimeout(r, 300));
     const updatedItem = archiveItem(selectedItem);
-    console.log('archivedItem: ', updatedItem);
     setCatalogItems(prev =>
       prev.map(item => item.id === updatedItem.id ? updatedItem : item)
     );
@@ -48,7 +47,6 @@ export const CatalogProvider = ({ children }: { children: React.ReactNode; }) =>
   const unarchiveCatalogItem = async (selectedItem: CatalogItemType) => {
     await new Promise(r => setTimeout(r, 300));
     const updatedItem = unarchiveItem(selectedItem);
-    console.log('unarchivedItem: ', updatedItem);
     setCatalogItems(prev =>
       prev.map(item => item.id === updatedItem.id ? updatedItem : item)
     );
