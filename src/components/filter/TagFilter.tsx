@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface TagFilterProps {
   availableFilterTags: Array<string>;
@@ -6,8 +6,13 @@ interface TagFilterProps {
   setSelectedTags: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-export default function TagFilter({ availableFilterTags, selectedTags, setSelectedTags }: TagFilterProps) {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+export default function TagFilter({
+  availableFilterTags,
+  selectedTags,
+  setSelectedTags,
+}: TagFilterProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
@@ -15,14 +20,32 @@ export default function TagFilter({ availableFilterTags, selectedTags, setSelect
     );
   };
 
+  // Close on click outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
-    <div className="relative inline-block text-left">
+    <div ref={containerRef} className="relative inline-block text-left">
       <button
         className="px-4 py-2 border rounded-md text-theme-primary"
         onClick={() => setIsOpen((prev) => !prev)}
       >
         Filter by Tags
       </button>
+
       {isOpen && (
         <div className="absolute mt-2 w-56 bg-theme-surface rounded-md shadow-lg border border-theme z-50">
           <ul className="p-2 space-y-1 max-h-60 overflow-y-auto">
