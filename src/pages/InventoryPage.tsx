@@ -40,7 +40,7 @@ export default function InventoryPage() {
 
   useEffect(() => {
     if(selectedItem) fetchSelectedItemDetails(selectedItem);
-  }, [inventoryItems, selectedItem]);
+  }, [inventoryItems, selectedItem, adjustQtyMode]);
 
   const selectedCatalogTemplate = selectedItem
     ? catalogItems.find((item) => item.id === selectedItem.catalogItemId)
@@ -50,8 +50,8 @@ export default function InventoryPage() {
     catalogItemId: string,
     newTotalQuantity: number
   ) => {
-    if (selectedItem) {      
-      const adjustQty = newTotalQuantity - selectedItem.quantityTotal;
+    if (selectedItemDetails) {      
+      const adjustQty = newTotalQuantity - selectedItemDetails.quantityTotal;
       if (adjustQty > 0) {
         addItemsToInventory(catalogItemId, adjustQty);
       } else if (adjustQty < 0) {
@@ -141,7 +141,7 @@ export default function InventoryPage() {
       )}
       {selectedItem && selectedItemDetails && adjustQtyMode && selectedCatalogTemplate && 
         <AdjustQuantityModal
-          item={selectedItem}
+          item={selectedItemDetails}
           catalogTemplate={selectedCatalogTemplate}
           onClose={() => setAdjustQtyMode(false)}
           onConfirm={handleConfirmAdjustQty}

@@ -126,7 +126,7 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
   }, []);
 
   useEffect(() => {
-    if (inventoryItems.length > 0) fetchInventoryPageData();      
+    if (inventoryItems.length > 0) fetchInventoryPageData();
   }, [inventoryItems]);
 
   return (
