@@ -59,6 +59,8 @@ export default function CatalogItemEdit({ template, onClose, onSave }: CatalogIt
     }));
   };
 
+  const isFormValid = formData.displayName && formData.sku && skuValid && formData.tags.length > 0;
+
   return (
     <>
       {/* Backdrop */}
@@ -237,7 +239,7 @@ export default function CatalogItemEdit({ template, onClose, onSave }: CatalogIt
               </button>
               <button
                 type="submit"
-                disabled={!formData.displayName || !formData.sku || !skuValid || formData.tags.length === 0}
+                disabled={!isFormValid}
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded transition-colors text-sm font-medium"
               >
                 Save Changes
