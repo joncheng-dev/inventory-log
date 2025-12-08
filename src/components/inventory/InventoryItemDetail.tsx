@@ -98,7 +98,7 @@ export default function InventoryItemDetail({
                 <h2 className="text-xl font-semibold text-theme-primary mb-2">
                   {displayName}
                 </h2>
-                <div className="flex gap-1.5 flex-wrap">
+                <div className="flex gap-2 flex-wrap">
                   {tags.map((cat) => (
                     <span
                       key={cat}
@@ -141,7 +141,7 @@ export default function InventoryItemDetail({
                 <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/50 rounded-lg p-4">
                   <h3 className="text-sm font-medium text-theme-primary mb-3">Check Out Items</h3>
                   
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <div>
                       <label className="text-sm text-theme-secondary mb-1.5 block">
                         Quantity
@@ -170,7 +170,7 @@ export default function InventoryItemDetail({
 
                     <button
                       onClick={() => onCheckoutClick()}
-                      className="w-full px-4 py-2 bg-amber-600 dark:bg-amber-600 text-white rounded hover:bg-amber-700 dark:hover:bg-amber-700 transition-colors font-medium"
+                      className="w-full px-4 py-2 bg-amber-600 dark:bg-amber-600 text-white rounded-md hover:bg-amber-700 dark:hover:bg-amber-700 transition-colors font-medium"
                     >
                       Check Out {checkoutQuantity > 1 ? `${checkoutQuantity} Items` : 'Item'}
                     </button>
@@ -224,7 +224,7 @@ export default function InventoryItemDetail({
                             {myItems.length > 1 && (
                               <button
                                 onClick={onReturnAllMyItems}
-                                className="text-xs px-3 py-1 border border-theme text-theme-primary rounded hover:bg-theme-hover transition-colors font-medium"
+                                className="text-xs px-3 py-1 border border-theme text-theme-primary rounded-md hover:bg-theme-hover transition-colors font-medium"
                               >
                                 Return All ({myItems.length})
                               </button>
@@ -248,7 +248,7 @@ export default function InventoryItemDetail({
                                 </div>
                                 <button
                                   onClick={() => onReturnItem(item.id)}
-                                  className="px-3 py-1.5 text-sm border border-theme text-theme-primary rounded hover:bg-theme-hover transition-colors font-medium"
+                                  className="px-4 py-2 text-sm border border-theme text-theme-primary rounded-md hover:bg-theme-hover transition-colors font-medium"
                                 >
                                   Return
                                 </button>
@@ -311,14 +311,14 @@ export default function InventoryItemDetail({
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => onClose()}
-                className="px-4 py-2 border border-theme rounded hover:bg-theme-hover transition-colors text-sm font-medium"
+                className="px-4 py-2 border border-theme rounded-md hover:bg-theme-hover transition-colors text-sm font-medium"
               >
                 Close
               </button>
               {isAdmin &&
                 <button
                   onClick={() => setAdjustQtyMode(true)}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded transition-colors text-sm font-medium"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-md transition-colors text-sm font-medium"
                 >
                   Adjust Quantity
                 </button>
