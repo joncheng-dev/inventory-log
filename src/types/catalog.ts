@@ -14,3 +14,11 @@ export interface InventoryCounts {
   available: number;
   checkedOut: number;
 }
+
+export interface CatalogItemFormData {
+  displayName: string,
+  sku: string,
+  description: string,
+  location: string,
+  tags: string[];
+}

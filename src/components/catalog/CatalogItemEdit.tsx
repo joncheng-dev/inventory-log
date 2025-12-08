@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { CatalogItem as CatalogItemType } from "../../types/catalog";
+import type { CatalogItem as CatalogItemType, CatalogItemFormData } from "../../types/catalog";
 import { useCatalog } from '../../contexts/CatalogContext';
 
 interface CatalogItemEditProps {
@@ -11,7 +11,8 @@ interface CatalogItemEditProps {
 export default function CatalogItemEdit({ template, onClose, onSave }: CatalogItemEditProps) {
   const { catalogItems } = useCatalog();
   const [skuValid, setSkuValid] = useState<true | false>(false);
-  const [formData, setFormData] = useState({
+  
+  const [formData, setFormData] = useState<CatalogItemFormData>({
     displayName: template.displayName,
     sku: template.sku,
     description: template.description || '',

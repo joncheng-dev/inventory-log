@@ -1,21 +1,18 @@
 import { useState, useEffect } from 'react';
-import type { CatalogItem as CatalogItemType } from "../../types/catalog";
+import type { CatalogItem as CatalogItemType, CatalogItemFormData } from "../../types/catalog";
+import { useCatalog } from '../../contexts/CatalogContext';
 
 interface CatalogItemNewProps {
   onClose: () => void;
   onSave: (newItem: CatalogItemType) => void;
 }
 
-type FormData = {
-  displayName: string,
-  sku: string,
-  description: string,
-  location: string,
-  tags: string[];
-};
-
 export default function CatalogItemNew({ onClose, onSave }: CatalogItemNewProps) {
-  const [formData, setFormData] = useState<FormData>({
+  const { catalogItems } = useCatalog();
+  const [skuValid, setSkuValid] = useState<true | false>(false);
+  const [skuTouched, setSkuTouched] = useState<true | false>(false);
+
+  const [formData, setFormData] = useState<CatalogItemFormData>({
     displayName: '',
     sku: '',
     description: '',
@@ -37,6 +34,14 @@ export default function CatalogItemNew({ onClose, onSave }: CatalogItemNewProps)
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
+  useEffect(() => {
+    const trimmedSku = formData.sku.trim();
+    const skuIsDuplicate = catalogItems.some(
+      item => item.sku === formData.sku
+    );
+    setSkuValid(trimmedSku.length > 0 && !skuIsDuplicate);
+  }, [catalogItems, formData.sku]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSave({
@@ -54,7 +59,7 @@ export default function CatalogItemNew({ onClose, onSave }: CatalogItemNewProps)
     }));
   };
 
-  const isFormValid = formData.displayName.trim() && formData.sku.trim() && formData.tags.length > 0;
+  const isFormValid = formData.displayName.trim() && formData.sku.trim() && formData.tags.length > 0 && skuValid;
 
   return (
     <>
@@ -133,9 +138,25 @@ export default function CatalogItemNew({ onClose, onSave }: CatalogItemNewProps)
                         required
                         value={formData.sku}
                         onChange={(e) => setFormData(prev => ({ ...prev, sku: e.target.value }))}
-                        className="w-full px-3 py-2 border-2 border-blue-300 dark:border-blue-700 rounded bg-theme-surface text-theme-primary font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        onBlur={(e) => {
+                          setFormData(prev => ({ ...prev, sku: e.target.value.trim() }));
+                          setSkuTouched(true);
+                        }}
+                        className={`w-full px-3 py-2 border-2 rounded bg-theme-surface text-theme-primary font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          skuTouched && !skuValid 
+                            ? 'border-red-500' 
+                            : 'border-blue-300 dark:border-blue-700'
+                        }`}
                         placeholder="e.g., BIO-001"
                       />
+                      {skuTouched && !skuValid && (
+                        <p className='text-xs text-red-500'>
+                        { formData.sku.trim().length === 0
+                          ? 'SKU is required.'
+                          : 'This SKU is in use.'
+                        }  
+                      </p>
+                      )}
                       <p className="text-xs text-theme-secondary">
                         Unique identifier for this item type
                       </p>
