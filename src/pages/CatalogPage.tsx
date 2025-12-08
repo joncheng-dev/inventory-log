@@ -23,7 +23,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   const { inventoryItems, addItemsToInventory } = useInventory(); 
 
   const [viewMode, setViewMode] = useState<'grid-view' | 'list-view'>('grid-view');
-  const [selectedTemplate, setSelectedTemplate] = useState<CatalogItemType | null>(null);
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
   const [editMode, setEditMode] = useState<true | false>(false);
   const [newMode, setNewMode] = useState<true | false>(false);
   const [archiveMode, setArchiveMode] = useState<true | false>(false);
@@ -34,6 +34,10 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   const itemsToDisplay = view === 'active'
     ? catalogItems.filter(item => !item.archived)
     : catalogItems.filter(item => item.archived);
+
+  const selectedTemplate = selectedTemplateId
+    ? catalogItems.find((item) => item.id === selectedTemplateId) ?? null
+    : null;
   
   // Filter via Tags
   const availableFilterTags = ["Biology", "Chemistry", "Earth Science", "General", "Physics"];
@@ -49,6 +53,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
 
   const handleSaveEdit = (updatedItem: CatalogItemType) => {
     updateCatalogItem(updatedItem);
+    setSelectedTemplateId(updatedItem.id);
     closeEditModal();
   }
   
@@ -62,7 +67,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   }
 
   const handleSelectTemplate = async (selectedTemplate: CatalogItemType) => {
-    setSelectedTemplate(selectedTemplate);
+    setSelectedTemplateId(selectedTemplate.id);
   }
 
   const handleArchiveClick = () => {
@@ -71,12 +76,12 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
 
   const handleArchiveConfirm = (selectedItem: CatalogItemType) => {
     archiveCatalogItem(selectedItem);
-    setSelectedTemplate(null);
+    setSelectedTemplateId(null);
   }
 
   const handleRestoreClick = (selectedTemplate: CatalogItemType) => {
     unarchiveCatalogItem(selectedTemplate);
-    setSelectedTemplate(null);
+    setSelectedTemplateId(null);
   }
 
   const handleArchiveCancel = () => {
@@ -129,7 +134,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
           <CatalogItemDetail
             selectedTemplate={selectedTemplate}
             setEditMode={setEditMode}
-            onClose={() => setSelectedTemplate(null)}
+            onClose={() => setSelectedTemplateId(null)}
             onArchiveClick={handleArchiveClick}
             onRestoreClick={handleRestoreClick}
             onAddItemClick={handleShowAddItemModal}
