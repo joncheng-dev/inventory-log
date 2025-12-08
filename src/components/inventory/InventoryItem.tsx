@@ -34,7 +34,7 @@ export default function InventoryItem({ item, catalogItem, viewMode, setSelected
           >
             {catalogItem.displayName}
           </h3>
-          <div className="flex gap-1.5 overflow-hidden">
+          <div className="flex gap-2 overflow-hidden">
             {catalogItem.tags.map((cat) => (
               <span 
                 key={cat} 
@@ -65,7 +65,7 @@ export default function InventoryItem({ item, catalogItem, viewMode, setSelected
         {/* Action section */}
         <div className="px-4 py-3 bg-theme-secondary/10">
           <button
-            className="w-full px-3 py-2 border border-theme rounded hover:bg-theme-hover transition-colors text-sm font-medium"
+            className="w-full px-4 py-2 border border-theme rounded-md hover:bg-theme-hover transition-colors text-sm font-medium"
             onClick={() => setSelectedItem(item)}
           >
             View Details
@@ -78,7 +78,7 @@ export default function InventoryItem({ item, catalogItem, viewMode, setSelected
   // List view
   return (
     <div className="bg-theme-surface border border-theme rounded hover:bg-theme-hover transition-colors">
-      <div className="px-4 py-2.5 flex items-center gap-4">
+      <div className="px-4 py-3 flex items-center gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex items-baseline gap-3">
             <h3 className="font-semibold text-theme-primary truncate">
@@ -88,11 +88,11 @@ export default function InventoryItem({ item, catalogItem, viewMode, setSelected
               {catalogItem.sku}
             </span>
           </div>
-          <div className="flex gap-1.5 mt-1 overflow-hidden">
+          <div className="flex gap-2 mt-1 overflow-hidden">
             {catalogItem.tags.map((cat) => (
               <span
                 key={cat}
-                className={`px-1.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${categoryColors[cat] || categoryColors.General}`}
+                className={`px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${categoryColors[cat] || categoryColors.General}`}
               >
                 {cat}
               </span>
@@ -108,7 +108,7 @@ export default function InventoryItem({ item, catalogItem, viewMode, setSelected
             <span className={statusColor}>{item.quantityAvailable}</span> available
           </span>
           <button
-            className="px-3 py-1.5 border border-theme rounded hover:bg-theme-surface transition-colors text-sm font-medium"
+            className="px-4 py-2 border border-theme rounded-md hover:bg-theme-surface transition-colors text-sm font-medium"
             onClick={() => setSelectedItem(item)}
           >
             Details

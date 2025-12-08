@@ -91,17 +91,17 @@ export default function CatalogItemDetail({
                     {archived ? 'Archived Template' : 'Template'}
                   </span>
                 </div>
-                <h2 className={`text-2xl font-bold mb-2 ${archived ? 'text-theme-secondary' : 'text-theme-primary'}`}>
+                <h2 className={`text-xl font-semibold mb-2 ${archived ? 'text-theme-secondary' : 'text-theme-primary'}`}>
                   {displayName}
                 </h2>
                 <p className="text-sm text-theme-secondary mb-2">
                   {archived ? 'Archived catalog item' : 'Catalog item definition'}
                 </p>
-                <div className="flex gap-1.5 flex-wrap">
+                <div className="flex gap-2 flex-wrap">
                   {tags.map((cat) => (
                     <span
                       key={cat}
-                      className={`px-3 py-1.5 rounded-full text-sm font-medium ${archived ? 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400' : categoryColors[cat] || categoryColors.General}`}
+                      className={`px-2 py-0.5 rounded-full text-xs font-medium ${archived ? 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400' : categoryColors[cat] || categoryColors.General}`}
                     >
                       {cat}
                     </span>
@@ -121,7 +121,7 @@ export default function CatalogItemDetail({
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto px-6 py-6">
+          <div className="flex-1 overflow-y-auto px-6 py-4">
             <div className="space-y-6">
               {/* Template Information Section */}
               <div className="space-y-4">
@@ -130,14 +130,14 @@ export default function CatalogItemDetail({
                 </h3>
                 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
+                  <div className="space-y-2">
                     <label className="text-xs text-theme-secondary">SKU</label>
                     <p className="font-mono text-sm text-theme-primary border border-theme rounded px-3 py-2 bg-theme-secondary/5">
                       {sku}
                     </p>
                   </div>
                   
-                  <div className="space-y-1">
+                  <div className="space-y-2">
                     <label className="text-xs text-theme-secondary">Display Name</label>
                     <p className="text-sm text-theme-primary border border-theme rounded px-3 py-2 bg-theme-secondary/5">
                       {displayName}
@@ -146,7 +146,7 @@ export default function CatalogItemDetail({
                 </div>
 
                 {location && (
-                  <div className="space-y-1">
+                  <div className="space-y-2">
                     <label className="text-xs text-theme-secondary">Default Location</label>
                     <p className="text-sm text-theme-primary border border-theme rounded px-3 py-2 bg-theme-secondary/5">
                       {location}
@@ -190,13 +190,13 @@ export default function CatalogItemDetail({
               <>
                 <button
                   onClick={() => onClose(null)}
-                  className="px-4 py-2 border border-theme rounded hover:bg-theme-hover transition-colors text-sm font-medium"
+                  className="px-4 py-2 border border-theme rounded-md hover:bg-theme-hover transition-colors text-sm font-medium"
                 >
                   Close
                 </button>
                 <button
                   onClick={() => onRestoreClick(selectedTemplate)}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded transition-colors text-sm font-medium"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-md transition-colors text-sm font-medium"
                 >
                   Restore to Catalog
                 </button>
@@ -205,26 +205,26 @@ export default function CatalogItemDetail({
               <>
                 <button
                   onClick={() => onArchiveClick(selectedTemplate)}
-                  className="px-4 py-2 border-2 border-amber-300 dark:border-amber-700 rounded hover:bg-amber-50 dark:hover:bg-amber-950/20 transition-colors text-sm font-medium text-amber-700 dark:text-amber-300"
+                  className="px-4 py-2 border-2 border-amber-300 dark:border-amber-700 rounded-md hover:bg-amber-50 dark:hover:bg-amber-950/20 transition-colors text-sm font-medium text-amber-700 dark:text-amber-300"
                 >
                   Archive Template
                 </button>
                 <button
                   onClick={() => onClose(null)}
-                  className="px-4 py-2 border border-theme rounded hover:bg-theme-hover transition-colors text-sm font-medium"
+                  className="px-4 py-2 border border-theme rounded-md hover:bg-theme-hover transition-colors text-sm font-medium"
                 >
                   Close
                 </button>
                 <div className="flex gap-3">
                   <button
                     onClick={() => setEditMode(true)}
-                    className="px-4 py-2 border-2 border-blue-400 dark:border-blue-600 rounded hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors text-sm font-medium text-blue-700 dark:text-blue-300"
+                    className="px-4 py-2 border-2 border-blue-400 dark:border-blue-600 rounded-md hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors text-sm font-medium text-blue-700 dark:text-blue-300"
                   >
                     Edit Template
                   </button>
                     <button
                       onClick={() => onAddItemClick(selectedTemplate)}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded transition-colors text-sm font-medium"
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-md transition-colors text-sm font-medium"
                   >
                     Add to Inventory
                   </button>

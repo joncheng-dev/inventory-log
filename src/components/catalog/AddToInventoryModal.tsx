@@ -110,7 +110,7 @@ export default function AddToInventoryModal({
               </div>
 
               {/* Quantity Input */}
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <label htmlFor="quantity" className="text-sm font-medium text-theme-secondary block">
                   How many items to create? <span className="text-red-500">*</span>
                 </label>
