@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { CatalogItem as CatalogItemType } from "../../types/catalog";
+import { useCatalog } from '../../contexts/CatalogContext';
 
 interface CatalogItemEditProps {
   template: CatalogItemType;
@@ -8,6 +9,8 @@ interface CatalogItemEditProps {
 }
 
 export default function CatalogItemEdit({ template, onClose, onSave }: CatalogItemEditProps) {
+  const { catalogItems } = useCatalog();
+  const [skuValid, setSkuValid] = useState<true | false>(false);
   const [formData, setFormData] = useState({
     displayName: template.displayName,
     sku: template.sku,
@@ -29,6 +32,14 @@ export default function CatalogItemEdit({ template, onClose, onSave }: CatalogIt
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
+
+  useEffect(() => {
+    const trimmedSku = formData.sku.trim();
+    const skuIsDuplicate = catalogItems.some(
+      item => item.sku === formData.sku && item.id !== template.id
+    );
+    setSkuValid(trimmedSku.length > 0 && !skuIsDuplicate);
+  }, [catalogItems, formData.sku, template.id]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,9 +130,22 @@ export default function CatalogItemEdit({ template, onClose, onSave }: CatalogIt
                         required
                         value={formData.sku}
                         onChange={(e) => setFormData(prev => ({ ...prev, sku: e.target.value }))}
-                        className="w-full px-3 py-2 border-2 border-blue-300 dark:border-blue-700 rounded bg-theme-surface text-theme-primary font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        onBlur={(e) => setFormData(prev => ({...prev, sku: e.target.value.trim() }))}
+                        className={`w-full px-3 py-2 border-2 rounded bg-theme-surface text-theme-primary font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          formData.sku && !skuValid 
+                            ? 'border-red-500' 
+                            : 'border-blue-300 dark:border-blue-700'
+                        }`}
                         placeholder="e.g., BIO-001"
                       />
+                      {!skuValid && (
+                        <p className='text-xs text-red-500'>
+                        { formData.sku.trim().length === 0
+                          ? 'SKU is required.'
+                          : 'This SKU is in use.'
+                        }  
+                      </p>
+                      )}
                     </div>
                     
                     {/* Display Name */}
@@ -212,7 +236,7 @@ export default function CatalogItemEdit({ template, onClose, onSave }: CatalogIt
               </button>
               <button
                 type="submit"
-                disabled={!formData.displayName || !formData.sku || formData.tags.length === 0}
+                disabled={!formData.displayName || !formData.sku || !skuValid || formData.tags.length === 0}
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded transition-colors text-sm font-medium"
               >
                 Save Changes

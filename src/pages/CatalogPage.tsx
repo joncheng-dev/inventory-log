@@ -13,7 +13,13 @@ import ArchiveConfirmationModal from '../components/catalog/ArchiveConfirmationM
 import { getInventoryCountsforCatalog } from '../utils/inventory';
 
 export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
-  const { catalogItems, addNewCatalogItem, updateCatalogItem, archiveCatalogItem, unarchiveCatalogItem } = useCatalog();
+  const {
+    catalogItems,
+    addNewCatalogItem,
+    updateCatalogItem,
+    archiveCatalogItem,
+    unarchiveCatalogItem
+  } = useCatalog();
   const { inventoryItems, addItemsToInventory } = useInventory(); 
 
   const [viewMode, setViewMode] = useState<'grid-view' | 'list-view'>('grid-view');
