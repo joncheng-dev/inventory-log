@@ -75,12 +75,12 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   }
 
   const handleArchiveConfirm = (selectedItem: CatalogItemType) => {
-    archiveCatalogItem(selectedItem);
+    archiveCatalogItem(selectedItem.id);
     setSelectedTemplateId(null);
   }
 
   const handleRestoreClick = (selectedTemplate: CatalogItemType) => {
-    unarchiveCatalogItem(selectedTemplate);
+    unarchiveCatalogItem(selectedTemplate.id);
     setSelectedTemplateId(null);
   }
 

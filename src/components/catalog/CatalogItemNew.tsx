@@ -4,7 +4,7 @@ import { useCatalog } from '../../contexts/CatalogContext';
 
 interface CatalogItemNewProps {
   onClose: () => void;
-  onSave: (newItem: CatalogItemType) => void;
+  onSave: (newItem: Omit<CatalogItemType, "id">) => void;
 }
 
 export default function CatalogItemNew({ onClose, onSave }: CatalogItemNewProps) {
@@ -45,7 +45,6 @@ export default function CatalogItemNew({ onClose, onSave }: CatalogItemNewProps)
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSave({
-      id: crypto.randomUUID(),
       ...formData,
     });
   };
