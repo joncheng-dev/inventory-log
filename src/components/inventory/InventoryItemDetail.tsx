@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { InventoryItem as InventoryItemType, InventoryItemGroupedType } from '../../types/inventory';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface InventoryItemDetailProps {
   selectedItemDetails: InventoryItemGroupedType;
@@ -24,7 +25,7 @@ export default function InventoryItemDetail({
 }: InventoryItemDetailProps) {
   const [checkoutQuantity, setCheckoutQuantity] = useState(1);
   const isAdmin = true;
-  const currentUserEmail = 'joncheng.dev@gmail.com';
+  const { userProfile } = useAuth(); // user email is "userProfile.email"
   
   const {
     displayName,
@@ -58,9 +59,9 @@ export default function InventoryItemDetail({
       return acc;
     }, {} as Record<string, InventoryItemType[]>);
 
-  const myItems = checkedOutItems[currentUserEmail] || [];
+  const myItems = checkedOutItems[userProfile.email] || [];
   const otherUsersItems = Object.entries(checkedOutItems)
-    .filter(([user]) => user !== currentUserEmail);
+    .filter(([user]) => user !== userProfile.email);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -165,7 +166,7 @@ export default function InventoryItemDetail({
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
-                      <span>Checking out as: <span className="text-theme-primary font-medium">{currentUserEmail}</span></span>
+                      <span>Checking out as: <span className="text-theme-primary font-medium">{userProfile.email}</span></span>
                     </div>
 
                     <button

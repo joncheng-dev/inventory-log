@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import type { InventoryItem as InventoryItemType, CheckedOutItemDataType, InventoryItemGroupedType } from "../types/inventory";
 import { useCatalog } from "./CatalogContext";
+import { useAuth } from "./AuthContext";
+import type { InventoryItem as InventoryItemType, CheckedOutItemDataType, InventoryItemGroupedType } from "../types/inventory";
 import {
   getInventoryItems,
   createInventoryItemsBatch,
@@ -40,7 +41,7 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
   const [checkedOutQty, setCheckedOutQty] = useState<Record<string, CheckedOutItemDataType>>({});
   const [filteredCheckedOutItems, setFilteredCheckedOutItems] = useState<Record<string, InventoryItemGroupedType>>({});
   const { catalogItems } = useCatalog();
-  const currentUserEmail = 'joncheng.dev@gmail.com';
+  const { userProfile } = useAuth();
   
   // Selected Item Details
   const [selectedItemDetails, setSelectedItemDetails] = useState<InventoryItemGroupedType | null>(null);
@@ -116,7 +117,7 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
     qtyToCheckOut: number
   ): Promise<void> => {
     try {
-      const updatedList = checkOutInventoryItems(currentUserEmail, inventoryItems, catalogItemId, qtyToCheckOut);
+      const updatedList = checkOutInventoryItems(userProfile.email, inventoryItems, catalogItemId, qtyToCheckOut);
       const checkedOutItems = updatedList.filter((item, index) => {
         const originalItem = inventoryItems[index];
         return item.isCheckedOut && !originalItem.isCheckedOut;
@@ -126,7 +127,7 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
         id: item.id,
         data: {
           isCheckedOut: true,
-          checkedOutBy: currentUserEmail,
+          checkedOutBy: userProfile.email,
           dateCheckedOut: item.dateCheckedOut
         }
       }));
@@ -141,9 +142,9 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
 
   const returnAllItems = async (catalogItemId: string): Promise<void> => {
     try {
-      const updatedList = returnAllInventoryItems(currentUserEmail, inventoryItems, catalogItemId);
+      const updatedList = returnAllInventoryItems(userProfile.email, inventoryItems, catalogItemId);
       const returnedItems = inventoryItems.filter(
-        item => item.checkedOutBy === currentUserEmail && item.catalogItemId === catalogItemId
+        item => item.checkedOutBy === userProfile.email && item.catalogItemId === catalogItemId
       );
       const updates = returnedItems.map(item => ({
         id: item.id,
@@ -191,7 +192,7 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
       aggregatedItems,
       checkedOutQty,
       filteredCheckedOutItems
-    } = buildInventoryView(currentUserEmail, inventoryItems, catalogItems);
+    } = buildInventoryView(userProfile.email, inventoryItems, catalogItems);
 
     setAggregatedInventory(aggregatedItems);
     setCheckedOutQty(checkedOutQty);

@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function DropdownMenu() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const currentUser = 'joncheng.dev@gmail.com';
+  const { userProfile } = useAuth(); // user email is "userProfile.email"
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -28,7 +29,7 @@ export default function DropdownMenu() {
           <div className="py-2 px-4 border-b border-theme-muted">
             <p className="text-xs text-theme-secondary mb-1">Signed in as</p>
             <p className="text-sm font-medium text-theme-primary truncate">
-              {currentUser}
+              {userProfile.email}
             </p>
           </div>
           <div className="py-1">

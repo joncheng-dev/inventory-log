@@ -29,7 +29,6 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   const [archiveMode, setArchiveMode] = useState<true | false>(false);
   const [addItemsMode, setAddItemsMode] = useState<true | false>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const currentUserEmail = 'joncheng.dev@gmail.com';
 
   const itemsToDisplay = view === 'active'
     ? catalogItems.filter(item => !item.archived)
@@ -61,7 +60,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
     setNewMode(false);
   } 
 
-  const handleSaveNew = (newItem: CatalogItemType) => {
+  const handleSaveNew = (newItem: Omit<CatalogItemType, "id">) => {
     addNewCatalogItem(newItem);
     closeNewModal();
   }

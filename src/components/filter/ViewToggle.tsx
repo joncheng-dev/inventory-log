@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 interface ViewToggleProps {
   viewMode: 'grid-view' | 'list-view';
   setViewMode: React.Dispatch<React.SetStateAction<'grid-view' | 'list-view'>>;
