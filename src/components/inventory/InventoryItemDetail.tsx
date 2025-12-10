@@ -24,8 +24,7 @@ export default function InventoryItemDetail({
   isBlurred = false
 }: InventoryItemDetailProps) {
   const [checkoutQuantity, setCheckoutQuantity] = useState(1);
-  const isAdmin = true;
-  const { userProfile } = useAuth(); // user email is "userProfile.email"
+  const { userProfile, isAdmin } = useAuth(); // user email is "userProfile.email"
   
   const {
     displayName,

@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import DropdownMenu from './ui/DropdownMenu';
 import DarkModeToggle from './ui/DarkModeToggle';
 
 export default function Header() {
+  const { userProfile, isAdmin } = useAuth();
+
   return (
     <div className='w-full flex justify-between py-4 px-4 border-b border-theme bg-theme text-theme-primary transition-colors duration-200'>
       <Link to="/" className='flex border border-theme rounded-lg overflow-hidden'>
@@ -16,11 +19,13 @@ export default function Header() {
         </div>
       </Link>
       <div className='flex items-center gap-4'>
-        <Link to="/catalog" className='px-4 py-2 rounded-lg hover:bg-theme-surface transition-colors duration-200'>
-          <p className="text-sm font-medium text-theme-primary">
-            Item Catalog
-          </p>
-        </Link>
+        {isAdmin && (
+          <Link to="/catalog" className='px-4 py-2 rounded-lg hover:bg-theme-surface transition-colors duration-200'>
+            <p className="text-sm font-medium text-theme-primary">
+              Item Catalog
+            </p>
+          </Link>
+        )}
         <Link to="/inventory" className='px-4 py-2 rounded-lg hover:bg-theme-surface transition-colors duration-200'>
           <p className="text-sm font-medium text-theme-primary">
             Inventory
