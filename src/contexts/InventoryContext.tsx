@@ -1,8 +1,19 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { InventoryItem as InventoryItemType, CheckedOutItemDataType, InventoryItemGroupedType } from "../types/inventory";
-import { mockInventoryItems } from "../mockData/inventoryItems";
 import { useCatalog } from "./CatalogContext";
-import { generateNewInventoryItems, buildInventoryView, buildSelectedItemDetails, removeInventoryItems, checkOutInventoryItems, returnAllInventoryItems, returnInventoryItem } from '../utils/inventory';
+import {
+  getInventoryItems,
+  createInventoryItemsBatch,
+  updateInventoryItemsBatch,
+  deleteInventoryItemsBatch,
+  generateNewInventoryItems,
+  buildInventoryView,
+  buildSelectedItemDetails,
+  removeInventoryItems,
+  checkOutInventoryItems,
+  returnAllInventoryItems,
+  returnInventoryItem
+} from '../utils/inventory';
 
 interface InventoryContextType {
   inventoryLoading: boolean;
@@ -39,12 +50,137 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
   const [inventoryLoading, setInventoryLoading] = useState(true);
   const [selectedItemLoading, setSelectedItemLoading] = useState(false);
 
-  // Fetch -- currently using mock data
   const fetchInventoryItems = async () => {
     setInventoryLoading(true);
-    await new Promise(r => setTimeout(r, 300));
-    setInventoryItems(mockInventoryItems);
+    try {
+      const items = await getInventoryItems();
+      setInventoryItems(items);
+    } catch (err) {
+      console.error("Failed to fetch inventory items: ", err);
+    } finally {
+      setInventoryLoading(false);
+    }
   }
+
+  const addItemsToInventory = async(
+    catalogItemId: string,
+    quantity: number
+  ): Promise<void> => {
+    const template = catalogItems.find((item) => item.id === catalogItemId);
+    if (!template) {
+      throw new Error(`Catalog template with ID ${catalogItemId} not found.`);
+    }
+    if (template.archived) {
+      throw new Error("Cannot add inventory to an archived template.");
+    }
+    try {
+      const newItems = generateNewInventoryItems(catalogItemId, quantity);
+      const ids = await createInventoryItemsBatch(newItems);
+      
+      // Add to local state with IDs
+      const itemsWithIds = newItems.map((item, index) => ({
+        ...item,
+        id: ids[index]
+      }));
+      setInventoryItems(prev => [...prev, ...itemsWithIds]);
+    } catch (err) {
+      console.error("Failed to add items to inventory:", err);
+      throw err;
+    }
+  };
+
+  const removeItemsFromInventory = async (
+    catalogItemId: string,
+    quantity: number
+  ): Promise<void> => {
+    const template = catalogItems.find((item) => item.id === catalogItemId);
+    if (!template) {
+      throw new Error(`Catalog template with ID ${catalogItemId} not found.`);
+    }
+
+    try {
+      const updatedList = removeInventoryItems(inventoryItems, catalogItemId, quantity);
+      const removedItems = inventoryItems.filter(item => !updatedList.includes(item));
+      const idsToRemove = removedItems.map(item => item.id);
+
+      await deleteInventoryItemsBatch(idsToRemove);
+      setInventoryItems(updatedList);
+    } catch (err) {
+      console.error("Failed to remove items from inventory: ", err);
+      throw err;
+    }
+  }
+
+  const checkOutItems = async (
+    catalogItemId: string,
+    qtyToCheckOut: number
+  ): Promise<void> => {
+    try {
+      const updatedList = checkOutInventoryItems(currentUserEmail, inventoryItems, catalogItemId, qtyToCheckOut);
+      const checkedOutItems = updatedList.filter((item, index) => {
+        const originalItem = inventoryItems[index];
+        return item.isCheckedOut && !originalItem.isCheckedOut;
+      });
+
+      const updates = checkedOutItems.map(item => ({
+        id: item.id,
+        data: {
+          isCheckedOut: true,
+          checkedOutBy: currentUserEmail,
+          dateCheckedOut: item.dateCheckedOut
+        }
+      }));
+
+      await updateInventoryItemsBatch(updates);
+      setInventoryItems(updatedList);
+    } catch (err) {
+      console.error("Failed to check out items: ", err);
+      throw err;
+    }
+  }
+
+  const returnAllItems = async (catalogItemId: string): Promise<void> => {
+    try {
+      const updatedList = returnAllInventoryItems(currentUserEmail, inventoryItems, catalogItemId);
+      const returnedItems = inventoryItems.filter(
+        item => item.checkedOutBy === currentUserEmail && item.catalogItemId === catalogItemId
+      );
+      const updates = returnedItems.map(item => ({
+        id: item.id,
+        data: {
+          isCheckedOut: false,
+          checkedOutBy: null,
+          dateCheckedOut: null
+        }
+      }));
+
+      await updateInventoryItemsBatch(updates);
+      setInventoryItems(updatedList);
+    } catch (err) {
+      console.error("Failed to return all items: ", err);
+      throw err;
+    }
+  };
+
+  const returnItem = async (itemId: string): Promise<void> => {
+    try {
+      const updatedList = returnInventoryItem(inventoryItems, itemId);
+
+      await updateInventoryItemsBatch([{
+        id: itemId,
+        data: {
+          isCheckedOut: false,
+          checkedOutBy: null,
+          dateCheckedOut: null
+        }
+      }]);
+
+      setInventoryItems(updatedList);
+    } catch (err) {
+      console.error("Failed to return item: ", err);
+      throw err;
+    }
+  };
 
   // Fetch grouped inventory items
   const fetchInventoryPageData = async () => {
@@ -74,51 +210,6 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
     setSelectedItemDetails(itemDetails);
     setRelatedItems(relatedItems);
     setSelectedItemLoading(false);
-  }
-
-  const addItemsToInventory = async(
-    catalogItemId: string,
-    quantity: number    
-  ): Promise<void> => {
-    await new Promise(r => setTimeout(r, 300));
-    let template = catalogItems.find((item) => item.id === catalogItemId);
-    if (!template) {
-      throw new Error(`Catalog template with ID ${catalogItemId} not found.`);
-    }
-    if (template.archived) {
-        throw new Error("Cannot add inventory to an archived template."); 
-    }
-    let newItems = generateNewInventoryItems(catalogItemId, quantity);
-    setInventoryItems(prev => [...prev, ...newItems]);
-  }
-
-  const removeItemsFromInventory = async (
-    catalogItemId: string,
-    quantity: number
-  ): Promise<void> => {
-    await new Promise(r => setTimeout(r, 300));
-    let template = catalogItems.find((item) => item.id === catalogItemId);
-    if (!template) {
-      throw new Error(`Catalog template with ID ${catalogItemId} not found.`);
-    }
-    let updatedList = removeInventoryItems(inventoryItems, catalogItemId, quantity);
-    setInventoryItems(updatedList);
-  }
-
-  const checkOutItems = async (catalogItemId: string, qtyToCheckOut: number): Promise<void> => {
-    await new Promise(r => setTimeout(r, 300));
-    let updatedList = checkOutInventoryItems(currentUserEmail, inventoryItems, catalogItemId, qtyToCheckOut);
-    setInventoryItems(updatedList);
-  }
-
-  const returnAllItems = async (catalogItemId: string): Promise<void> => {
-    await new Promise(r => setTimeout(r, 300));
-    setInventoryItems(returnAllInventoryItems(currentUserEmail, inventoryItems, catalogItemId));
-  }
-
-  const returnItem = async (itemId: string): Promise<void> => {
-    await new Promise(r => setTimeout(r, 300));
-    setInventoryItems(returnInventoryItem(inventoryItems, itemId));
   }
 
   useEffect(() => {

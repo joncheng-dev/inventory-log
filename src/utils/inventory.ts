@@ -1,5 +1,119 @@
-import type { InventoryItem as InventoryItemType , InventoryItemGroupedType, CheckedOutItemDataType} from "../types/inventory";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  doc,
+  updateDoc,
+  deleteDoc,
+  writeBatch
+} from 'firebase/firestore';
+import { db } from "../firebase";
+import type { InventoryItem as InventoryItemType, InventoryItemGroupedType, CheckedOutItemDataType } from "../types/inventory";
 import type { CatalogItem as CatalogItemType, InventoryCounts } from '../types/catalog';
+
+export const getInventoryItems = async (): Promise<InventoryItemType[]> => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'inventoryItems'));
+
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    } as InventoryItemType));
+  } catch (e) {
+    console.error("Error fetching inventory items: ", e);
+    throw e;
+  }
+}
+
+export const createInventoryItem = async (
+  item: Omit<InventoryItemType, 'id'>
+): Promise<string> => {
+  try {
+    const docRef = await addDoc(collection(db, 'inventoryItems'), item);
+    return docRef.id;
+  } catch (e) {
+    console.error("Error creating inventory item: ", e);
+    throw e;
+  }
+};
+
+export const createInventoryItemsBatch = async (
+  items: Omit<InventoryItemType, 'id'>[]
+): Promise<string[]> => {
+  try {
+    const batch = writeBatch(db);
+    const collectionRef = collection(db, 'inventoryItems');
+    const docRefs: string[] = [];
+
+    items.forEach((item) => {
+      const docRef = doc(collectionRef);
+      batch.set(docRef, item);
+      docRefs.push(docRef.id);
+    });
+    await batch.commit();
+    return docRefs;
+  } catch (e) {
+    console.error("Error creating batch inventory items: ", e);
+    throw e;
+  }
+};
+
+export const updatedInventoryItem = async (
+  id: string,
+  updates: Partial<Omit<InventoryItemType, 'id'>>
+): Promise<void> => {
+  try {
+    const docRef = doc(db, 'inventoryItems', id);
+    await updateDoc(docRef, updates);
+  } catch (e) {
+    console.error("Error updating inventory item: ", e);
+    throw e;
+  }
+}
+
+export const updateInventoryItemsBatch = async (
+  updates: { id: string; data: Partial<Omit<InventoryItemType, "id">> }[]
+): Promise<void> => {
+  try {
+    const batch = writeBatch(db);
+
+    updates.forEach(({ id, data }) => {
+      const docRef = doc(db, "inventoryItems", id);
+      batch.update(docRef, data);
+    });
+
+    await batch.commit();
+  } catch (e) {
+    console.error("Error batch updating inventory items: ", e);
+    throw e;
+  }
+};
+
+export const deleteInventoryItem = async (id: string): Promise<void> => {
+  try {
+    const docRef = doc(db, "inventoryItems", id);
+    await deleteDoc(docRef);
+  } catch (e) {
+    console.error("Error deleting inventory item: ", e);
+    throw e;
+  }
+};
+
+export const deleteInventoryItemsBatch = async (ids: string[]): Promise<void> => {
+  try {
+    const batch = writeBatch(db);
+
+    ids.forEach((id) => {
+      const docRef = doc(db, "inventoryItems", id);
+      batch.delete(docRef);
+    });
+
+    await batch.commit();
+  } catch (e) {
+    console.error("Error batch deleting inventory items: ", e);
+    throw e;
+  }
+};
 
 export function countInventoryItemAvailability(groupedItems: InventoryItemType[]): number {
   let numAvailable = 0;
@@ -161,12 +275,12 @@ export function getInventoryCountsforCatalog(
 export function generateNewInventoryItems(
   catalogItemId: string,
   quantity: number
-): InventoryItemType[] {
-  let items = [];
+): Omit<InventoryItemType, 'id'>[] {
+  const items: Omit<InventoryItemType, 'id'>[] = [];
   const createdAt = new Date().toISOString();
+
   for (let i = 0; i < quantity; i++) {
     items.push({
-      id: crypto.randomUUID(),
       catalogItemId: catalogItemId,
       isCheckedOut: false,
       checkedOutBy: null,
