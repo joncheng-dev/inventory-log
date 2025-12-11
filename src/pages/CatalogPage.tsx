@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCatalog } from '../contexts/CatalogContext';
 import { useInventory } from '../contexts/InventoryContext';
 import PageLayout from './PageLayout';
@@ -16,7 +17,11 @@ import { useAuth } from '../contexts/AuthContext';
 
 export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   const { isAdmin } = useAuth();
-  if (!isAdmin) throw new Error("Unauthorized");
+  const navigate = useNavigate();
+  if (!isAdmin) {
+    navigate('/unauthorized');
+    return null;
+  }
 
   const {
     catalogItems,

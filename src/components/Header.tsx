@@ -4,7 +4,7 @@ import DropdownMenu from './ui/DropdownMenu';
 import DarkModeToggle from './ui/DarkModeToggle';
 
 export default function Header() {
-  const { userProfile, isAdmin } = useAuth();
+  const { isAdmin } = useAuth();
 
   return (
     <div className='w-full flex justify-between py-4 px-4 border-b border-theme bg-theme text-theme-primary transition-colors duration-200'>

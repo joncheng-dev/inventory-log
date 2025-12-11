@@ -9,6 +9,7 @@ import ThemeViewerPage from "./pages/ThemeViewerPage";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import ProtectedRoute from './utils/ProtectedRoute.tsx';
 import "./App.css";
+import UnauthorizedPage from './pages/UnauthorizedPage.tsx';
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
                 }
               />
               <Route path="/theme-viewer" element={<ThemeViewerPage />} />
+              <Route path="/unauthorized" element={<UnauthorizedPage />} />
             </Routes>
           </InventoryProvider>
         </CatalogProvider>

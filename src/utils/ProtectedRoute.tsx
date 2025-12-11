@@ -10,10 +10,14 @@ export default function ProtectedRoute({
   children,
   requireAdmin = false
 }: ProtectedRouteProps) {
-  const { isAdmin } = useAuth();
+  const { userProfile, isAdmin } = useAuth();
+
+  if (!userProfile) {
+    return <Navigate to="/signin" replace />;
+  }
 
   if (requireAdmin && !isAdmin) {
-    return <Navigate to="/inventory" replace />;
+    return <Navigate to="/unauthorized" replace />;
   }
 
   return (
