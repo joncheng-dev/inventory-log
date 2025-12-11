@@ -8,6 +8,7 @@ import CatalogListDisplay from '../components/CatalogListDisplay';
 import CatalogItemDetail from '../components/catalog/CatalogItemDetail';
 import CatalogItemEdit from '../components/catalog/CatalogItemEdit';
 import CatalogItemNew from '../components/catalog/CatalogItemNew';
+import CatalogViewToggle from '../components/catalog/CatalogViewToggle';
 import AddToInventoryModal from '../components/catalog/AddToInventoryModal';
 import ArchiveConfirmationModal from '../components/catalog/ArchiveConfirmationModal';
 import { getInventoryCountsforCatalog } from '../utils/inventory';
@@ -110,6 +111,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
 
   return (
     <PageLayout>
+      <CatalogViewToggle currentView={view} />
       <div className="flex w-full border-b border-theme">
         <Filters
           availableFilterTags={availableFilterTags}
