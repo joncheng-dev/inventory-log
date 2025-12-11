@@ -7,6 +7,7 @@ import { CatalogProvider } from './contexts/CatalogContext.tsx'
 import { InventoryProvider } from './contexts/InventoryContext.tsx';
 import ThemeViewerPage from "./pages/ThemeViewerPage";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import ProtectedRoute from './utils/ProtectedRoute.tsx';
 import "./App.css";
 
 function App() {
@@ -20,8 +21,22 @@ function App() {
               <Route path="/" element={<InventoryPage />} />
               <Route path="/signin" element={<SignInPage />} />
               <Route path="/inventory" element={<InventoryPage />} />
-              <Route path="/catalog" element={<CatalogPage view="active"/>} />
-              <Route path="/catalog/archived" element={<CatalogPage view="archived"/>} />
+              <Route
+                path="/catalog"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <CatalogPage view="active" />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/catalog/archived"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <CatalogPage view="archived" />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/theme-viewer" element={<ThemeViewerPage />} />
             </Routes>
           </InventoryProvider>

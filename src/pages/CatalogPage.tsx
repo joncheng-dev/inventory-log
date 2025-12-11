@@ -11,8 +11,12 @@ import CatalogItemNew from '../components/catalog/CatalogItemNew';
 import AddToInventoryModal from '../components/catalog/AddToInventoryModal';
 import ArchiveConfirmationModal from '../components/catalog/ArchiveConfirmationModal';
 import { getInventoryCountsforCatalog } from '../utils/inventory';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
+  const { isAdmin } = useAuth();
+  if (!isAdmin) throw new Error("Unauthorized");
+
   const {
     catalogItems,
     addNewCatalogItem,
