@@ -40,7 +40,7 @@ export default function TagFilter({
   return (
     <div ref={containerRef} className="relative inline-block text-left">
       <button
-        className="px-4 py-2 border rounded-md text-theme-primary"
+        className="px-4 py-2 border border-theme rounded-md text-theme-primary"
         onClick={() => setIsOpen((prev) => !prev)}
       >
         Filter by Tags
