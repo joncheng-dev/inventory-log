@@ -5,7 +5,6 @@ import PageLayout from './PageLayout';
 export default function UnauthorizedPage() {
   const { userProfile } = useAuth();
   const navigate = useNavigate();
-  if (!userProfile) return;
 
   return (
     <PageLayout>

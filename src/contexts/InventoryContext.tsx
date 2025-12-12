@@ -42,7 +42,7 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
   const [filteredCheckedOutItems, setFilteredCheckedOutItems] = useState<Record<string, InventoryItemGroupedType>>({});
   const { catalogItems } = useCatalog();
   const { userProfile } = useAuth();
-  
+
   // Selected Item Details
   const [selectedItemDetails, setSelectedItemDetails] = useState<InventoryItemGroupedType | null>(null);
   const [relatedItems, setRelatedItems] = useState<InventoryItemType[]>([]);
@@ -116,6 +116,8 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
     catalogItemId: string,
     qtyToCheckOut: number
   ): Promise<void> => {
+    if (!userProfile) return;
+
     try {
       const updatedList = checkOutInventoryItems(userProfile.email, inventoryItems, catalogItemId, qtyToCheckOut);
       const checkedOutItems = updatedList.filter((item, index) => {
@@ -141,6 +143,8 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
   }
 
   const returnAllItems = async (catalogItemId: string): Promise<void> => {
+    if (!userProfile) return;
+    
     try {
       const updatedList = returnAllInventoryItems(userProfile.email, inventoryItems, catalogItemId);
       const returnedItems = inventoryItems.filter(
@@ -185,6 +189,8 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
 
   // Fetch grouped inventory items
   const fetchInventoryPageData = async () => {
+    if (!userProfile) return;
+    
     await new Promise(r => setTimeout(r, 300));
     // Use existing inventory item list to generate a list of unique inventory items with quantity values
     // Calculate checked out items associated with current user

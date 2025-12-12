@@ -25,6 +25,9 @@ export default function InventoryItemDetail({
 }: InventoryItemDetailProps) {
   const [checkoutQuantity, setCheckoutQuantity] = useState(1);
   const { userProfile, isAdmin } = useAuth(); // user email is "userProfile.email"
+  if (!userProfile) {
+    throw new Error("InventoryItemDetail rendered without a signed-in user");
+  }
   
   const {
     displayName,

@@ -1,4 +1,22 @@
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+
 export default function SignInPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { setIsSignedIn } = useAuth();
+
+  const from = (location.state as { from?: Location; })?.from?.pathname || '/inventory';
+
+  const handleSignInClick = () => {
+    try {
+      setIsSignedIn(true);
+      navigate(from, { replace: true });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-theme text-theme-primary flex items-center justify-center">
       <div className="bg-theme-surface p-8 rounded-lg border border-theme max-w-md w-full">
@@ -30,7 +48,8 @@ export default function SignInPage() {
           </div>
           
           <button
-            type="submit"
+            type="button"
+            onClick={handleSignInClick}
             className="w-full px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors duration-200 font-medium"
           >
             Sign In

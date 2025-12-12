@@ -1,14 +1,26 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function DropdownMenu() {
+  const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { userProfile } = useAuth(); // user email is "userProfile.email"
+  const { userProfile, setUserProfile, setIsSignedIn } = useAuth(); // user email is "userProfile.email"
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
+  const handleSignOutClick = () => {
+    console.log('DropdownMenu, handleSignOutClick triggered');
+    try {
+      setIsSignedIn(false);
+      setUserProfile(null);
+      navigate('/signin', { replace: true });
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   return (
     <div className='ml-10 px-2 py-2 relative'>
@@ -27,10 +39,15 @@ export default function DropdownMenu() {
       {isDropdownOpen && (
         <div className="absolute right-0 mt-2 w-56 bg-theme-surface rounded-md shadow-lg border border-theme z-50">
           <div className="py-2 px-4 border-b border-theme-muted">
-            <p className="text-xs text-theme-secondary mb-1">Signed in as</p>
-            <p className="text-sm font-medium text-theme-primary truncate">
-              {userProfile.email}
-            </p>
+            {userProfile && (
+              <>
+                <p className="text-xs text-theme-secondary mb-1">Signed in as</p>
+                <p className="text-sm font-medium text-theme-primary truncate">
+                  {userProfile.email}
+                </p>
+              </>
+            )
+            }
           </div>
           <div className="py-1">
             <Link
@@ -51,12 +68,17 @@ export default function DropdownMenu() {
             >
               About
             </a>
-            <Link
-              to="/signin"
+            <a
+              href="#"
+              onClick={(e) => {
+                  e.preventDefault();
+                  handleSignOutClick();
+                }
+              }
               className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors duration-200"
             >
               Sign Out
-            </Link>
+            </a>
           </div>
         </div>
       )}
