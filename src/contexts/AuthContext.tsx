@@ -10,15 +10,19 @@ export interface UserProfile {
 }
 
 interface AuthContextType {
-  userProfile: UserProfile;
+  userProfile: UserProfile | null;
+  setUserProfile: React.Dispatch<React.SetStateAction<UserProfile | null>>;
   isAdmin: boolean;
+  isSignedIn: boolean;
   setRole: (role: UserRole) => void;
+  setIsSignedIn: (signedIn: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
-  const [userProfile] = useState<UserProfile>({
+  const [isSignedIn, setIsSignedIn] = useState<boolean>(true);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>({
     uid: 'user-123',
     // email: 'jonathan@kkfs.org',
     email: 'joncheng.dev@gmail.com',
@@ -28,14 +32,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
 
   const [role, setRole] = useState<UserRole>('admin');
 
-  const isAdmin = role === 'admin';
+  const isAdmin = isSignedIn && role === 'admin';
 
   return (
     <AuthContext.Provider
       value={{
-        userProfile: { ...userProfile, role },
+        userProfile: isSignedIn && userProfile ? { ...userProfile, role } : null,
+        setUserProfile,
         isAdmin,
-        setRole
+        setRole,
+        isSignedIn,
+        setIsSignedIn
       }}
     >
       {children}

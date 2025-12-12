@@ -1,19 +1,26 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
+  requireSignIn?: boolean;
   requireAdmin?: boolean;
 }
 
 export default function ProtectedRoute({
   children,
+  requireSignIn = true,
   requireAdmin = false
 }: ProtectedRouteProps) {
-  const { userProfile, isAdmin } = useAuth();
+  const { isAdmin, isSignedIn } = useAuth();
+  const location = useLocation();
 
-  if (!userProfile) {
+  if (!isSignedIn) {
     return <Navigate to="/signin" replace />;
+  }
+
+  if (!isSignedIn && requireSignIn) {
+    return <Navigate to="/signin" replace state={{ from: location }} />;
   }
 
   if (requireAdmin && !isAdmin) {

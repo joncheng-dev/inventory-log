@@ -19,13 +19,21 @@ function App() {
         <CatalogProvider>
           <InventoryProvider>          
             <Routes>
-              <Route path="/" element={<InventoryPage />} />
+              <Route path="/" element={<SignInPage />} />
               <Route path="/signin" element={<SignInPage />} />
-              <Route path="/inventory" element={<InventoryPage />} />
+              <Route
+                path="/inventory"
+                element={
+                  <ProtectedRoute requireSignIn>
+                    <InventoryPage />
+                  </ProtectedRoute>
+
+                }
+              />
               <Route
                 path="/catalog"
                 element={
-                  <ProtectedRoute requireAdmin>
+                  <ProtectedRoute requireSignIn requireAdmin>
                     <CatalogPage view="active" />
                   </ProtectedRoute>
                 }
@@ -33,7 +41,7 @@ function App() {
               <Route
                 path="/catalog/archived"
                 element={
-                  <ProtectedRoute requireAdmin>
+                  <ProtectedRoute requireSignIn requireAdmin>
                     <CatalogPage view="archived" />
                   </ProtectedRoute>
                 }
