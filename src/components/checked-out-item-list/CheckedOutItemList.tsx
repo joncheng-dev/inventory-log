@@ -14,7 +14,7 @@ export default function CheckedOutItemList({ checkedOutItemsList, checkedOutItem
   }
 
   return (
-    <div className="p-4 border-l border-theme h-full overflow-y-auto">
+    <div className="p-4 h-full overflow-y-auto">
       <h2 className="text-lg font-semibold mb-4">Checked Out Items ({checkedOutItemTypes})</h2>
         {checkedOutItemTypes > 0 && checkedOutItemsList && checkedOutItemQuantities ? (
           <ul className="space-y-3">

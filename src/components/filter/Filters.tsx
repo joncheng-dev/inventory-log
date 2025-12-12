@@ -26,7 +26,7 @@ export default function Filters({
   onNewClick
 }: FiltersProps) {
   return (
-    <div className="flex items-center gap-4 px-4 py-3 bg-theme-surface border-b border-theme">
+    <div className="flex items-center gap-4 px-4 py-3 bg-theme-surface">
       <SearchInput
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}

@@ -27,7 +27,7 @@ export default function InventoryItem({ item, catalogItem, viewMode, setSelected
     return (
       <div className="bg-theme-surface border border-theme rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
         {/* Header section */}
-        <div className="px-4 pt-4 pb-3 border-b border-theme/50">
+        <div className="px-4 pt-4 pb-3 border-b border-theme">
           <h3
             className="text-lg font-semibold text-theme-primary mb-2 truncate"
             title={catalogItem.displayName}
