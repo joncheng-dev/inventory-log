@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useCatalog } from '../contexts/CatalogContext';
 import { useInventory } from '../contexts/InventoryContext';
 import PageLayout from './PageLayout';
-import Filters from '../components/filter/Filters';
+import PageActionBar from '../components/PageActionBar';
 import ItemListDisplay from '../components/ItemListDisplay';
 import CheckedOutSidebar from '../components/checked-out-item-list/CheckedOutSidebar';
 import CheckedOutToggle from '../components/checked-out-item-list/CheckedOutToggle';
@@ -93,24 +93,23 @@ export default function InventoryPage() {
         </div>
       ) : (
         <>
-          <div className="flex w-full border-b border-theme">
-            <Filters
-              availableFilterTags={availableFilterTags}
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-              selectedTags={selectedTags}
-              setSelectedTags={setSelectedTags}
-              viewMode={viewMode}
-              setViewMode={setViewMode}
-              rightSlot={
-                <CheckedOutToggle
-                  count={checkedOutItemTypes}
-                  isOpen={isSidebarOpen}
-                  onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
-                />
-              }
-            />
-          </div>
+          <PageActionBar
+            leftSlot={null}
+            availableFilterTags={availableFilterTags}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+            viewMode={viewMode}
+            setViewMode={setViewMode}
+            rightSlot={
+              <CheckedOutToggle
+                count={checkedOutItemTypes}
+                isOpen={isSidebarOpen}
+                onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+              />
+            }
+          />
           <div className="flex flex-1 w-full">
             <div className="flex-1 border-r border-theme">
               <ItemListDisplay

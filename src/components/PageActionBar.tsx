@@ -31,14 +31,14 @@ export default function PageActionBar({
   rightSlot
 }: PageActionBarProps) {
   return (
-    <div className="flex items-center justify-between w-full px-4 py-3 border-b border-theme gap-4">
-      {/* Left: Page-specific navigation */}
-      <div className="flex items-center gap-1">
+    <div className="grid grid-cols-[auto,1fr] lg:grid-cols-[1fr,auto,1fr] items-center w-full px-4 py-3 border-b border-theme gap-4">
+      {/* Left: Page-specific navigation - hidden on mobile */}
+      <div className="hidden lg:flex items-center gap-1">
         {leftSlot}
       </div>
       
       {/* Center: Common filters */}
-      <div className="flex items-center gap-3 flex-1 justify-center max-w-2xl">
+      <div className="flex items-center gap-3 justify-center lg:justify-center">
         <SearchInput
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -52,7 +52,7 @@ export default function PageActionBar({
       </div>
       
       {/* Right: Page-specific actions */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 justify-end">
         {rightSlot}
       </div>
     </div>
