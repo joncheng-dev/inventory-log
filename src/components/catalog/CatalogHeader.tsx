@@ -33,7 +33,7 @@ export default function CatalogHeader({ currentView, onNewClick }: CatalogHeader
       
       <button
         onClick={() => onNewClick(true)}
-        className="px-4 py-1.5 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-medium transition-colors duration-200 flex items-center gap-2"
+        className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white text-white rounded-lg font-medium transition-colors duration-200 flex items-center gap-2"
       >
         <span className="text-xl leading-none">+</span>
         Add New Template

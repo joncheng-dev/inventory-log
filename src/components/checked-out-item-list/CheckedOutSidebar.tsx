@@ -34,7 +34,7 @@ export default function CheckedOutSidebar({
           top-0 right-0
           h-full w-80
           bg-theme border-l border-theme
-          z-50
+          z-40
           flex flex-col
         ">
         {/* Header */}
