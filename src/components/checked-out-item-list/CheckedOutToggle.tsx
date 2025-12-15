@@ -38,8 +38,8 @@ export default function CheckedOutToggle({
             px-2 py-0.5 text-xs rounded-full
             ${
               isOpen
-                ? 'bg-theme-primary text-black'
-                : 'bg-theme-primary/80 text-black'
+                ? 'bg-theme-primary/10 border-theme-primary text-theme-primary'
+                : 'bg-transparent border-theme text-theme-secondary hover:bg-theme-hover'
             }
           `}
         >
