@@ -10,6 +10,7 @@ interface FiltersProps {
   setSelectedTags: React.Dispatch<React.SetStateAction<string[]>>;
   viewMode: 'grid-view' | 'list-view';
   setViewMode: React.Dispatch<React.SetStateAction<'grid-view' | 'list-view'>>;
+  rightSlot?: React.ReactNode;
 }
 
 export default function Filters({
@@ -20,19 +21,25 @@ export default function Filters({
   setSelectedTags,
   viewMode,
   setViewMode,
+  rightSlot
 }: FiltersProps) {
   return (
-    <div className="flex items-center gap-4 px-4 py-3 bg-theme-surface border-b border-theme">
-      <SearchInput
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-      />
-      <TagFilter
-        availableFilterTags={availableFilterTags}
-        selectedTags={selectedTags}
-        setSelectedTags={setSelectedTags}
-      />
-      <ViewToggle viewMode={viewMode} setViewMode={setViewMode}/>
+    <div className="flex items-center justify-between w-full px-4 py-3 border-b border-theme">
+      <div className="flex items-center gap-3 flex-1">
+        <SearchInput
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          />
+        <TagFilter
+          availableFilterTags={availableFilterTags}
+          selectedTags={selectedTags}
+          setSelectedTags={setSelectedTags}
+        />
+      </div>
+      <div className="flex items-center gap-3">
+        <ViewToggle viewMode={viewMode} setViewMode={setViewMode}/>
+        { rightSlot }
+      </div>
     </div>
   );
 }

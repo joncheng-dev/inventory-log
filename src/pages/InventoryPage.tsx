@@ -4,7 +4,8 @@ import { useInventory } from '../contexts/InventoryContext';
 import PageLayout from './PageLayout';
 import Filters from '../components/filter/Filters';
 import ItemListDisplay from '../components/ItemListDisplay';
-import CheckedOutItemList from '../components/checked-out-item-list/CheckedOutItemList';
+import CheckedOutSidebar from '../components/checked-out-item-list/CheckedOutSidebar';
+import CheckedOutToggle from '../components/checked-out-item-list/CheckedOutToggle';
 import type { InventoryItemGroupedType } from '../types/inventory';
 import InventoryItemDetail from '../components/inventory/InventoryItemDetail';
 import AdjustQuantityModal from '../components/inventory/AdjustQuantityModal';
@@ -29,6 +30,7 @@ export default function InventoryPage() {
   } = useInventory();
 
   const [viewMode, setViewMode] = useState<'grid-view' | 'list-view'>('grid-view');
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
   // Filter via Tags
   const availableFilterTags = ["Biology", "Chemistry", "Earth Science", "General", "Physics"];
@@ -46,6 +48,10 @@ export default function InventoryPage() {
     ? catalogItems.find((item) => item.id === selectedItem.catalogItemId)
     : null;
 
+  const checkedOutItemTypes = filteredCheckedOutItems 
+    ? Object.keys(filteredCheckedOutItems).length 
+    : 0;
+  
   const handleConfirmAdjustQty = (
     catalogItemId: string,
     newTotalQuantity: number
@@ -96,6 +102,13 @@ export default function InventoryPage() {
               setSelectedTags={setSelectedTags}
               viewMode={viewMode}
               setViewMode={setViewMode}
+              rightSlot={
+                <CheckedOutToggle
+                  count={checkedOutItemTypes}
+                  isOpen={isSidebarOpen}
+                  onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+                />
+              }
             />
           </div>
           <div className="flex flex-1 w-full">
@@ -107,15 +120,17 @@ export default function InventoryPage() {
                 selectedTags={selectedTags}
                 setSelectedItem={setSelectedItem}
                 viewMode={viewMode}
-              />
+                />
             </div>
-            <div className="w-1/5">
-              <CheckedOutItemList
+            {isSidebarOpen && (                
+              <CheckedOutSidebar
+                isOpen={isSidebarOpen}
+                onClose={() => setIsSidebarOpen(false)}
                 checkedOutItemsList={filteredCheckedOutItems}
                 checkedOutItemQuantities={checkedOutQty}
                 setSelectedItem={setSelectedItem}
               />
-            </div>
+            )}
           </div>
         </>
       )}
