@@ -9,7 +9,7 @@ import CatalogListDisplay from '../components/CatalogListDisplay';
 import CatalogItemDetail from '../components/catalog/CatalogItemDetail';
 import CatalogItemEdit from '../components/catalog/CatalogItemEdit';
 import CatalogItemNew from '../components/catalog/CatalogItemNew';
-import CatalogViewToggle from '../components/catalog/CatalogViewToggle';
+import CatalogToolbar from '../components/catalog/CatalogToolbar';
 import AddToInventoryModal from '../components/catalog/AddToInventoryModal';
 import ArchiveConfirmationModal from '../components/catalog/ArchiveConfirmationModal';
 import { getInventoryCountsforCatalog } from '../utils/inventory';
@@ -126,11 +126,12 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
           setSelectedTags={setSelectedTags}
           viewMode={viewMode}
           setViewMode={setViewMode}
-          showAddCatalogButton={true}
-          onNewClick={setNewMode}
         />
       </div>
-      <CatalogViewToggle currentView={view} />
+      <CatalogToolbar
+        currentView={view}
+        onNewClick={setNewMode}
+      />
       <div className="flex flex-1 w-full">
         <div className="flex-1 border-r border-theme">
           <CatalogListDisplay
