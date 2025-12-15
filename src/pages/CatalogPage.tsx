@@ -85,6 +85,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
 
   const handleArchiveConfirm = (selectedItem: CatalogItemType) => {
     archiveCatalogItem(selectedItem.id);
+    setArchiveMode(false);
     setSelectedTemplateId(null);
   }
 
