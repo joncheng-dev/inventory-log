@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useCatalog } from '../contexts/CatalogContext';
 import { useInventory } from '../contexts/InventoryContext';
 import PageLayout from './PageLayout';
-import Filters from '../components/filter/Filters';
+import PageActionBar from '../components/PageActionBar';
 import type { CatalogItem as CatalogItemType } from '../types/catalog';
 import CatalogListDisplay from '../components/CatalogListDisplay';
 import CatalogItemDetail from '../components/catalog/CatalogItemDetail';
 import CatalogItemEdit from '../components/catalog/CatalogItemEdit';
 import CatalogItemNew from '../components/catalog/CatalogItemNew';
-import CatalogHeader from '../components/catalog/CatalogHeader';
+import CatalogViewToggle from '../components/catalog/CatalogViewToggle';
 import AddToInventoryModal from '../components/catalog/AddToInventoryModal';
 import ArchiveConfirmationModal from '../components/catalog/ArchiveConfirmationModal';
 import { getInventoryCountsforCatalog } from '../utils/inventory';
@@ -117,20 +117,26 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
 
   return (
     <PageLayout>
-      <div className="flex w-full border-b border-theme">
-        <Filters
-          availableFilterTags={availableFilterTags}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedTags={selectedTags}
-          setSelectedTags={setSelectedTags}
-          viewMode={viewMode}
-          setViewMode={setViewMode}
-        />
-      </div>
-      <CatalogHeader
-        currentView={view}
-        onNewClick={setNewMode}
+      <PageActionBar
+        leftSlot={
+          <CatalogViewToggle currentView={view} />
+        }
+        availableFilterTags={availableFilterTags}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedTags={selectedTags}
+        setSelectedTags={setSelectedTags}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        rightSlot={
+          <button 
+            onClick={() => setNewMode(true)}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 whitespace-nowrap"
+          >
+            <span className="text-xl leading-none">+</span>
+            Add New Template
+          </button>
+        }
       />
       <div className="flex flex-1 w-full">
         <div className="flex-1 border-r border-theme">
