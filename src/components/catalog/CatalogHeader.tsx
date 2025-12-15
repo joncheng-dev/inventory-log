@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 
-interface CatalogToolbarProps {
+interface CatalogHeaderProps {
   currentView: 'active' | 'archived';
   onNewClick: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function CatalogToolbar({ currentView, onNewClick }: CatalogToolbarProps) {
+export default function CatalogHeader({ currentView, onNewClick }: CatalogHeaderProps) {
   return (
     <div className="flex items-center justify-between px-4 border-b border-theme-border">
       <div className="flex gap-6">

@@ -9,7 +9,7 @@ import CatalogListDisplay from '../components/CatalogListDisplay';
 import CatalogItemDetail from '../components/catalog/CatalogItemDetail';
 import CatalogItemEdit from '../components/catalog/CatalogItemEdit';
 import CatalogItemNew from '../components/catalog/CatalogItemNew';
-import CatalogToolbar from '../components/catalog/CatalogToolbar';
+import CatalogHeader from '../components/catalog/CatalogHeader';
 import AddToInventoryModal from '../components/catalog/AddToInventoryModal';
 import ArchiveConfirmationModal from '../components/catalog/ArchiveConfirmationModal';
 import { getInventoryCountsforCatalog } from '../utils/inventory';
@@ -128,7 +128,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
           setViewMode={setViewMode}
         />
       </div>
-      <CatalogToolbar
+      <CatalogHeader
         currentView={view}
         onNewClick={setNewMode}
       />
