@@ -117,7 +117,6 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
 
   return (
     <PageLayout>
-      <CatalogViewToggle currentView={view} />
       <div className="flex w-full border-b border-theme">
         <Filters
           availableFilterTags={availableFilterTags}
@@ -131,6 +130,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
           onNewClick={setNewMode}
         />
       </div>
+      <CatalogViewToggle currentView={view} />
       <div className="flex flex-1 w-full">
         <div className="flex-1 border-r border-theme">
           <CatalogListDisplay

@@ -6,23 +6,23 @@ interface CatalogViewToggleProps {
 
 export default function CatalogViewToggle({ currentView }: CatalogViewToggleProps) {
   return (
-    <div className="flex gap-1 px-4 pt-4 bg-theme">
+    <div className="flex gap-6 px-4 border-b border-theme-border">
       <Link 
         to="/catalog"
-        className={`px-4 py-2 rounded-t-lg font-medium transition-colors duration-200 ${
+        className={`px-1 py-3 font-medium transition-colors duration-200 ${
           currentView === 'active' 
-            ? 'bg-theme-surface text-primary-500 border-b-2 border-primary-500' 
-            : 'text-theme-secondary hover:text-theme-primary hover:bg-theme-surface/50'
+            ? 'text-primary-500 border-b-2 border-primary-500 -mb-[2px]' 
+            : 'text-theme-secondary hover:text-theme-primary'
         }`}
       >
         Active Items
       </Link>
       <Link 
         to="/catalog/archived"
-        className={`px-4 py-2 rounded-t-lg font-medium transition-colors duration-200 ${
+        className={`px-1 py-3 font-medium transition-colors duration-200 ${
           currentView === 'archived' 
-            ? 'bg-theme-surface text-primary-500 border-b-2 border-primary-500' 
-            : 'text-theme-secondary hover:text-theme-primary hover:bg-theme-surface/50'
+            ? 'text-primary-500 border-b-2 border-primary-500 -mb-[2px]' 
+            : 'text-theme-secondary hover:text-theme-primary'
         }`}
       >
         Archived
