@@ -23,7 +23,7 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
   const addNotification = useCallback((
     message: string, 
     type: NotificationType = 'info', 
-    duration: number = 5000
+    duration: number = 2500
   ) => {
     const id = Date.now() + Math.random();
     setNotifications(prev => [...prev, { id, message, type, duration }]);
@@ -43,11 +43,11 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
     addNotification(message, 'success', duration);
   }, [addNotification]);
 
-  const error = useCallback((message: string, duration: number = 7000) => {
+  const error = useCallback((message: string, duration: number = 5000) => {
     addNotification(message, 'error', duration);
   }, [addNotification]);
 
-  const warning = useCallback((message: string, duration?: number) => {
+  const warning = useCallback((message: string, duration: number = 3500) => {
     addNotification(message, 'warning', duration);
   }, [addNotification]);
 

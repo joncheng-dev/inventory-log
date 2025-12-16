@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { CheckIcon, ErrorIcon, WarningIcon, InfoIcon, CloseIcon } from './icons';
 import type { NotificationItem, NotificationConfig, NotificationType } from '../../types/notification';
 
@@ -7,7 +8,19 @@ interface NotificationProps {
 }
 
 export default function Notification({ notification, onClose }: NotificationProps) {
-  const { type, message } = notification;
+  const { type, message, duration } = notification;
+  const [isExiting, setIsExiting] = useState(false);
+
+  useEffect(() => {
+    if (duration > 0) {
+      // Start exit animation 300ms before removal
+      const exitTimer = setTimeout(() => {
+        setIsExiting(true);
+      }, duration - 300);
+
+      return () => clearTimeout(exitTimer);
+    }
+  }, [duration]);
 
   const config: Record<NotificationType, NotificationConfig> = {
     success: {
@@ -44,7 +57,9 @@ export default function Notification({ notification, onClose }: NotificationProp
 
   return (
     <div 
-      className={`${bgColor} ${textColor} border-l-4 ${borderColor} p-4 rounded-lg shadow-lg flex items-start gap-3 animate-slide-in min-w-80`}
+      className={`${bgColor} ${textColor} border-l-4 ${borderColor} p-4 rounded-lg shadow-lg flex items-start gap-3 min-w-80 transition-all duration-300 ${
+        isExiting ? 'animate-slide-out' : 'animate-slide-in'
+      }`}
       role="alert"
     >
       <div className={iconColor}>
