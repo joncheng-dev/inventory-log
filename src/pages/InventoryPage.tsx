@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useCatalog } from '../contexts/CatalogContext';
 import { useInventory } from '../contexts/InventoryContext';
+import { useNotification } from '../contexts/NotificationContext';
+import { getErrorMessage } from '../utils/error';
 import PageLayout from './PageLayout';
 import PageActionBar from '../components/PageActionBar';
 import ItemListDisplay from '../components/ItemListDisplay';
@@ -11,6 +13,7 @@ import InventoryItemDetail from '../components/inventory/InventoryItemDetail';
 import AdjustQuantityModal from '../components/inventory/AdjustQuantityModal';
 
 export default function InventoryPage() {
+  const { success, error } = useNotification();
   const { catalogItems } = useCatalog();
   const {
     inventoryItems,
@@ -56,30 +59,49 @@ export default function InventoryPage() {
     catalogItemId: string,
     newTotalQuantity: number
   ) => {
-    if (selectedItemDetails) {      
-      const adjustQty = newTotalQuantity - selectedItemDetails.quantityTotal;
-      if (adjustQty > 0) {
-        addItemsToInventory(catalogItemId, adjustQty);
-      } else if (adjustQty < 0) {
-        removeItemsFromInventory(catalogItemId, Math.abs(adjustQty));
-      } else {
-        throw new Error("Cannot update. New quantity is the same as the previous quantity."); 
+    try {
+      if (selectedItemDetails) {
+        const adjustQty = newTotalQuantity - selectedItemDetails.quantityTotal;
+        if (adjustQty > 0) {
+          addItemsToInventory(catalogItemId, adjustQty);
+          success("Inventory updated");
+        } else if (adjustQty < 0) {
+          removeItemsFromInventory(catalogItemId, Math.abs(adjustQty));
+          success("Inventory updated");
+        }
       }
+    } catch (err) {
+      error(`Failed to update inventory: ${getErrorMessage(err)}`);
     }
   }
 
   const handleCheckout = (qtyToCheckOut: number) => {
-    if (!selectedItem?.catalogItemId) return;
-    checkOutItems(selectedItem.catalogItemId, qtyToCheckOut);
+    try {
+      if (!selectedItem?.catalogItemId) return;
+      checkOutItems(selectedItem.catalogItemId, qtyToCheckOut);
+      success(`Checked out ${qtyToCheckOut} item${qtyToCheckOut > 1 ? 's' : ''}`);
+    } catch (err) {
+      error(`Failed to check out items: ${getErrorMessage(err)}`);
+    }
   }
 
   const handleReturnItem = (itemId: string) => {
-    returnItem(itemId);
+    try {
+      returnItem(itemId);
+      success("Item returned");
+    } catch (err) {
+      error(`Failed to return item: ${getErrorMessage(err)}`);
+    }
   }
 
   const handleReturnAllMyItems = () => {
-    if (!selectedItem?.catalogItemId) return;
-    returnAllItems(selectedItem.catalogItemId);
+    try {
+      if (!selectedItem?.catalogItemId) return;
+      returnAllItems(selectedItem.catalogItemId);
+      success("All items returned");
+    } catch (err) {
+      error(`Failed to return items: ${getErrorMessage(err)}`);
+    }
   }
 
   return (
