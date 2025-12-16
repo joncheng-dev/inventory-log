@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCatalog } from '../contexts/CatalogContext';
 import { useInventory } from '../contexts/InventoryContext';
+import { useNotification } from '../contexts/NotificationContext';
+import { getErrorMessage } from '../utils/error';
 import PageLayout from './PageLayout';
 import PageActionBar from '../components/PageActionBar';
 import type { CatalogItem as CatalogItemType } from '../types/catalog';
@@ -22,7 +24,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
     navigate('/unauthorized');
     return null;
   }
-
+  const { success, error } = useNotification();
   const {
     catalogItems,
     addNewCatalogItem,
@@ -61,9 +63,14 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   }
 
   const handleSaveEdit = (updatedItem: CatalogItemType) => {
-    updateCatalogItem(updatedItem);
-    setSelectedTemplateId(updatedItem.id);
-    closeEditModal();
+    try {
+      updateCatalogItem(updatedItem);
+      setSelectedTemplateId(updatedItem.id);
+      closeEditModal();
+      success('Template updated');
+    } catch (err) {
+      error(`Failed to update template: ${getErrorMessage(err)}`);
+    }
   }
   
   const closeNewModal = () => {
@@ -71,8 +78,13 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   } 
 
   const handleSaveNew = (newItem: Omit<CatalogItemType, "id">) => {
-    addNewCatalogItem(newItem);
-    closeNewModal();
+    try {
+      addNewCatalogItem(newItem);
+      closeNewModal();
+      success('Template added to catalog');
+    } catch (err) {
+      error(`Failed to add template: ${getErrorMessage(err)}`);
+    }
   }
 
   const handleSelectTemplate = async (selectedTemplate: CatalogItemType) => {
@@ -84,14 +96,24 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   }
 
   const handleArchiveConfirm = (selectedItem: CatalogItemType) => {
-    archiveCatalogItem(selectedItem.id);
-    setArchiveMode(false);
-    setSelectedTemplateId(null);
+    try {
+      archiveCatalogItem(selectedItem.id);
+      setArchiveMode(false);
+      setSelectedTemplateId(null);
+      success("Template archived");
+    } catch (err) {
+      error(`Failed to archive template: ${getErrorMessage(err)}`);
+    }
   }
 
   const handleRestoreClick = (selectedTemplate: CatalogItemType) => {
-    unarchiveCatalogItem(selectedTemplate.id);
-    setSelectedTemplateId(null);
+    try {
+      unarchiveCatalogItem(selectedTemplate.id);
+      setSelectedTemplateId(null);
+      success("Template restored");
+    } catch (err) {
+      error(`Failed to restore template: ${getErrorMessage(err)}`);      
+    }
   }
 
   const handleArchiveCancel = () => {
@@ -103,12 +125,17 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   }
 
   const handleAddItemConfirm = (quantity: number) => {
-    if (!selectedTemplate) {
-      console.error("Attempted to add item without a selected template.");
-      return;
+    try {      
+      if (!selectedTemplate) {
+        console.error("Attempted to add item without a selected template.");
+        return;
+      }
+      addItemsToInventory(selectedTemplate.id, quantity);
+      setAddItemsMode(false);
+      success(`Added ${quantity} item${quantity > 1 ? 's' : ''} to inventory`);
+    } catch (err) {
+      error(`Failed to add items: ${getErrorMessage(err)}`);
     }
-    addItemsToInventory(selectedTemplate.id, quantity);
-    setAddItemsMode(false);
   }
 
   const handleCloseAddItemModal = () => {
