@@ -1,10 +1,12 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../auth/AuthContext";
+import { signInWithGoogle } from "../auth/auth";
+import { useEffect } from "react";
 
 export default function SignInPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { setIsSignedIn } = useAuth();
+  const { isSignedIn, setIsSignedIn } = useAuth();
 
   const from = (location.state as { from?: Location; })?.from?.pathname || '/inventory';
 
@@ -16,6 +18,21 @@ export default function SignInPage() {
       console.error(err);
     }
   };
+
+  const handleSignInWithGoogleClick = async () => {
+    try {
+      const result = await signInWithGoogle();
+      console.log('Sign in successful:', result.user.email);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  useEffect(() => {
+    if (isSignedIn) {
+      navigate(from, { replace: true });
+    }
+  }, [isSignedIn, navigate, from]);
 
   return (
     <div className="min-h-screen bg-theme text-theme-primary flex items-center justify-center">
@@ -53,6 +70,14 @@ export default function SignInPage() {
             className="w-full px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors duration-200 font-medium"
           >
             Sign In
+          </button>
+
+          <button
+            type="button"
+            onClick={handleSignInWithGoogleClick}
+            className="w-full px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors duration-200 font-medium"
+          >
+            Sign In with Google
           </button>
         </form>
       </div>

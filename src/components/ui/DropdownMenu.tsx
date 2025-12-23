@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../auth/AuthContext';
+import { signOutUser } from '../../auth/auth';
 
 export default function DropdownMenu() {
   const navigate = useNavigate();
@@ -11,9 +12,10 @@ export default function DropdownMenu() {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleSignOutClick = () => {
-    console.log('DropdownMenu, handleSignOutClick triggered');
+  const handleSignOutClick = async () => {
     try {
+      const result = await signOutUser();
+      console.log('Sign out successful:', result);
       setIsSignedIn(false);
       setUserProfile(null);
       navigate('/signin', { replace: true });
