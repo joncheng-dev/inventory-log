@@ -15,7 +15,7 @@ import CatalogViewToggle from '../components/catalog/CatalogViewToggle';
 import AddToInventoryModal from '../components/catalog/AddToInventoryModal';
 import ArchiveConfirmationModal from '../components/catalog/ArchiveConfirmationModal';
 import { getInventoryCountsforCatalog } from '../utils/inventory';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../auth/AuthContext';
 
 export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   const { isAdmin } = useAuth();

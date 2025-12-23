@@ -103,7 +103,6 @@ export const CatalogProvider = ({ children }: { children: React.ReactNode }) => 
     }
   };
 
-  // Fetch on mount
   useEffect(() => {
     fetchCatalogItems();
   }, []);

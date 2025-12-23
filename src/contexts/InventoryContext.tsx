@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useCatalog } from "./CatalogContext";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../auth/AuthContext";
 import type { InventoryItem as InventoryItemType, CheckedOutItemDataType, InventoryItemGroupedType } from "../types/inventory";
 import {
   getInventoryItems,

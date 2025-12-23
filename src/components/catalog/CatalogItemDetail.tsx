@@ -198,7 +198,7 @@ export default function CatalogItemDetail({
                   onClick={() => onRestoreClick(selectedTemplate)}
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-md transition-colors text-sm font-medium"
                 >
-                  Restore to Catalog
+                  Restore
                 </button>
               </>
             ) : (

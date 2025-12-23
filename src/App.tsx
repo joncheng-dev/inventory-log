@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import CatalogPage from './pages/CatalogPage';
 import InventoryPage from "./pages/InventoryPage";
 import SignInPage from "./pages/SignInPage";
-import { AuthProvider } from './contexts/AuthContext.tsx';
+import { AuthProvider } from './auth/AuthContext.tsx';
 import { CatalogProvider } from './contexts/CatalogContext.tsx'
 import { InventoryProvider } from './contexts/InventoryContext.tsx';
 import ThemeViewerPage from "./pages/ThemeViewerPage";

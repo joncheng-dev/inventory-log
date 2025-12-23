@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { InventoryItem as InventoryItemType, InventoryItemGroupedType } from '../../types/inventory';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../auth/AuthContext';
 
 interface InventoryItemDetailProps {
   selectedItemDetails: InventoryItemGroupedType;
