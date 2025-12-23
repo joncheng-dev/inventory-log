@@ -34,7 +34,6 @@ export default function AdjustQuantityModal({
   const handleConfirm = () => {
     if (isIncreaseDisabled) return;
     if (adjustmentType === 'decrease' && item.quantityTotal - minimumAllowed === 0) return;
-    console.log('handleConfirm, newTotal: ', newTotal);
     onConfirm(item.catalogItemId, newTotal);
     setAdjustmentAmount(1);
     onClose();

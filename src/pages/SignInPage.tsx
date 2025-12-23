@@ -21,8 +21,7 @@ export default function SignInPage() {
 
   const handleSignInWithGoogleClick = async () => {
     try {
-      const result = await signInWithGoogle();
-      console.log('Sign in successful:', result.user.email);
+      await signInWithGoogle();
     } catch (err) {
       console.error(err);
     }

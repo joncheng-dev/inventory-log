@@ -14,8 +14,7 @@ export default function DropdownMenu() {
 
   const handleSignOutClick = async () => {
     try {
-      const result = await signOutUser();
-      console.log('Sign out successful:', result);
+      await signOutUser();
       setIsSignedIn(false);
       setUserProfile(null);
       navigate('/signin', { replace: true });

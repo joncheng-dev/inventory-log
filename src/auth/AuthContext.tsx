@@ -36,8 +36,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
   const [role, setRole] = useState<UserRole>('user');
 
   const handleAuthChange = async (user: User | null) => {
-    console.log('handleAuthChange called with user:', user?.email);
-
     if (!user) {
       setUserProfile(null);
       setIsSignedIn(false);
@@ -64,7 +62,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
         createdAt: serverTimestamp()
       });
       setUserProfile(baseProfile);
-      console.log('AuthContext, no user exists. User created');
     } else {
       // returning user, load existing profile
       const data = snap.data()!;
@@ -75,7 +72,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
       if (data.role === 'admin') {
         setRole('admin');
       }
-      console.log('AuthContext, user exists. Loading profile');
     }
     setIsSignedIn(true);
     setLoading(false);

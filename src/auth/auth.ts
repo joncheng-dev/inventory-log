@@ -5,8 +5,10 @@ export const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 export const signInWithGoogle = () => {
-  console.log('signInWithGoogle called');
-  return signInWithPopup(auth, provider);
+  if (import.meta.env.DEV) {
+    return signInWithPopup(auth, provider);
+  }
+  return signInWithRedirect(auth, provider);
 };
 
 export const signOutUser = () => {
