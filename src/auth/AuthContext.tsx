@@ -72,6 +72,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
         ...baseProfile,
         role: data.role,
       });
+      if (data.role === 'admin') {
+        setRole('admin');
+      }
       console.log('AuthContext, user exists. Loading profile');
     }
     setIsSignedIn(true);

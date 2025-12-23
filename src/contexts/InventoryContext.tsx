@@ -189,9 +189,12 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
 
   // Fetch grouped inventory items
   const fetchInventoryPageData = async () => {
-    if (!userProfile) return;
-    
-    await new Promise(r => setTimeout(r, 300));
+    if (!userProfile) {
+      setInventoryLoading(true);  
+      return;
+    }
+
+    setInventoryLoading(true);
     // Use existing inventory item list to generate a list of unique inventory items with quantity values
     // Calculate checked out items associated with current user
     const {
@@ -224,8 +227,8 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
   }, []);
 
   useEffect(() => {
-    if (inventoryItems.length > 0) fetchInventoryPageData();
-  }, [inventoryItems]);
+    if (inventoryItems.length > 0 && userProfile) fetchInventoryPageData();
+  }, [inventoryItems, userProfile]);
 
   return (
     <InventoryContext.Provider
