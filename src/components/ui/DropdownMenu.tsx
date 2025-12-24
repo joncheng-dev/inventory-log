@@ -2,9 +2,12 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import { signOutUser } from '../../auth/auth';
+import { useNotification } from '../../contexts/NotificationContext';
+import { getErrorMessage } from '../../utils/error';
 
 export default function DropdownMenu() {
   const navigate = useNavigate();
+  const { success, error } = useNotification(); 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { userProfile, setUserProfile, setIsSignedIn } = useAuth(); // user email is "userProfile.email"
 
@@ -17,8 +20,12 @@ export default function DropdownMenu() {
       await signOutUser();
       setIsSignedIn(false);
       setUserProfile(null);
-      navigate('/signin', { replace: true });
+      success('Signed out successfully');
+      setTimeout(() => {
+        navigate('/signin');
+      }, 800);
     } catch (err) {
+      error(`Failed to sign out: ${getErrorMessage(err)}`);
       console.error(err);
     }
   }
@@ -78,7 +85,7 @@ export default function DropdownMenu() {
               }
               className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors duration-200"
             >
-              Sign Out
+              Log Out
             </a>
           </div>
         </div>
