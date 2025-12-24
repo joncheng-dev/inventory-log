@@ -10,7 +10,7 @@ import {
 
 interface CatalogContextType {
   catalogItems: CatalogItemType[];
-  loading: boolean;
+  catalogLoading: boolean;
   error: string | null;
   fetchCatalogItems: () => Promise<void>;
   addNewCatalogItem: (newItem: Omit<CatalogItemType, "id">) => Promise<void>;
@@ -23,11 +23,11 @@ const CatalogContext = createContext<CatalogContextType | null>(null);
 
 export const CatalogProvider = ({ children }: { children: React.ReactNode }) => {
   const [catalogItems, setCatalogItems] = useState<CatalogItemType[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [catalogLoading, setCatalogLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchCatalogItems = async () => {
-    setLoading(true);
+    setCatalogLoading(true);
     setError(null);
     try {
       const items = await getCatalogTemplates();
@@ -36,7 +36,7 @@ export const CatalogProvider = ({ children }: { children: React.ReactNode }) => 
       setError("Failed to fetch catalog items");
       console.error(err);
     } finally {
-      setLoading(false);
+      setCatalogLoading(false);
     }
   };
 
@@ -111,7 +111,7 @@ export const CatalogProvider = ({ children }: { children: React.ReactNode }) => 
     <CatalogContext.Provider
       value={{
         catalogItems,
-        loading,
+        catalogLoading,
         error,
         fetchCatalogItems,
         addNewCatalogItem,

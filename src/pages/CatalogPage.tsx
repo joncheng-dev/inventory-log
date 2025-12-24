@@ -5,6 +5,7 @@ import { useInventory } from '../contexts/InventoryContext';
 import { useNotification } from '../contexts/NotificationContext';
 import { getErrorMessage } from '../utils/error';
 import PageLayout from './PageLayout';
+import LoadingScreen from '../components/ui/LoadingScreen';
 import PageActionBar from '../components/PageActionBar';
 import type { CatalogItem as CatalogItemType } from '../types/catalog';
 import CatalogListDisplay from '../components/CatalogListDisplay';
@@ -27,6 +28,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   const { success, error } = useNotification();
   const {
     catalogItems,
+    catalogLoading,
     addNewCatalogItem,
     updateCatalogItem,
     archiveCatalogItem,
@@ -144,77 +146,83 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
 
   return (
     <PageLayout>
-      <PageActionBar
-        leftSlot={
-          <CatalogViewToggle currentView={view} />
-        }
-        availableFilterTags={availableFilterTags}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        selectedTags={selectedTags}
-        setSelectedTags={setSelectedTags}
-        viewMode={viewMode}
-        setViewMode={setViewMode}
-        rightSlot={
-          <button 
-            onClick={() => setNewMode(true)}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 whitespace-nowrap"
-          >
-            <span className="text-xl leading-none">+</span>
-            Add New Template
-          </button>
-        }
-      />
-      <div className="flex flex-1 w-full">
-        <div className="flex-1 border-r border-theme">
-          <CatalogListDisplay
-            catalogItems={itemsToDisplay}
+      {catalogLoading ?
+        <LoadingScreen pageType='Catalog' />
+        : (
+        <>
+          <PageActionBar
+            leftSlot={
+              <CatalogViewToggle currentView={view} />
+            }
+            availableFilterTags={availableFilterTags}
             searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
             selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
             viewMode={viewMode}
-            onSelectTemplate={handleSelectTemplate}
+            setViewMode={setViewMode}
+            rightSlot={
+              <button
+                onClick={() => setNewMode(true)}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 whitespace-nowrap"
+              >
+                <span className="text-xl leading-none">+</span>
+                Add New Template
+              </button>
+            }
           />
-        </div>
-        {selectedTemplate && 
-          <CatalogItemDetail
-            selectedTemplate={selectedTemplate}
-            setEditMode={setEditMode}
-            onClose={() => setSelectedTemplateId(null)}
-            onArchiveClick={handleArchiveClick}
-            onRestoreClick={handleRestoreClick}
-            onAddItemClick={handleShowAddItemModal}
-          />
-        }
-        {selectedTemplate && addItemsMode && templateCounts && 
-          <AddToInventoryModal
-            template={selectedTemplate}
-            counts={templateCounts}
-            onClose={handleCloseAddItemModal}
-            onConfirm={handleAddItemConfirm}
-          />
-        }
-        {selectedTemplate && archiveMode && templateCounts && 
-          <ArchiveConfirmationModal
-            template={selectedTemplate}
-            counts={templateCounts}
-            onArchiveConfirm={handleArchiveConfirm}
-            onCancel={handleArchiveCancel}
-          />
-        }
-        {selectedTemplate && editMode && 
-          <CatalogItemEdit
-            template={selectedTemplate}
-            onClose={() => closeEditModal()}
-            onSave={handleSaveEdit}
-          />
-        }
-        {newMode &&
-          <CatalogItemNew
-            onClose={() => closeNewModal()}
-            onSave={handleSaveNew}
-          />
-        }
-      </div>
+          <div className="flex flex-1 w-full">
+            <div className="flex-1 border-r border-theme">
+              <CatalogListDisplay
+                catalogItems={itemsToDisplay}
+                searchTerm={searchTerm}
+                selectedTags={selectedTags}
+                viewMode={viewMode}
+                onSelectTemplate={handleSelectTemplate}
+              />
+            </div>
+            {selectedTemplate &&
+              <CatalogItemDetail
+                selectedTemplate={selectedTemplate}
+                setEditMode={setEditMode}
+                onClose={() => setSelectedTemplateId(null)}
+                onArchiveClick={handleArchiveClick}
+                onRestoreClick={handleRestoreClick}
+                onAddItemClick={handleShowAddItemModal}
+              />
+            }
+            {selectedTemplate && addItemsMode && templateCounts &&
+              <AddToInventoryModal
+                template={selectedTemplate}
+                counts={templateCounts}
+                onClose={handleCloseAddItemModal}
+                onConfirm={handleAddItemConfirm}
+              />
+            }
+            {selectedTemplate && archiveMode && templateCounts &&
+              <ArchiveConfirmationModal
+                template={selectedTemplate}
+                counts={templateCounts}
+                onArchiveConfirm={handleArchiveConfirm}
+                onCancel={handleArchiveCancel}
+              />
+            }
+            {selectedTemplate && editMode &&
+              <CatalogItemEdit
+                template={selectedTemplate}
+                onClose={() => closeEditModal()}
+                onSave={handleSaveEdit}
+              />
+            }
+            {newMode &&
+              <CatalogItemNew
+                onClose={() => closeNewModal()}
+                onSave={handleSaveNew}
+              />
+            }
+          </div>
+        </>
+      )}
     </PageLayout>
   );
 }

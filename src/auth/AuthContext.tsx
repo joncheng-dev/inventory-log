@@ -3,6 +3,7 @@ import { type User, getRedirectResult, onAuthStateChanged } from 'firebase/auth'
 import { auth } from './auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
+import LoadingScreen from '../components/ui/LoadingScreen';
 
 export type UserRole = 'admin' | 'user';
 
@@ -97,7 +98,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
   const isAdmin = isSignedIn && role === 'admin';
   
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen w-full bg-theme">
+        <LoadingScreen />
+      </div>
+    );
   }
 
   return (

@@ -4,6 +4,7 @@ import { useInventory } from '../contexts/InventoryContext';
 import { useNotification } from '../contexts/NotificationContext';
 import { getErrorMessage } from '../utils/error';
 import PageLayout from './PageLayout';
+import LoadingScreen from '../components/ui/LoadingScreen';
 import PageActionBar from '../components/PageActionBar';
 import ItemListDisplay from '../components/ItemListDisplay';
 import CheckedOutSidebar from '../components/checked-out-item-list/CheckedOutSidebar';
@@ -106,14 +107,9 @@ export default function InventoryPage() {
 
   return (
     <PageLayout>
-      {inventoryLoading ? (
-        <div className="flex flex-col items-center justify-center w-full h-full p-8 text-lg text-theme-secondary">
-          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-theme-primary" viewBox="0 0 24 24">
-            {/* Spinner SVG */}
-          </svg>
-          Loading Inventory...
-        </div>
-      ) : (
+      {inventoryLoading ? 
+        <LoadingScreen pageType='Inventory'/>
+      : (
         <>
           <PageActionBar
             leftSlot={null}

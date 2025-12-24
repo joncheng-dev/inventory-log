@@ -212,7 +212,7 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
   const fetchSelectedItemDetails = async (selectedItem: InventoryItemGroupedType) => {
     setSelectedItemDetails(null);
     setSelectedItemLoading(true);
-    // await new Promise(r => setTimeout(r, 300));
+    
     const {
       itemDetails,
       relatedItems
