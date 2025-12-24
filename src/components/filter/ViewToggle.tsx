@@ -1,11 +1,11 @@
-interface ViewToggleProps {
-  viewMode: 'grid-view' | 'list-view';
-  setViewMode: React.Dispatch<React.SetStateAction<'grid-view' | 'list-view'>>;
-}
+import { useAuth } from "../../auth/AuthContext";
 
-export default function ViewToggle({ viewMode, setViewMode }: ViewToggleProps) {
+export default function ViewToggle() {
+  const { handleViewToggleClick } = useAuth();
+  
   const toggleGridListView = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setViewMode(e.currentTarget.id as 'grid-view' | 'list-view');
+    const selectedView = e.currentTarget.id as 'grid-view' | 'list-view' === 'grid-view' ? 'grid' : 'list';
+    handleViewToggleClick(selectedView);
   }
 
   return (

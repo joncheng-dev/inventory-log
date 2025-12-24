@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useAuth } from '../auth/AuthContext';
 import { useCatalog } from '../contexts/CatalogContext';
 import { useInventory } from '../contexts/InventoryContext';
 import { useNotification } from '../contexts/NotificationContext';
@@ -14,6 +15,7 @@ import InventoryItemDetail from '../components/inventory/InventoryItemDetail';
 import AdjustQuantityModal from '../components/inventory/AdjustQuantityModal';
 
 export default function InventoryPage() {
+  const { viewMode } = useAuth();
   const { success, error } = useNotification();
   const { catalogItems } = useCatalog();
   const {
@@ -33,17 +35,17 @@ export default function InventoryPage() {
     returnItem
   } = useInventory();
 
-  const [viewMode, setViewMode] = useState<'grid-view' | 'list-view'>('grid-view');
+  
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
   // Filter via Tags
   const availableFilterTags = ["Biology", "Chemistry", "Earth Science", "General", "Physics"];
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-
+  
   // Inventory Item Details (props to pass in to component)
   const [selectedItem, setSelectedItem] = useState<InventoryItemGroupedType | null>(null);
   const [adjustQtyMode, setAdjustQtyMode] = useState<true | false>(false);
-
+  
   useEffect(() => {
     if(selectedItem) fetchSelectedItemDetails(selectedItem);
   }, [inventoryItems, selectedItem, adjustQtyMode]);
@@ -118,8 +120,6 @@ export default function InventoryPage() {
             setSearchTerm={setSearchTerm}
             selectedTags={selectedTags}
             setSelectedTags={setSelectedTags}
-            viewMode={viewMode}
-            setViewMode={setViewMode}
             rightSlot={
               <CheckedOutToggle
                 count={checkedOutItemTypes}

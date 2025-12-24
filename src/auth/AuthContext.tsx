@@ -4,20 +4,8 @@ import { auth } from './auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
 import LoadingScreen from '../components/ui/LoadingScreen';
-
-export type UserRole = 'admin' | 'user';
-
-export interface UserSetting {
-  key: string;
-  value: any;
-}
-
-export interface UserProfile {
-  uid: string;
-  email: string;
-  displayName: string;
-  role: UserRole;
-}
+import type { UserProfile, UserRole, UserSettings, ViewMode } from '../types/user';
+import { updateUserViewMode } from '../utils/user';
 
 interface AuthContextType {
   userProfile: UserProfile | null;
@@ -26,6 +14,8 @@ interface AuthContextType {
   isSignedIn: boolean;
   setRole: (role: UserRole) => void;
   setIsSignedIn: (signedIn: boolean) => void;
+  handleViewToggleClick: (selectedView: ViewMode) => void;
+  viewMode: ViewMode;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -35,6 +25,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [role, setRole] = useState<UserRole>('user');
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
   const handleAuthChange = async (user: User | null) => {
     if (!user) {
@@ -47,12 +38,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
     const userRef = doc(db, 'users', user.uid);
     const snap = await getDoc(userRef);
 
+    const defaultUserSettings: UserSettings = {
+      viewMode: 'grid'
+    }
+
     const baseProfile: UserProfile = {
       uid: user.uid,
       email: user.email ?? '',
       displayName: user.displayName ?? '',
       role: 'user',
-    }
+      settings: defaultUserSettings
+    };
 
     if (!snap.exists()) {
       // this is the first login; create a new user
@@ -60,16 +56,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
         email: baseProfile.email,
         displayName: baseProfile.displayName,
         role: baseProfile.role,
+        settings: baseProfile.settings,
         createdAt: serverTimestamp()
       });
       setUserProfile(baseProfile);
+      setViewMode('grid');
     } else {
       // returning user, load existing profile
       const data = snap.data()!;
-      setUserProfile({
+      const loadedProfile: UserProfile = {
         ...baseProfile,
         role: data.role,
-      });
+        settings: data.settings || defaultUserSettings
+      };
+      setUserProfile(loadedProfile);
+      setViewMode(data.settings?.viewMode || 'grid');
+
       if (data.role === 'admin') {
         setRole('admin');
       }
@@ -77,6 +79,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
     setIsSignedIn(true);
     setLoading(false);
   };
+
+  const handleViewToggleClick = async (selectedView: ViewMode) => {
+    const previousView = viewMode;
+    setViewMode(selectedView);
+
+    if (userProfile?.uid) {
+      try {
+        await updateUserViewMode(userProfile.uid, selectedView);
+      } catch (err) {
+        console.error('Failed to save view preference:', err);
+        setViewMode(previousView);
+      }
+    }
+  }
 
   useEffect(() => {
     getRedirectResult(auth)
@@ -113,7 +129,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
         isAdmin,
         setRole,
         isSignedIn,
-        setIsSignedIn
+        setIsSignedIn,
+        handleViewToggleClick,
+        viewMode
       }}
     >
       {children}

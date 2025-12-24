@@ -19,7 +19,7 @@ import { getInventoryCountsforCatalog } from '../utils/inventory';
 import { useAuth } from '../auth/AuthContext';
 
 export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
-  const { isAdmin } = useAuth();
+  const { isAdmin, viewMode } = useAuth();
   const navigate = useNavigate();
   if (!isAdmin) {
     navigate('/unauthorized');
@@ -36,7 +36,6 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   } = useCatalog();
   const { inventoryItems, addItemsToInventory } = useInventory(); 
 
-  const [viewMode, setViewMode] = useState<'grid-view' | 'list-view'>('grid-view');
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
   const [editMode, setEditMode] = useState<true | false>(false);
   const [newMode, setNewMode] = useState<true | false>(false);
@@ -159,8 +158,6 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
             setSearchTerm={setSearchTerm}
             selectedTags={selectedTags}
             setSelectedTags={setSelectedTags}
-            viewMode={viewMode}
-            setViewMode={setViewMode}
             rightSlot={
               <button
                 onClick={() => setNewMode(true)}
