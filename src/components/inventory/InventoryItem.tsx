@@ -1,10 +1,11 @@
 import type { InventoryItemGroupedType } from '../../types/inventory';
 import type { CatalogItem as CatalogItemType } from '../../types/catalog';
+import type { ViewMode } from '../../types/user';
 
 interface InventoryItemProps {
   item: InventoryItemGroupedType | null;
   catalogItem: CatalogItemType;
-  viewMode: 'grid-view' | 'list-view';
+  viewMode: ViewMode;
   setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemGroupedType | null>>;
 }
 
@@ -23,7 +24,7 @@ export default function InventoryItem({ item, catalogItem, viewMode, setSelected
     ? 'ml-1.5 font-semibold text-emerald-600 dark:text-emerald-400'
     : 'ml-1.5 font-semibold text-red-600 dark:text-red-400';
 
-  if (viewMode === 'grid-view') {
+  if (viewMode === 'grid') {
     return (
       <div className="bg-theme-surface border border-theme rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
         {/* Header section */}

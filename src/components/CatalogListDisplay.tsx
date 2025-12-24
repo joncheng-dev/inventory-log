@@ -1,11 +1,12 @@
 import type { CatalogItem as CatalogItemType } from '../types/catalog';
 import CatalogItemList from './catalog/CatalogItemList';
+import type { ViewMode } from '../types/user';
 
 interface CatalogListDisplayProps {
   catalogItems: CatalogItemType[];
   searchTerm: string;
   selectedTags: string[];
-  viewMode: 'grid-view' | 'list-view';
+  viewMode: ViewMode;
   onSelectTemplate: (selectedTemplate: CatalogItemType) => Promise<void>;
 }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
 

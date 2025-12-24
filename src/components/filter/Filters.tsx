@@ -8,8 +8,7 @@ interface FiltersProps {
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
   selectedTags: Array<string>;
   setSelectedTags: React.Dispatch<React.SetStateAction<string[]>>;
-  viewMode: 'grid-view' | 'list-view';
-  setViewMode: React.Dispatch<React.SetStateAction<'grid-view' | 'list-view'>>;
+  setViewMode: React.Dispatch<React.SetStateAction<'grid' | 'list'>>;
   rightSlot?: React.ReactNode;
 }
 
@@ -19,8 +18,6 @@ export default function Filters({
   setSearchTerm,
   selectedTags,
   setSelectedTags,
-  viewMode,
-  setViewMode,
   rightSlot
 }: FiltersProps) {
   return (
@@ -37,7 +34,7 @@ export default function Filters({
         />
       </div>
       <div className="flex items-center gap-3">
-        <ViewToggle viewMode={viewMode} setViewMode={setViewMode}/>
+        <ViewToggle />
         { rightSlot }
       </div>
     </div>

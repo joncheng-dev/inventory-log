@@ -1,8 +1,9 @@
 import type { CatalogItem as CatalogItemType } from '../../types/catalog';
+import type { ViewMode } from '../../types/user';
 
 interface CatalogItemProps {
   catalogItem: CatalogItemType;
-  viewMode: 'grid-view' | 'list-view';
+  viewMode: ViewMode;
   onSelectTemplate: (selectedTemplate: CatalogItemType) => Promise<void>;
 }
 
@@ -42,7 +43,7 @@ export default function CatalogItem({ catalogItem, viewMode, onSelectTemplate }:
     Physics: 'text-purple-800 dark:text-purple-200',
   };
 
-if (viewMode === 'grid-view') {
+if (viewMode === 'grid') {
     return (
       <div className={`bg-theme-surface border-2 border-dashed ${styles.border} rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow relative ${archived ? 'opacity-75' : ''}`}>
         {/* Badge */}

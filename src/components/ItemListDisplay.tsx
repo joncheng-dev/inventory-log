@@ -1,6 +1,7 @@
 import type { InventoryItemGroupedType } from '../types/inventory';
 import InventoryItemList from './inventory/InventoryItemList';
 import type { CatalogItem as CatalogItemType } from '../types/catalog';
+import type { ViewMode } from '../types/user';
 
 interface ItemListDisplayProps {
   inventoryItemData: Record<string, InventoryItemGroupedType>;
@@ -8,7 +9,7 @@ interface ItemListDisplayProps {
   searchTerm: string;
   selectedTags: string[];
   setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemGroupedType | null>>;
-  viewMode: 'grid-view' | 'list-view';
+  viewMode: ViewMode;
 }
 
 export default function ItemListDisplay({ inventoryItemData, catalogItems, searchTerm, selectedTags, setSelectedItem, viewMode }: ItemListDisplayProps) {

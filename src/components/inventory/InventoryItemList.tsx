@@ -1,18 +1,19 @@
 import InventoryItem from './InventoryItem';
 import type { InventoryItemGroupedType } from '../../types/inventory';
 import type { CatalogItem as CatalogItemType } from '../../types/catalog';
+import type { ViewMode } from '../../types/user';
 
 interface InventoryItemListProps {
   inventoryItemsAfterFilter: Record<string, InventoryItemGroupedType | null>;
   catalogItems: CatalogItemType[];
-  viewMode: 'grid-view' | 'list-view';
+  viewMode: ViewMode;
   setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemGroupedType | null>>;
 }
 
 function renderGroupedInventoryItems(
   inventoryItems: Record<string, InventoryItemGroupedType | null>,
   catalogItems: CatalogItemType[],
-  viewMode: 'grid-view' | 'list-view',
+  viewMode: ViewMode,
   setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemGroupedType | null>>,
 ) {
   return Object.entries(inventoryItems).map(([catalogItemId, item]) => {
@@ -43,7 +44,7 @@ export default function InventoryItemList({ inventoryItemsAfterFilter, catalogIt
     );
   }
 
-  if (viewMode === 'grid-view') {
+  if (viewMode === 'grid') {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
         {renderGroupedInventoryItems(inventoryItemsAfterFilter, catalogItems, viewMode, setSelectedItem)}

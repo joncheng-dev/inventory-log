@@ -12,8 +12,6 @@ interface PageActionBarProps {
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
   selectedTags: Array<string>;
   setSelectedTags: React.Dispatch<React.SetStateAction<string[]>>;
-  viewMode: 'grid-view' | 'list-view';
-  setViewMode: React.Dispatch<React.SetStateAction<'grid-view' | 'list-view'>>;
   
   // Right slot - page-specific actions
   rightSlot?: React.ReactNode;
@@ -26,8 +24,6 @@ export default function PageActionBar({
   setSearchTerm,
   selectedTags,
   setSelectedTags,
-  viewMode,
-  setViewMode,
   rightSlot
 }: PageActionBarProps) {
   return (
@@ -48,7 +44,7 @@ export default function PageActionBar({
           selectedTags={selectedTags}
           setSelectedTags={setSelectedTags}
         />
-        <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
+        <ViewToggle />
       </div>
       
       {/* Right: Page-specific actions */}

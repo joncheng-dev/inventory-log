@@ -1,15 +1,16 @@
 import CatalogItem from './CatalogItem';
 import type { CatalogItem as CatalogItemType } from '../../types/catalog';
+import type { ViewMode } from '../../types/user';
 
 interface CatalogItemListProps {
   catalogItemsAfterFilter: CatalogItemType[];
-  viewMode: 'grid-view' | 'list-view';
+  viewMode: ViewMode;
   onSelectTemplate: (selectedTemplate: CatalogItemType) => Promise<void>;
 }
 
 function renderCatalogItems(
   catalogItems: CatalogItemType[],
-  viewMode: 'grid-view' | 'list-view',
+  viewMode: ViewMode,
   onSelectTemplate: (selectedTemplate: CatalogItemType) => Promise<void>,
 ) {
   return catalogItems.map((item) => {
@@ -37,7 +38,7 @@ export default function CatalogItemList({ catalogItemsAfterFilter, viewMode, onS
     );
   }
 
-  if (viewMode === 'grid-view') {
+  if (viewMode === 'grid') {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-6">
         {renderCatalogItems(catalogItemsAfterFilter, viewMode, onSelectTemplate)}
