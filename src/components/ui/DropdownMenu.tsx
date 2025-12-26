@@ -76,6 +76,24 @@ export default function DropdownMenu() {
             >
               About
             </a>
+            {userProfile?.role === 'admin' && (
+              <>
+                <div className="my-2 border-t border-theme-muted" />
+
+                <p className="px-4 py-1 text-xs font-semibold text-theme-secondary uppercase tracking-wide">
+                  Admin
+                </p>
+
+                <Link
+                  to="/admin/users"
+                  className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors"
+                >
+                  Manage Users
+                </Link>
+              </>
+            )}
+
+            <div className="my-2 border-t border-theme-muted" />
             <a
               href="#"
               onClick={(e) => {
