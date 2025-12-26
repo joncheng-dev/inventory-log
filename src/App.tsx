@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import CatalogPage from './pages/CatalogPage';
 import InventoryPage from './pages/InventoryPage';
 import SignInPage from './pages/SignInPage';
-import UserManagementPage from './pages/UserManagementPage.tsx';
+import ManageUsersPage from './pages/ManageUsersPage.tsx';
 import { AuthProvider } from './auth/AuthContext.tsx';
 import { CatalogProvider } from './contexts/CatalogContext.tsx'
 import { InventoryProvider } from './contexts/InventoryContext.tsx';
@@ -53,7 +53,7 @@ function App() {
                   path="/admin/users"
                   element={
                     <ProtectedRoute requireSignIn requireAdmin>
-                      <UserManagementPage />
+                      <ManageUsersPage />
                     </ProtectedRoute>
                   }
                 />

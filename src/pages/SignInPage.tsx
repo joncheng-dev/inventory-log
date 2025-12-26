@@ -2,7 +2,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { signInWithGoogle } from "../auth/auth";
 import { useEffect } from "react";
-import { useNotification } from "../contexts/NotificationContext";
 
 export default function SignInPage() {
   const navigate = useNavigate();
@@ -54,7 +53,7 @@ export default function SignInPage() {
             Continue with Google
           </button>
 
-          {/* Optional: Divider and additional info */}
+          {/* Additional info */}
           <div className="mt-6 pt-6 border-t border-theme">
             <p className="text-sm text-theme-secondary text-center">
               Sign in with your organization's Google account
