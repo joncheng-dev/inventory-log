@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import { signOutUser } from '../../auth/auth';
@@ -8,11 +8,12 @@ import { getErrorMessage } from '../../utils/error';
 export default function DropdownMenu() {
   const navigate = useNavigate();
   const { success, error } = useNotification(); 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const { userProfile, setUserProfile, setIsSignedIn } = useAuth(); // user email is "userProfile.email"
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+    setIsOpen(!isOpen);
   };
 
   const handleSignOutClick = async () => {
@@ -30,8 +31,24 @@ export default function DropdownMenu() {
     }
   }
 
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
-    <div className='ml-10 px-2 py-2 relative'>
+    <div ref={containerRef} className='ml-10 px-2 py-2 relative'>
       <svg 
         className='cursor-pointer text-theme-primary hover:text-primary-500 transition-colors duration-200' 
         width="24" 
@@ -44,7 +61,7 @@ export default function DropdownMenu() {
         <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
       
-      {isDropdownOpen && (
+      {isOpen && (
         <div className="absolute right-0 mt-2 w-56 bg-theme-surface rounded-md shadow-lg border border-theme z-50">
           <div className="py-2 px-4 border-b border-theme-muted">
             {userProfile && (
