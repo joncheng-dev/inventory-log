@@ -1,10 +1,8 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { type User, getRedirectResult, onAuthStateChanged } from 'firebase/auth';
-import { auth } from './auth';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../firebase';
+import { auth, getOrCreateUserProfile } from './auth';
 import LoadingScreen from '../components/ui/LoadingScreen';
-import type { UserProfile, UserRole, UserSettings, ViewMode } from '../types/user';
+import type { UserProfile, UserRole, ViewMode } from '../types/user';
 import { updateUserViewMode } from '../utils/user';
 
 interface AuthContextType {
@@ -35,46 +33,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
       return;
     }
 
-    const userRef = doc(db, 'users', user.uid);
-    const snap = await getDoc(userRef);
+    const profile = await getOrCreateUserProfile(user);
+    setUserProfile(profile);
+    setViewMode(profile.settings?.viewMode || 'grid');
 
-    const defaultUserSettings: UserSettings = {
-      viewMode: 'grid'
-    }
-
-    const baseProfile: UserProfile = {
-      uid: user.uid,
-      email: user.email ?? '',
-      displayName: user.displayName ?? '',
-      role: 'user',
-      settings: defaultUserSettings
-    };
-
-    if (!snap.exists()) {
-      // this is the first login; create a new user
-      await setDoc(userRef, {
-        email: baseProfile.email,
-        displayName: baseProfile.displayName,
-        role: baseProfile.role,
-        settings: baseProfile.settings,
-        createdAt: serverTimestamp()
-      });
-      setUserProfile(baseProfile);
-      setViewMode('grid');
-    } else {
-      // returning user, load existing profile
-      const data = snap.data()!;
-      const loadedProfile: UserProfile = {
-        ...baseProfile,
-        role: data.role,
-        settings: data.settings || defaultUserSettings
-      };
-      setUserProfile(loadedProfile);
-      setViewMode(data.settings?.viewMode || 'grid');
-
-      if (data.role === 'admin') {
+    if (profile.role === 'admin') {
         setRole('admin');
-      }
     }
     setIsSignedIn(true);
     setLoading(false);
@@ -92,7 +56,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
         setViewMode(previousView);
       }
     }
-  }
+  };
 
   useEffect(() => {
     getRedirectResult(auth)
