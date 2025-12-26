@@ -8,7 +8,7 @@ export default function CatalogViewToggle({ currentView }: CatalogViewToggleProp
   return (
     <>
       <Link 
-        to="/catalog"
+        to="/admin/catalog"
         className={`px-4 py-2 font-medium transition-colors duration-200 rounded-lg ${
           currentView === 'active' 
             ? 'text-primary-500 bg-primary-50 dark:bg-primary-900/20' 
@@ -18,7 +18,7 @@ export default function CatalogViewToggle({ currentView }: CatalogViewToggleProp
         Active Items
       </Link>
       <Link 
-        to="/catalog/archived"
+        to="/admin/catalog/archived"
         className={`px-4 py-2 font-medium transition-colors duration-200 rounded-lg ${
           currentView === 'archived' 
             ? 'text-primary-500 bg-primary-50 dark:bg-primary-900/20' 

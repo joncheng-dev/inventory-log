@@ -1,13 +1,14 @@
 import { Routes, Route } from 'react-router-dom';
 import CatalogPage from './pages/CatalogPage';
-import InventoryPage from "./pages/InventoryPage";
-import SignInPage from "./pages/SignInPage";
+import InventoryPage from './pages/InventoryPage';
+import SignInPage from './pages/SignInPage';
+import UserManagementPage from './pages/UserManagementPage.tsx';
 import { AuthProvider } from './auth/AuthContext.tsx';
 import { CatalogProvider } from './contexts/CatalogContext.tsx'
 import { InventoryProvider } from './contexts/InventoryContext.tsx';
 import ThemeViewerPage from "./pages/ThemeViewerPage";
 import { NotificationProvider } from './contexts/NotificationContext.tsx';
-import { ThemeProvider } from "./contexts/ThemeContext";
+import { ThemeProvider } from './contexts/ThemeContext';
 import ProtectedRoute from './utils/ProtectedRoute.tsx';
 import "./App.css";
 import UnauthorizedPage from './pages/UnauthorizedPage.tsx';
@@ -33,7 +34,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/catalog"
+                  path="/admin/catalog"
                   element={
                     <ProtectedRoute requireSignIn requireAdmin>
                       <CatalogPage view="active" />
@@ -41,10 +42,18 @@ function App() {
                   }
                 />
                 <Route
-                  path="/catalog/archived"
+                  path="/admin/catalog/archived"
                   element={
                     <ProtectedRoute requireSignIn requireAdmin>
                       <CatalogPage view="archived" />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/users"
+                  element={
+                    <ProtectedRoute requireSignIn requireAdmin>
+                      <UserManagementPage />
                     </ProtectedRoute>
                   }
                 />

@@ -20,7 +20,7 @@ export default function Header() {
       </Link>
       <div className='flex items-center gap-4'>
         {isAdmin && (
-          <Link to="/catalog" className='px-4 py-2 rounded-lg hover:bg-theme-surface transition-colors duration-200'>
+          <Link to="/admin/catalog" className='px-4 py-2 rounded-lg hover:bg-theme-surface transition-colors duration-200'>
             <p className="text-sm font-medium text-theme-primary">
               Item Catalog
             </p>
