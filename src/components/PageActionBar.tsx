@@ -6,24 +6,29 @@ interface PageActionBarProps {
   // Left slot - page-specific navigation
   leftSlot?: React.ReactNode;
   
-  // Center - common filters (always present)
-  availableFilterTags: Array<string>;
+  // Center - common search input (always present)
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
-  selectedTags: Array<string>;
-  setSelectedTags: React.Dispatch<React.SetStateAction<string[]>>;
-  
+  // Center - for catalog and inventory pages
+  showTagFilter: boolean;
+  availableFilterTags?: Array<string>;
+  selectedTags?: Array<string>;
+  setSelectedTags?: React.Dispatch<React.SetStateAction<string[]>>;
+  showViewToggle?: boolean;
+
   // Right slot - page-specific actions
   rightSlot?: React.ReactNode;
 }
 
 export default function PageActionBar({
   leftSlot,
-  availableFilterTags,
   searchTerm,
   setSearchTerm,
+  showTagFilter = false,
+  availableFilterTags,
   selectedTags,
   setSelectedTags,
+  showViewToggle = false,
   rightSlot
 }: PageActionBarProps) {
   return (
@@ -39,12 +44,16 @@ export default function PageActionBar({
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
         />
-        <TagFilter
-          availableFilterTags={availableFilterTags}
-          selectedTags={selectedTags}
-          setSelectedTags={setSelectedTags}
-        />
-        <ViewToggle />
+        {showTagFilter && availableFilterTags && selectedTags && setSelectedTags && (
+          <TagFilter
+            availableFilterTags={availableFilterTags}
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+          />
+        )}
+        {showViewToggle && (
+          <ViewToggle />
+        )}
       </div>
       
       {/* Right: Page-specific actions */}

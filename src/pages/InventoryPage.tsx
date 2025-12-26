@@ -115,11 +115,13 @@ export default function InventoryPage() {
         <>
           <PageActionBar
             leftSlot={null}
-            availableFilterTags={availableFilterTags}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
+            showTagFilter={true}
+            availableFilterTags={availableFilterTags}
             selectedTags={selectedTags}
             setSelectedTags={setSelectedTags}
+            showViewToggle={true}
             rightSlot={
               <CheckedOutToggle
                 count={checkedOutItemTypes}

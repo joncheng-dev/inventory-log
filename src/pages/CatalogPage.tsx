@@ -153,11 +153,13 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
             leftSlot={
               <CatalogViewToggle currentView={view} />
             }
-            availableFilterTags={availableFilterTags}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
+            showTagFilter={true}
+            availableFilterTags={availableFilterTags}
             selectedTags={selectedTags}
             setSelectedTags={setSelectedTags}
+            showViewToggle={true}
             rightSlot={
               <button
                 onClick={() => setNewMode(true)}
