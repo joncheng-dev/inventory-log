@@ -1,34 +1,57 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { collection, onSnapshot, doc, updateDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { useNotification } from './NotificationContext';
 import type { UserProfile, UserRole } from '../types/user';
-import { getUserProfiles } from '../utils/user';
+import { getUserProfiles, updateUserRole } from '../utils/user';
 
 interface UserContextType {
   users: UserProfile[];
   userLoading: boolean;
-  error: string | null;
-  // updateUserRole: (uid: string, newRole: UserRole) => Promise<void>;
+  errorMsg: string | null;
+  changeUserRole: (uid: string, newRole: UserRole) => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | null>(null);
 
 export const UserProvider = ({ children }: { children: React.ReactNode; }) => {
+  const { success, error } = useNotification();
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [userLoading, setUserLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const fetchUserProfiles = async () => {
     setUserLoading(true);
-    setError(null);
+    setErrorMsg(null);
     try {
       const users = await getUserProfiles();
       setUsers(users);
     } catch (err) {
-      setError("Failed to fetch user profiles");
+      setErrorMsg("Failed to fetch user profiles");
       console.error(err);
+      throw err;
     } finally {
       setUserLoading(false);
+    }
+  };
+
+  const changeUserRole = async (uid: string, newRole: UserRole) => {
+    const prevUsers = users;
+    setUsers((prev) =>
+      prev.map(user =>
+        user.uid === uid
+          ? { ...user, role: newRole }
+          : user
+      ) 
+    );
+    
+    try {
+      await updateUserRole(uid, newRole);
+      success(`Role updated to ${newRole}`);
+    } catch (err) {
+      setUsers(prevUsers);
+      setErrorMsg("Failed to update user role");
+      error('Failed to update user role');
+      console.error(err);
+      throw err;
     }
   };
 
@@ -41,8 +64,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode; }) => {
       value={{
         users,
         userLoading,
-        error,
-        // updateUserRole
+        errorMsg,
+        changeUserRole
       }}
     >
       {children}

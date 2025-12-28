@@ -19,8 +19,8 @@ function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <UserProvider>
-          <NotificationProvider>
+        <NotificationProvider>
+          <UserProvider>
             <CatalogProvider>
               <InventoryProvider>          
                 <Routes>
@@ -64,8 +64,8 @@ function App() {
                 </Routes>
               </InventoryProvider>
             </CatalogProvider>
-          </NotificationProvider>
-        </UserProvider>
+          </UserProvider>
+        </NotificationProvider>
       </AuthProvider>
     </ThemeProvider>
   );
