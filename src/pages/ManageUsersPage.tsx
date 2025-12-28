@@ -1,45 +1,26 @@
 import { useState } from "react";
+import { useUser } from "../contexts/UserContext";
 import PageLayout from "./PageLayout";
 import PageActionBar from "../components/PageActionBar";
 
 export default function ManageUsersPage() {
+  const { users } = useUser();
   const [searchTerm, setSearchTerm] = useState<string>('');
  
-  const mockData = [
-    {
-      uid: '123123',
-      email: 'homer@simpson.org',
-      displayName: 'Homer Simpson',
-      role: 'admin'
-    },
-    {
-      uid: '12341234',
-      email: 'marge@simpson.org',
-      displayName: 'Marge Simpson',
-      role: 'admin'
-    },
-    {
-      uid: '1234512345',
-      email: 'bart@simpson.org',
-      displayName: 'Bart Simpson',
-      role: 'user'
-    },
-  ];
+  let search = '';
+  if (searchTerm.length > 1) {
+    search = searchTerm.toLowerCase();
+  }  
 
-    let search = '';
-    if (searchTerm.length > 1) {
-      search = searchTerm.toLowerCase();
-    }  
-
-    const filteredUsers = mockData
-      .filter((user) => {
-        if (searchTerm === '') return true;
-        return (
-          user.displayName.toLowerCase().includes(search) ||
-          user.email.toLowerCase().includes(search)
-        );    
-      })
-    ;
+  const filteredUsers = users
+    .filter((user) => {
+      if (searchTerm === '') return true;
+      return (
+        user.displayName.toLowerCase().includes(search) ||
+        user.email.toLowerCase().includes(search)
+      );    
+    })
+  ;
 
   return (
     <PageLayout>
@@ -132,7 +113,7 @@ export default function ManageUsersPage() {
 
         {/* Summary */}
         <div className="mt-4 text-sm text-theme-secondary">
-          Showing {filteredUsers.length} of {mockData.length} users
+          Showing {filteredUsers.length} of {users.length} users
         </div>
       </div>
     </PageLayout>
