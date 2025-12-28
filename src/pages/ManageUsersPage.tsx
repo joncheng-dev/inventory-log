@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { useAuth } from "../auth/AuthContext";
 import { useUser } from "../contexts/UserContext";
+import type { UserRole } from "../types/user";
 import PageLayout from "./PageLayout";
 import PageActionBar from "../components/PageActionBar";
 
 export default function ManageUsersPage() {
-  const { users } = useUser();
+  const { userProfile } = useAuth();
+  const { users, changeUserRole } = useUser();
   const [searchTerm, setSearchTerm] = useState<string>('');
  
   let search = '';
@@ -21,6 +24,15 @@ export default function ManageUsersPage() {
       );    
     })
   ;
+
+  const handleRoleChange = (uid: string, newRole: UserRole) => {
+    if (uid === userProfile!.uid && newRole === 'user') {
+      if (!confirm('Are you sure you want to remove your admin privileges?')) {
+        return;
+      }
+    }
+    changeUserRole(uid, newRole);
+  };
 
   return (
     <PageLayout>
@@ -96,7 +108,7 @@ export default function ManageUsersPage() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <select
                           value={user.role}
-                          // onChange={(e) => handleRoleChange(user.id, e.target.value as 'admin' | 'user')}
+                          onChange={(e) => handleRoleChange(user.uid, e.target.value as UserRole)}
                           className="px-3 py-1.5 border border-theme rounded-md bg-theme-surface text-theme-primary text-sm font-medium hover:bg-theme-hover focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors cursor-pointer"
                         >
                           <option value="user">User</option>
