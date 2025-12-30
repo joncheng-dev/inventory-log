@@ -57,19 +57,19 @@ export default function ManageUsersPage() {
             <table className="w-full table-fixed">
               <thead>
                 <tr className="border-b border-theme bg-theme-secondary/10">
-                  <th className="w-[25%] px-6 py-3 text-left text-xs font-semibold text-theme-primary uppercase tracking-wider">
+                  <th className="w-[30%] px-6 py-3 text-left text-xs font-semibold text-theme-primary uppercase tracking-wider">
                     Name
                   </th>
                   <th className="w-[30%] px-6 py-3 text-left text-xs font-semibold text-theme-primary uppercase tracking-wider">
                     Email
                   </th>
-                  <th className="w-[15%] px-6 py-3 text-left text-xs font-semibold text-theme-primary uppercase tracking-wider">
+                  <th className="w-[20%] px-6 py-3 text-left text-xs font-semibold text-theme-primary uppercase tracking-wider">
                     Role
                   </th>
-                  <th className="w-[15%] px-6 py-3 text-left text-xs font-semibold text-theme-primary uppercase tracking-wider">
+                  {/* <th className="w-[15%] px-6 py-3 text-left text-xs font-semibold text-theme-primary uppercase tracking-wider">
                     Last Active
-                  </th>
-                  <th className="w-[15%] px-6 py-3 text-left text-xs font-semibold text-theme-primary uppercase tracking-wider">
+                  </th> */}
+                  <th className="w-[20%] px-6 py-3 text-left text-xs font-semibold text-theme-primary uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -102,14 +102,14 @@ export default function ManageUsersPage() {
                           {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      {/* <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-theme-secondary">timestamp</div>
-                      </td>
+                      </td> */}
                       <td className="px-6 py-4 whitespace-nowrap">
                         <select
                           value={user.role}
                           onChange={(e) => handleRoleChange(user.uid, e.target.value as UserRole)}
-                          className="px-3 py-1.5 border border-theme rounded-md bg-theme-surface text-theme-primary text-sm font-medium hover:bg-theme-hover focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors cursor-pointer"
+                          className="px-5 py-3 border border-theme rounded-md bg-theme-surface text-theme-primary text-sm font-medium hover:bg-theme-hover focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors cursor-pointer"
                         >
                           <option value="user">User</option>
                           <option value="admin">Admin</option>
