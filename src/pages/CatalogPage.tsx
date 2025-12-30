@@ -163,7 +163,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
             rightSlot={
               <button
                 onClick={() => setNewMode(true)}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 whitespace-nowrap"
+                className="px-4 py-2 border border-blue-400 dark:border-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 whitespace-nowrap"
               >
                 <span className="text-xl leading-none">+</span>
                 Add New Template
