@@ -22,7 +22,6 @@ export default function CatalogItemNew({ onClose, onSave }: CatalogItemNewProps)
 
   const availableTags = ['Biology', 'Chemistry', 'Earth Science', 'General', 'Physics'];
 
-  // Escape key to close
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -93,7 +92,7 @@ export default function CatalogItemNew({ onClose, onSave }: CatalogItemNewProps)
                     </p>
                   )}
                   <p className="text-sm text-theme-secondary">
-                    Create new catalog item definition
+                    Create a new template for inventory items
                   </p>
                 </div>
                 <button
@@ -115,7 +114,7 @@ export default function CatalogItemNew({ onClose, onSave }: CatalogItemNewProps)
                 {/* Info Box */}
                 <div className="border-2 border-dashed border-blue-300 dark:border-blue-700 rounded-lg p-4 bg-blue-50/50 dark:bg-blue-950/20">
                   <p className="text-sm text-blue-700 dark:text-blue-300">
-                    <span className="font-semibold">💡 Tip:</span> This template will define the default properties for new inventory items. You can create multiple physical items from this template later.
+                    <span className="font-semibold">💡 Tip:</span> Templates define the shared details for inventory items. You can create multiple inventory items from this template later.
                   </p>
                 </div>
 
@@ -157,7 +156,7 @@ export default function CatalogItemNew({ onClose, onSave }: CatalogItemNewProps)
                       </p>
                       )}
                       <p className="text-xs text-theme-secondary">
-                        Unique identifier for this item type
+                        Unique identifier for this template
                       </p>
                     </div>
                     
@@ -195,7 +194,7 @@ export default function CatalogItemNew({ onClose, onSave }: CatalogItemNewProps)
                       placeholder="e.g., Room 204, Cabinet A"
                     />
                     <p className="text-xs text-theme-secondary">
-                      Where items of this type are typically stored
+                      Default location for items created from this template
                     </p>
                   </div>
 
@@ -252,10 +251,10 @@ export default function CatalogItemNew({ onClose, onSave }: CatalogItemNewProps)
                       onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                       rows={4}
                       className="w-full px-3 py-2 border-2 border-blue-300 dark:border-blue-700 rounded bg-theme-surface text-theme-primary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                      placeholder="Describe this catalog item..."
+                      placeholder="Describe what this item is used for..."
                     />
                     <p className="text-xs text-theme-secondary">
-                      Optional details about this item type
+                      Optional details about this template
                     </p>
                   </div>
                 </div>
@@ -277,7 +276,7 @@ export default function CatalogItemNew({ onClose, onSave }: CatalogItemNewProps)
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded transition-colors text-sm font-medium"
                 title={
                   !isFormValid
-                    ? 'Please fill in all required fields'
+                    ? 'Complete all required fields to create the template'
                     : 'Create this template'
                 }
               >
