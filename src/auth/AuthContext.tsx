@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
   const handleAuthChange = async (user: User | null) => {
     if (!user) {
       setUserProfile(null);
+      setViewMode('grid');
       setIsSignedIn(false);
       setLoading(false);
       return;
@@ -39,23 +40,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
 
     return listenToCurrentUserProfile(user.uid, (updatedProfile) => {
       setUserProfile(updatedProfile);
-      setViewMode(updatedProfile.settings?.viewMode || 'grid');
+      setViewMode(prev => updatedProfile.settings?.viewMode || prev);
     });
   };
 
   const handleViewToggleClick = async (selectedView: ViewMode) => {
-    const previousView = viewMode;
     setViewMode(selectedView);
-
-    if (userProfile?.uid) {
-      try {
-        await updateUserViewMode(userProfile.uid, selectedView);
-      } catch (err) {
-        console.error('Failed to save view preference:', err);
-        setViewMode(previousView);
-      }
-    }
   };
+
+  useEffect(() => {
+    if (userProfile?.uid && viewMode !== userProfile.settings?.viewMode) {
+      const timeoutId = setTimeout(() => {
+        updateUserViewMode(userProfile.uid, viewMode);
+      }, 1000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [viewMode, userProfile?.uid, userProfile?.settings.viewMode]);
 
   useEffect(() => {
     getRedirectResult(auth)
