@@ -1,10 +1,19 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import PageLayout from './PageLayout';
 
 export default function UnauthorizedPage() {
-  const { userProfile } = useAuth();
+  const { userProfile, isAdmin } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as { from?: Location; })?.from?.pathname || '/'; 
+
+  useEffect(() => {
+    if (isAdmin) {
+      navigate(from, { replace: true });
+    }
+  }, [isAdmin, from, navigate]);
 
   return (
     <PageLayout>

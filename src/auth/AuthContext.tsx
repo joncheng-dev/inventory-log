@@ -38,7 +38,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
     setLoading(false);
 
     return listenToCurrentUserProfile(user.uid, (updatedProfile) => {
-      console.log('listenToCurrentUserProfile, updatedProfile: ', updatedProfile);
       setUserProfile(updatedProfile);
       setViewMode(updatedProfile.settings?.viewMode || 'grid');
     });
