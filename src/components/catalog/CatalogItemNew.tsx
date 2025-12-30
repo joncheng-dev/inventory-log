@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import type { CatalogItem as CatalogItemType, CatalogItemFormData } from "../../types/catalog";
+import type { CatalogTemplate, CatalogItemFormData } from "../../types/catalog";
 import { useCatalog } from '../../contexts/CatalogContext';
 
 interface CatalogItemNewProps {
   onClose: () => void;
-  onSave: (newItem: Omit<CatalogItemType, "id">) => void;
+  onSave: (newItem: Omit<CatalogTemplate, "id">) => void;
 }
 
 export default function CatalogItemNew({ onClose, onSave }: CatalogItemNewProps) {

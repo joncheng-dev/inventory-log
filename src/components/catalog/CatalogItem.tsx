@@ -1,10 +1,10 @@
-import type { CatalogItem as CatalogItemType } from '../../types/catalog';
+import type { CatalogTemplate } from '../../types/catalog';
 import type { ViewMode } from '../../types/user';
 
 interface CatalogItemProps {
-  catalogItem: CatalogItemType;
+  catalogItem: CatalogTemplate;
   viewMode: ViewMode;
-  onSelectTemplate: (selectedTemplate: CatalogItemType) => Promise<void>;
+  onSelectTemplate: (selectedTemplate: CatalogTemplate) => Promise<void>;
 }
 
 export default function CatalogItem({ catalogItem, viewMode, onSelectTemplate }: CatalogItemProps) {

@@ -1,13 +1,13 @@
 import { useEffect } from "react";
-import type { CatalogItem as CatalogItemType } from "../../types/catalog";
+import type { CatalogTemplate } from "../../types/catalog";
 
 interface CatalogItemDetailProps {
-  selectedTemplate: CatalogItemType;
+  selectedTemplate: CatalogTemplate;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
-  onClose: React.Dispatch<React.SetStateAction<CatalogItemType | null>>;
-  onArchiveClick: (selectedTemplate: CatalogItemType) => void;
-  onRestoreClick: (selectedTemplate: CatalogItemType) => void;
-  onAddItemClick: (selectedTemplate: CatalogItemType) => void;
+  onClose: React.Dispatch<React.SetStateAction<CatalogTemplate | null>>;
+  onArchiveClick: (selectedTemplate: CatalogTemplate) => void;
+  onRestoreClick: (selectedTemplate: CatalogTemplate) => void;
+  onAddItemClick: (selectedTemplate: CatalogTemplate) => void;
 }
 
 export default function CatalogItemDetail({ 

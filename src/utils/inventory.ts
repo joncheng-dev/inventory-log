@@ -9,7 +9,7 @@ import {
 } from 'firebase/firestore';
 import { db } from "../firebase";
 import type { InventoryItem as InventoryItemType, InventoryItemGroupedType, CheckedOutItemDataType } from "../types/inventory";
-import type { CatalogItem as CatalogItemType, InventoryCounts } from '../types/catalog';
+import type { CatalogTemplate, InventoryCounts } from '../types/catalog';
 
 export const getInventoryItems = async (): Promise<InventoryItemType[]> => {
   try {
@@ -147,7 +147,7 @@ export function groupInventoryItemsByCatalogItem(inventoryItems: InventoryItemTy
   }, {} as Record<string, InventoryItemType[]>);
 }
 
-export function gatherInventoryItemData(groupedItems: Record<string, InventoryItemType[]>, catalogItems: CatalogItemType[]) {
+export function gatherInventoryItemData(groupedItems: Record<string, InventoryItemType[]>, catalogItems: CatalogTemplate[]) {
   let data: Record<string, InventoryItemGroupedType> = {};
 
   for (const [catalogItemId, items] of Object.entries(groupedItems)) {
@@ -170,7 +170,7 @@ export function gatherInventoryItemData(groupedItems: Record<string, InventoryIt
   return data;
 }
 
-export function gatherCheckoutItemDetails(groupedItems: Record<string, InventoryItemType[]>, catalogItems: CatalogItemType[]) {
+export function gatherCheckoutItemDetails(groupedItems: Record<string, InventoryItemType[]>, catalogItems: CatalogTemplate[]) {
   let data: Record<string, CheckedOutItemDataType> = {};
 
   for (const [catalogItemId, items] of Object.entries(groupedItems)) {
@@ -189,7 +189,7 @@ export function gatherCheckoutItemDetails(groupedItems: Record<string, Inventory
 export function gatherCheckoutItemQuantities(
   userEmail: string,
   inventoryItemData: InventoryItemType[],
-  catalogItems: CatalogItemType[])
+  catalogItems: CatalogTemplate[])
   : Record<string, CheckedOutItemDataType> {
   const itemsTiedToUser: InventoryItemType[] = inventoryItemData.filter((item) => item.checkedOutBy === userEmail);
   const groupedByCategory = groupInventoryItemsByCatalogItem(itemsTiedToUser);
@@ -199,7 +199,7 @@ export function gatherCheckoutItemQuantities(
 export function buildInventoryView(
   userEmail: string,
   inventoryItems: InventoryItemType[],
-  catalogItems: CatalogItemType[]
+  catalogItems: CatalogTemplate[]
 ): {
     aggregatedItems: Record<string, InventoryItemGroupedType>;
     checkedOutQty: Record<string, CheckedOutItemDataType>;
@@ -221,7 +221,7 @@ export function buildInventoryView(
 
 export function buildSelectedItemDetails(
   inventoryItems: InventoryItemType[],
-  catalogItems: CatalogItemType[],
+  catalogItems: CatalogTemplate[],
   selectedItem: InventoryItemGroupedType
 ): {
   itemDetails: InventoryItemGroupedType | null;

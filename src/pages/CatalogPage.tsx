@@ -7,7 +7,7 @@ import { getErrorMessage } from '../utils/error';
 import PageLayout from './PageLayout';
 import LoadingScreen from '../components/ui/LoadingScreen';
 import PageActionBar from '../components/PageActionBar';
-import type { CatalogItem as CatalogItemType } from '../types/catalog';
+import type { CatalogTemplate } from '../types/catalog';
 import CatalogListDisplay from '../components/CatalogListDisplay';
 import CatalogItemDetail from '../components/catalog/CatalogItemDetail';
 import CatalogItemEdit from '../components/catalog/CatalogItemEdit';
@@ -63,7 +63,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
     setEditMode(false);
   }
 
-  const handleSaveEdit = (updatedItem: CatalogItemType) => {
+  const handleSaveEdit = (updatedItem: CatalogTemplate) => {
     try {
       updateCatalogItem(updatedItem);
       setSelectedTemplateId(updatedItem.id);
@@ -78,7 +78,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
     setNewMode(false);
   } 
 
-  const handleSaveNew = (newItem: Omit<CatalogItemType, "id">) => {
+  const handleSaveNew = (newItem: Omit<CatalogTemplate, "id">) => {
     try {
       addNewCatalogItem(newItem);
       closeNewModal();
@@ -88,7 +88,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
     }
   }
 
-  const handleSelectTemplate = async (selectedTemplate: CatalogItemType) => {
+  const handleSelectTemplate = async (selectedTemplate: CatalogTemplate) => {
     setSelectedTemplateId(selectedTemplate.id);
   }
 
@@ -96,7 +96,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
     setArchiveMode(true);
   }
 
-  const handleArchiveConfirm = (selectedItem: CatalogItemType) => {
+  const handleArchiveConfirm = (selectedItem: CatalogTemplate) => {
     try {
       archiveCatalogItem(selectedItem.id);
       setArchiveMode(false);
@@ -107,7 +107,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
     }
   }
 
-  const handleRestoreClick = (selectedTemplate: CatalogItemType) => {
+  const handleRestoreClick = (selectedTemplate: CatalogTemplate) => {
     try {
       unarchiveCatalogItem(selectedTemplate.id);
       setSelectedTemplateId(null);

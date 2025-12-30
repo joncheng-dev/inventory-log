@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import type { CatalogItem as CatalogItemType, CatalogItemFormData } from "../../types/catalog";
+import type { CatalogTemplate, CatalogItemFormData } from "../../types/catalog";
 import { useCatalog } from '../../contexts/CatalogContext';
 
 interface CatalogItemEditProps {
-  template: CatalogItemType;
+  template: CatalogTemplate;
   onClose: () => void;
-  onSave: (updatedItem: CatalogItemType) => void;
+  onSave: (updatedItem: CatalogTemplate) => void;
 }
 
 export default function CatalogItemEdit({ template, onClose, onSave }: CatalogItemEditProps) {

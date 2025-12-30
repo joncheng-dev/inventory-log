@@ -1,18 +1,18 @@
 import InventoryItem from './InventoryItem';
 import type { InventoryItemGroupedType } from '../../types/inventory';
-import type { CatalogItem as CatalogItemType } from '../../types/catalog';
+import type { CatalogTemplate } from '../../types/catalog';
 import type { ViewMode } from '../../types/user';
 
 interface InventoryItemListProps {
   inventoryItemsAfterFilter: Record<string, InventoryItemGroupedType | null>;
-  catalogItems: CatalogItemType[];
+  catalogItems: CatalogTemplate[];
   viewMode: ViewMode;
   setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemGroupedType | null>>;
 }
 
 function renderGroupedInventoryItems(
   inventoryItems: Record<string, InventoryItemGroupedType | null>,
-  catalogItems: CatalogItemType[],
+  catalogItems: CatalogTemplate[],
   viewMode: ViewMode,
   setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemGroupedType | null>>,
 ) {

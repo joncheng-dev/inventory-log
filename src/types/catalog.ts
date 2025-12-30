@@ -1,4 +1,4 @@
-export interface CatalogItem {
+export interface CatalogTemplate {
   id: string;
   displayName: string;
   sku: string;

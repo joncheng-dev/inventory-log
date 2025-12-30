@@ -1,13 +1,13 @@
-import type { CatalogItem as CatalogItemType } from '../types/catalog';
+import type { CatalogTemplate } from '../types/catalog';
 import CatalogItemList from './catalog/CatalogItemList';
 import type { ViewMode } from '../types/user';
 
 interface CatalogListDisplayProps {
-  catalogItems: CatalogItemType[];
+  catalogItems: CatalogTemplate[];
   searchTerm: string;
   selectedTags: string[];
   viewMode: ViewMode;
-  onSelectTemplate: (selectedTemplate: CatalogItemType) => Promise<void>;
+  onSelectTemplate: (selectedTemplate: CatalogTemplate) => Promise<void>;
 }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
 
 export default function CatalogListDisplay({ catalogItems, searchTerm, selectedTags, viewMode, onSelectTemplate }: CatalogListDisplayProps) {

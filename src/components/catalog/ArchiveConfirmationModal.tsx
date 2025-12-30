@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import type { CatalogItem as CatalogItemType, InventoryCounts } from "../../types/catalog";
+import type { CatalogTemplate, InventoryCounts } from "../../types/catalog";
 
 interface ArchiveConfirmationModalProps {
-  template: CatalogItemType;
+  template: CatalogTemplate;
   counts: InventoryCounts;
-  onArchiveConfirm: (selectedItem: CatalogItemType) => void;
+  onArchiveConfirm: (selectedItem: CatalogTemplate) => void;
   onCancel: () => void;
 }
 

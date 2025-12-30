@@ -1,17 +1,17 @@
 import CatalogItem from './CatalogItem';
-import type { CatalogItem as CatalogItemType } from '../../types/catalog';
+import type { CatalogTemplate } from '../../types/catalog';
 import type { ViewMode } from '../../types/user';
 
 interface CatalogItemListProps {
-  catalogItemsAfterFilter: CatalogItemType[];
+  catalogItemsAfterFilter: CatalogTemplate[];
   viewMode: ViewMode;
-  onSelectTemplate: (selectedTemplate: CatalogItemType) => Promise<void>;
+  onSelectTemplate: (selectedTemplate: CatalogTemplate) => Promise<void>;
 }
 
 function renderCatalogItems(
-  catalogItems: CatalogItemType[],
+  catalogItems: CatalogTemplate[],
   viewMode: ViewMode,
-  onSelectTemplate: (selectedTemplate: CatalogItemType) => Promise<void>,
+  onSelectTemplate: (selectedTemplate: CatalogTemplate) => Promise<void>,
 ) {
   return catalogItems.map((item) => {
     return (

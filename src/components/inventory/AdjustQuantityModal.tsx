@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import type { InventoryItemGroupedType } from '../../types/inventory';
-import type { CatalogItem as CatalogItemType } from '../../types/catalog';
+import type { CatalogTemplate } from '../../types/catalog';
 
 interface AdjustQuantityModalProps {
   item: InventoryItemGroupedType;
-  catalogTemplate: CatalogItemType;
+  catalogTemplate: CatalogTemplate;
   onClose: () => void;
   onConfirm: (catalogItemId: string, newTotal: number) => void;
 }

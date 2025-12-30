@@ -1,11 +1,11 @@
 import type { InventoryItemGroupedType } from '../types/inventory';
 import InventoryItemList from './inventory/InventoryItemList';
-import type { CatalogItem as CatalogItemType } from '../types/catalog';
+import type { CatalogTemplate } from '../types/catalog';
 import type { ViewMode } from '../types/user';
 
 interface ItemListDisplayProps {
   inventoryItemData: Record<string, InventoryItemGroupedType>;
-  catalogItems: CatalogItemType[];
+  catalogItems: CatalogTemplate[];
   searchTerm: string;
   selectedTags: string[];
   setSelectedItem: React.Dispatch<React.SetStateAction<InventoryItemGroupedType | null>>;

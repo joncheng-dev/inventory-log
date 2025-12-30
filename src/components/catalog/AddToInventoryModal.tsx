@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import type { CatalogItem, InventoryCounts } from '../../types/catalog';
+import type { CatalogTemplate, InventoryCounts } from '../../types/catalog';
 
 interface AddToInventoryModalProps {
-  template: CatalogItem;
+  template: CatalogTemplate;
   counts: InventoryCounts;
   onClose: () => void;
   onConfirm: (quantity: number) => void;

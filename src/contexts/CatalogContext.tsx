@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import type { CatalogItem as CatalogItemType } from '../types/catalog';
+import type { CatalogTemplate } from '../types/catalog';
 import {
   getCatalogTemplates,
   createCatalogTemplate,
@@ -9,12 +9,12 @@ import {
 } from '../utils/catalog';
 
 interface CatalogContextType {
-  catalogItems: CatalogItemType[];
+  catalogItems: CatalogTemplate[];
   catalogLoading: boolean;
   error: string | null;
   fetchCatalogItems: () => Promise<void>;
-  addNewCatalogItem: (newItem: Omit<CatalogItemType, "id">) => Promise<void>;
-  updateCatalogItem: (updated: CatalogItemType) => Promise<void>;
+  addNewCatalogItem: (newItem: Omit<CatalogTemplate, "id">) => Promise<void>;
+  updateCatalogItem: (updated: CatalogTemplate) => Promise<void>;
   archiveCatalogItem: (id: string) => Promise<void>;
   unarchiveCatalogItem: (id: string) => Promise<void>;
 }
@@ -22,7 +22,7 @@ interface CatalogContextType {
 const CatalogContext = createContext<CatalogContextType | null>(null);
 
 export const CatalogProvider = ({ children }: { children: React.ReactNode }) => {
-  const [catalogItems, setCatalogItems] = useState<CatalogItemType[]>([]);
+  const [catalogItems, setCatalogItems] = useState<CatalogTemplate[]>([]);
   const [catalogLoading, setCatalogLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,7 +40,7 @@ export const CatalogProvider = ({ children }: { children: React.ReactNode }) => 
     }
   };
 
-  const addNewCatalogItem = async (newItem: Omit<CatalogItemType, "id">) => {
+  const addNewCatalogItem = async (newItem: Omit<CatalogTemplate, "id">) => {
     setError(null);
     try {
       const id = await createCatalogTemplate(newItem);
@@ -52,7 +52,7 @@ export const CatalogProvider = ({ children }: { children: React.ReactNode }) => 
     }
   };
 
-  const updateCatalogItem = async (updated: CatalogItemType) => {
+  const updateCatalogItem = async (updated: CatalogTemplate) => {
     setError(null);
     try {
       const { id, ...updates } = updated;

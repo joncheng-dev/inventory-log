@@ -8,10 +8,10 @@ import {
   serverTimestamp 
 } from "firebase/firestore";
 import { db } from "../firebase";
-import type { CatalogItem as CatalogItemType } from "../types/catalog";
+import type { CatalogTemplate } from "../types/catalog";
 
 export const createCatalogTemplate = async (
-  item: Omit<CatalogItemType, 'id'>
+  item: Omit<CatalogTemplate, 'id'>
 ): Promise<string> => {
   try {
     const docRef = await addDoc(collection(db, 'catalogTemplates'), {
@@ -26,14 +26,14 @@ export const createCatalogTemplate = async (
   }
 };
  
-export const getCatalogTemplates = async (): Promise<CatalogItemType[]> => {
+export const getCatalogTemplates = async (): Promise<CatalogTemplate[]> => {
   try {
     const querySnapshot = await getDocs(collection(db, 'catalogTemplates'));
     
     return querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
-    } as CatalogItemType));
+    } as CatalogTemplate));
   } catch (e) {
     console.error("Error fetching catalog templates: ", e);
     throw e;
@@ -42,7 +42,7 @@ export const getCatalogTemplates = async (): Promise<CatalogItemType[]> => {
 
 export const updateCatalogTemplate = async (
   id: string,
-  updates: Partial<Omit<CatalogItemType, 'id'>>
+  updates: Partial<Omit<CatalogTemplate, 'id'>>
 ): Promise<void> => {
   try {
     const docRef = doc(db, 'catalogTemplates', id);
