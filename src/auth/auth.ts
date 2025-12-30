@@ -24,7 +24,8 @@ export const getOrCreateUserProfile = async (user: User) => {
   const snap = await getDoc(userRef);
 
   const defaultUserSettings: UserSettings = {
-    viewMode: 'grid'
+    viewMode: 'grid',
+    isCheckoutSideBarOpen: false
   };
 
   const baseProfile: UserProfile = {

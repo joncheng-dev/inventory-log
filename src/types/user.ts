@@ -3,6 +3,7 @@ export type ViewMode = 'grid' | 'list';
 
 export interface UserSettings {
   viewMode: ViewMode;
+  isCheckoutSideBarOpen: boolean;
 }
 
 export interface UserProfile {

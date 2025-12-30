@@ -61,3 +61,10 @@ export const updateUserViewMode = async (uid: string, viewMode: ViewMode) => {
     'settings.viewMode': viewMode
   });
 };
+
+export const updateIsCheckoutSideBarOpen = async (uid: string, isCheckoutSideBarOpen: boolean) => {
+  const userRef = doc(db, 'users', uid);
+  await updateDoc(userRef, {
+    'settings.isCheckoutSideBarOpen': isCheckoutSideBarOpen
+  });
+}

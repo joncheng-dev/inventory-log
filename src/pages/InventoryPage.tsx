@@ -13,9 +13,10 @@ import CheckedOutToggle from '../components/checked-out-item-list/CheckedOutTogg
 import type { InventoryItemGroupedType } from '../types/inventory';
 import InventoryItemDetail from '../components/inventory/InventoryItemDetail';
 import AdjustQuantityModal from '../components/inventory/AdjustQuantityModal';
+import { updateIsCheckoutSideBarOpen } from '../utils/user';
 
 export default function InventoryPage() {
-  const { viewMode } = useAuth();
+  const { viewMode, userProfile } = useAuth();
   const { success, error } = useNotification();
   const { catalogItems } = useCatalog();
   const {
@@ -36,7 +37,7 @@ export default function InventoryPage() {
   } = useInventory();
 
   
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(userProfile!.settings.isCheckoutSideBarOpen);
   const [searchTerm, setSearchTerm] = useState<string>('');
   // Filter via Tags
   const availableFilterTags = ["Biology", "Chemistry", "Earth Science", "General", "Physics"];
@@ -49,6 +50,16 @@ export default function InventoryPage() {
   useEffect(() => {
     if(selectedItem) fetchSelectedItemDetails(selectedItem);
   }, [inventoryItems, selectedItem, adjustQtyMode]);
+
+  useEffect(() => {
+    if (userProfile?.uid && isSidebarOpen !== userProfile.settings.isCheckoutSideBarOpen) {
+      const timeoutId = setTimeout(() => {
+        updateIsCheckoutSideBarOpen(userProfile.uid, isSidebarOpen);
+      }, 1000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [isSidebarOpen, userProfile?.uid]);
 
   const selectedCatalogTemplate = selectedItem
     ? catalogItems.find((item) => item.id === selectedItem.catalogItemId)
@@ -76,7 +87,7 @@ export default function InventoryPage() {
     } catch (err) {
       error(`Failed to update inventory: ${getErrorMessage(err)}`);
     }
-  }
+  };
 
   const handleCheckout = (qtyToCheckOut: number) => {
     try {
@@ -86,7 +97,7 @@ export default function InventoryPage() {
     } catch (err) {
       error(`Failed to check out items: ${getErrorMessage(err)}`);
     }
-  }
+  };
 
   const handleReturnItem = (itemId: string) => {
     try {
@@ -95,7 +106,7 @@ export default function InventoryPage() {
     } catch (err) {
       error(`Failed to return item: ${getErrorMessage(err)}`);
     }
-  }
+  };
 
   const handleReturnAllMyItems = () => {
     try {
@@ -105,7 +116,11 @@ export default function InventoryPage() {
     } catch (err) {
       error(`Failed to return items: ${getErrorMessage(err)}`);
     }
-  }
+  };
+
+  const handleCheckoutSidebarToggle = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
     <PageLayout>
@@ -126,7 +141,7 @@ export default function InventoryPage() {
               <CheckedOutToggle
                 count={checkedOutItemTypes}
                 isOpen={isSidebarOpen}
-                onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+                onToggle={handleCheckoutSidebarToggle}
               />
             }
           />
