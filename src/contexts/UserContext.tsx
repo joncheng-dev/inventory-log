@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNotification } from './NotificationContext';
 import type { UserProfile, UserRole } from '../types/user';
-import { getUserProfiles, updateUserRole } from '../utils/user';
+import { listenToUserProfiles, updateUserRole } from '../utils/user';
 
 interface UserContextType {
   users: UserProfile[];
@@ -18,36 +18,11 @@ export const UserProvider = ({ children }: { children: React.ReactNode; }) => {
   const [userLoading, setUserLoading] = useState<boolean>(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const fetchUserProfiles = async () => {
-    setUserLoading(true);
-    setErrorMsg(null);
-    try {
-      const users = await getUserProfiles();
-      setUsers(users);
-    } catch (err) {
-      setErrorMsg("Failed to fetch user profiles");
-      console.error(err);
-      throw err;
-    } finally {
-      setUserLoading(false);
-    }
-  };
-
   const changeUserRole = async (uid: string, newRole: UserRole) => {
-    const prevUsers = users;
-    setUsers((prev) =>
-      prev.map(user =>
-        user.uid === uid
-          ? { ...user, role: newRole }
-          : user
-      ) 
-    );
-    
     try {
       await updateUserRole(uid, newRole);
       success(`Role updated to ${newRole}`);
     } catch (err) {
-      setUsers(prevUsers);
       setErrorMsg("Failed to update user role");
       error('Failed to update user role');
       console.error(err);
@@ -56,7 +31,12 @@ export const UserProvider = ({ children }: { children: React.ReactNode; }) => {
   };
 
   useEffect(() => {
-    fetchUserProfiles();
+    const unsubscribe = listenToUserProfiles((users) => {
+      setUsers(users);
+      setUserLoading(false);
+    });
+    
+    return unsubscribe;
   }, []);
 
   return (

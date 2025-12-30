@@ -2,15 +2,14 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { type User, getRedirectResult, onAuthStateChanged } from 'firebase/auth';
 import { auth, getOrCreateUserProfile } from './auth';
 import LoadingScreen from '../components/ui/LoadingScreen';
-import type { UserProfile, UserRole, ViewMode } from '../types/user';
-import { updateUserViewMode } from '../utils/user';
+import type { UserProfile, ViewMode } from '../types/user';
+import { listenToCurrentUserProfile, updateUserViewMode } from '../utils/user';
 
 interface AuthContextType {
   userProfile: UserProfile | null;
   setUserProfile: React.Dispatch<React.SetStateAction<UserProfile | null>>;
   isAdmin: boolean;
   isSignedIn: boolean;
-  setRole: (role: UserRole) => void;
   setIsSignedIn: (signedIn: boolean) => void;
   handleViewToggleClick: (selectedView: ViewMode) => void;
   viewMode: ViewMode;
@@ -22,7 +21,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
   const [isSignedIn, setIsSignedIn] = useState<boolean>(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [role, setRole] = useState<UserRole>('user');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
   const handleAuthChange = async (user: User | null) => {
@@ -36,12 +34,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
     const profile = await getOrCreateUserProfile(user);
     setUserProfile(profile);
     setViewMode(profile.settings?.viewMode || 'grid');
-
-    if (profile.role === 'admin') {
-        setRole('admin');
-    }
     setIsSignedIn(true);
     setLoading(false);
+
+    return listenToCurrentUserProfile(user.uid, (updatedProfile) => {
+      console.log('listenToCurrentUserProfile, updatedProfile: ', updatedProfile);
+      setUserProfile(updatedProfile);
+      setViewMode(updatedProfile.settings?.viewMode || 'grid');
+    });
   };
 
   const handleViewToggleClick = async (selectedView: ViewMode) => {
@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
     return () => unsubscribe();
   }, []);
 
-  const isAdmin = isSignedIn && role === 'admin';
+  const isAdmin = isSignedIn && userProfile?.role === 'admin';
   
   if (loading) {
     return (
@@ -88,10 +88,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
   return (
     <AuthContext.Provider
       value={{
-        userProfile: isSignedIn && userProfile ? { ...userProfile, role } : null,
+        userProfile,
         setUserProfile,
         isAdmin,
-        setRole,
         isSignedIn,
         setIsSignedIn,
         handleViewToggleClick,

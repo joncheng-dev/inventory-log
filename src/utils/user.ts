@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 import type { ViewMode, UserRole } from '../types/user';
 import type { UserProfile } from '../types/user';
@@ -16,6 +16,37 @@ export const getUserProfiles = async (): Promise<UserProfile[]> => {
     throw e;
   }
 };
+
+export const listenToUserProfiles = (
+  onUpdate: (users: UserProfile[]) => void
+) => {
+  return onSnapshot(
+    collection(db, 'users'),
+    snap => {
+      onUpdate(snap.docs.map(doc => ({
+        uid: doc.id,
+        ...doc.data()
+      } as UserProfile)));
+    },
+    error => {
+      console.error('listenToUserProfiles error:', error);
+    }
+  );
+};
+
+export const listenToCurrentUserProfile = (
+  uid: string,
+  onUpdate: (profile: UserProfile) => void
+) => {
+  return onSnapshot(doc(db, 'users', uid), snap => {
+    if (snap.exists()) {
+      onUpdate({
+        uid: uid,
+        ...snap.data() 
+      } as UserProfile);
+    }
+  });
+}
 
 export const updateUserRole = async (uid: string, newRole: UserRole) => {
   const userRef = doc(db, 'users', uid);

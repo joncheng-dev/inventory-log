@@ -26,10 +26,10 @@ export default function ManageUsersPage() {
   ;
 
   const handleRoleChange = (uid: string, newRole: UserRole) => {
-    if (uid === userProfile!.uid && newRole === 'user') {
+    if (uid === userProfile!.uid && userProfile!.role === 'admin' && newRole === 'user') {
       if (!confirm('Are you sure you want to remove your admin privileges?')) {
         return;
-      }
+      } 
     }
     changeUserRole(uid, newRole);
   };
