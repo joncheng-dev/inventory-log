@@ -89,7 +89,7 @@ export default function CatalogItemEdit({ template, onClose, onSave }: CatalogIt
                     {formData.displayName || 'Untitled Template'}
                   </h2>
                   <p className="text-sm text-theme-secondary">
-                    Modify catalog item definition
+                    Modify catalog template
                   </p>
                 </div>
                 <button

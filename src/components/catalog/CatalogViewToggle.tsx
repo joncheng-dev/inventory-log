@@ -15,7 +15,7 @@ export default function CatalogViewToggle({ currentView }: CatalogViewToggleProp
             : 'text-theme-secondary hover:text-theme-primary hover:bg-theme-hover'
         }`}
       >
-        Active Items
+        Active
       </Link>
       <Link 
         to="/admin/catalog/archived"

@@ -43,7 +43,7 @@ export default function CatalogItem({ catalogItem, viewMode, onSelectTemplate }:
     Physics: 'text-purple-800 dark:text-purple-200',
   };
 
-if (viewMode === 'grid') {
+  if (viewMode === 'grid') {
     return (
       <div className={`bg-theme-surface border-2 border-dashed ${styles.border} rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow relative ${archived ? 'opacity-75' : ''}`}>
         {/* Badge */}

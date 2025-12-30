@@ -91,12 +91,9 @@ export default function CatalogItemDetail({
                     {archived ? 'Archived Template' : 'Template'}
                   </span>
                 </div>
-                <h2 className={`text-xl font-semibold mb-2 ${archived ? 'text-theme-secondary' : 'text-theme-primary'}`}>
+                <h2 className={`text-xl font-semibold my-4 ${archived ? 'text-theme-secondary' : 'text-theme-primary'}`}>
                   {displayName}
                 </h2>
-                <p className="text-sm text-theme-secondary mb-2">
-                  {archived ? 'Archived catalog item' : 'Catalog item definition'}
-                </p>
                 <div className="flex gap-2 flex-wrap">
                   {tags.map((cat) => (
                     <span
@@ -126,7 +123,7 @@ export default function CatalogItemDetail({
               {/* Template Information Section */}
               <div className="space-y-4">
                 <h3 className="text-sm font-semibold text-theme-secondary uppercase tracking-wide">
-                  Template Information
+                  Template Details
                 </h3>
                 
                 <div className="grid grid-cols-2 gap-4">
