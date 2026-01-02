@@ -10,6 +10,7 @@ import {
 
 interface CatalogContextType {
   catalogItems: CatalogTemplate[];
+  availableTags: string[];
   catalogLoading: boolean;
   error: string | null;
   fetchCatalogItems: () => Promise<void>;
@@ -25,6 +26,7 @@ export const CatalogProvider = ({ children }: { children: React.ReactNode }) => 
   const [catalogItems, setCatalogItems] = useState<CatalogTemplate[]>([]);
   const [catalogLoading, setCatalogLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const availableTags = ['Biology', 'Chemistry', 'Earth Science', 'General', 'Physics'];
 
   const fetchCatalogItems = async () => {
     setCatalogLoading(true);
@@ -117,7 +119,8 @@ export const CatalogProvider = ({ children }: { children: React.ReactNode }) => 
         addNewCatalogItem,
         updateCatalogItem,
         archiveCatalogItem,
-        unarchiveCatalogItem
+        unarchiveCatalogItem,
+        availableTags
       }}
     >
       {children}

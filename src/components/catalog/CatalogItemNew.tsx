@@ -8,7 +8,7 @@ interface CatalogItemNewProps {
 }
 
 export default function CatalogItemNew({ onClose, onSave }: CatalogItemNewProps) {
-  const { catalogItems } = useCatalog();
+  const { catalogItems, availableTags } = useCatalog();
   const [skuValid, setSkuValid] = useState<true | false>(false);
   const [skuTouched, setSkuTouched] = useState<true | false>(false);
 
@@ -19,8 +19,6 @@ export default function CatalogItemNew({ onClose, onSave }: CatalogItemNewProps)
     location: '',
     tags: [],
   });
-
-  const availableTags = ['Biology', 'Chemistry', 'Earth Science', 'General', 'Physics'];
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

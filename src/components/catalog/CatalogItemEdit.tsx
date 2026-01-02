@@ -9,7 +9,7 @@ interface CatalogItemEditProps {
 }
 
 export default function CatalogItemEdit({ template, onClose, onSave }: CatalogItemEditProps) {
-  const { catalogItems } = useCatalog();
+  const { catalogItems, availableTags } = useCatalog();
   const [skuValid, setSkuValid] = useState<true | false>(false);
   
   const [formData, setFormData] = useState<CatalogItemFormData>({
@@ -19,8 +19,6 @@ export default function CatalogItemEdit({ template, onClose, onSave }: CatalogIt
     location: template.location || '',
     tags: template.tags,
   });
-
-  const availableTags = ['Biology', 'Chemistry', 'Earth Science', 'General', 'Physics'];
 
   // Escape key to close
   useEffect(() => {
