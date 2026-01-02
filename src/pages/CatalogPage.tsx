@@ -32,7 +32,8 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
     addNewCatalogItem,
     updateCatalogItem,
     archiveCatalogItem,
-    unarchiveCatalogItem
+    unarchiveCatalogItem,
+    availableTags
   } = useCatalog();
   const { inventoryItems, addItemsToInventory } = useInventory(); 
 
@@ -52,7 +53,6 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
     : null;
   
   // Filter via Tags
-  const availableFilterTags = ["Biology", "Chemistry", "Earth Science", "General", "Physics"];
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const templateCounts = selectedTemplate
@@ -89,6 +89,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
   }
 
   const handleSelectTemplate = async (selectedTemplate: CatalogTemplate) => {
+    setEditMode(false);
     setSelectedTemplateId(selectedTemplate.id);
   }
 
@@ -156,7 +157,7 @@ export default function CatalogPage({ view }: { view: 'active' | 'archived'}) {
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             showTagFilter={true}
-            availableFilterTags={availableFilterTags}
+            availableFilterTags={availableTags}
             selectedTags={selectedTags}
             setSelectedTags={setSelectedTags}
             showViewToggle={true}
