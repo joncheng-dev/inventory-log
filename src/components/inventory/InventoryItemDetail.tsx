@@ -321,7 +321,7 @@ export default function InventoryItemDetail({
               {isAdmin &&
                 <button
                   onClick={() => setAdjustQtyMode(true)}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-md transition-colors text-sm font-medium"
+                  className="px-4 py-2 border border-blue-400 dark:border-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-md transition-colors text-sm font-medium"
                 >
                   Adjust Quantity
                 </button>

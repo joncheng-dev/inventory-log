@@ -215,13 +215,13 @@ export default function CatalogItemDetail({
                 <div className="flex gap-3">
                   <button
                     onClick={() => setEditMode(true)}
-                    className="px-4 py-2 border-2 border-blue-400 dark:border-blue-600 rounded-md hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors text-sm font-medium text-blue-700 dark:text-blue-300"
+                    className="px-4 py-2 border-2 border-blue-400 dark:border-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-md transition-colors text-sm font-medium"
                   >
                     Edit Template
                   </button>
                     <button
                       onClick={() => onAddItemClick(selectedTemplate)}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-md transition-colors text-sm font-medium"
+                    className="px-4 py-2 border-2 border-blue-400 dark:border-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-md transition-colors text-sm font-medium"
                   >
                     Add to Inventory
                   </button>
