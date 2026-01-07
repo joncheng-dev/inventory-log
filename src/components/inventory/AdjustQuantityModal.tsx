@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { InventoryItemGroupedType } from '../../types/inventory';
 import type { CatalogTemplate } from '../../types/catalog';
 
@@ -23,13 +23,13 @@ export default function AdjustQuantityModal({
   const maxRemovable = item.quantityTotal - minimumAllowed;
   const MIN_ADJUSTMENT = -maxRemovable;
   const MAX_ADJUSTMENT = 100; // Maximum items per batch operation
-
-  const clamp = (value: number) => {
-    return Math.min(Math.max(value, MIN_ADJUSTMENT), MAX_ADJUSTMENT);
-  };
-
+  const confirmBtnDisabled =
+    (isArchived && adjustmentAmount > 0) ||
+    ((item.quantityTotal - minimumAllowed === 0) && adjustmentAmount < 0) ||
+    adjustmentAmount === 0;
+  
   const newTotal = item.quantityTotal + adjustmentAmount;  
-
+  
   const categoryColors: Record<string, string> = {
     Biology: 'text-green-800 dark:text-green-200',
     Chemistry: 'text-blue-800 dark:text-blue-200',
@@ -37,19 +37,19 @@ export default function AdjustQuantityModal({
     General: 'text-gray-800 dark:text-gray-200',
     Physics: 'text-purple-800 dark:text-purple-200',
   };
+  
+  const clamp = (value: number) => {
+    return Math.min(Math.max(value, MIN_ADJUSTMENT), MAX_ADJUSTMENT);
+  };
 
   const handleConfirm = () => {
-    if (isArchived) return;
-    if (item.quantityTotal - minimumAllowed === 0) return;
+    if (isArchived && adjustmentAmount > 0) return;
+    if ((item.quantityTotal - minimumAllowed === 0) && adjustmentAmount < 0) return;
+    if (adjustmentAmount === 0) return;
     onConfirm(item.catalogItemId, newTotal);
     setAdjustmentAmount(1);
     onClose();
   };
-
-  useEffect(() => {
-    console.log('adjustment amount changed: ', adjustmentAmount);
-    console.log('newTotal: ', newTotal);
-  }, [adjustmentAmount]);
 
   return (
     <>
@@ -270,14 +270,14 @@ export default function AdjustQuantityModal({
             </button>
             <button
               onClick={handleConfirm}
-              disabled={isArchived || (item.quantityTotal - minimumAllowed === 0) || adjustmentAmount === 0}
-              className={`px-6 py-2 rounded transition-colors text-sm font-medium ${
-                isArchived || (item.quantityTotal - minimumAllowed === 0) || adjustmentAmount === 0
+              disabled={confirmBtnDisabled}
+              className={`px-6 py-2 rounded transition-colors text-sm font-medium 
+                ${confirmBtnDisabled
                   ? 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed'
                   : adjustmentAmount > 0
                   ? 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white'
                   : 'bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 text-white'
-              }`}
+                }`}
               title={
                 isArchived 
                   ? 'Cannot add items - template is archived'

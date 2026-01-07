@@ -60,7 +60,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode; }) => {
   useEffect(() => {
     getRedirectResult(auth)
       .then((result) => {
-        console.log('Redirect result: ', result);
         if (result) {
           console.log('User signed in via redirect: ', result.user.email);
         }
