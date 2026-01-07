@@ -81,7 +81,7 @@ export default function DropdownMenu() {
             >
               Theme Viewer
             </Link> */}
-            <a
+            {/* <a
               href="#"
               className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors duration-200"
             >
@@ -92,7 +92,7 @@ export default function DropdownMenu() {
               className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors duration-200"
             >
               About
-            </a>
+            </a> */}
             {userProfile?.role === 'admin' && (
               <>
                 <div className="my-2 border-t border-theme-muted" />
