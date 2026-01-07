@@ -75,12 +75,12 @@ export default function DropdownMenu() {
             }
           </div>
           <div className="py-1">
-            <Link
+            {/* <Link
               to="/theme-viewer"
               className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors duration-200"
             >
               Theme Viewer
-            </Link>
+            </Link> */}
             <a
               href="#"
               className="block px-4 py-2 text-sm text-theme-primary hover:bg-theme transition-colors duration-200"

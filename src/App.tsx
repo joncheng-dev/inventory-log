@@ -60,7 +60,7 @@ function App() {
                       </ProtectedRoute>
                     }
                   />
-                  <Route path="/theme-viewer" element={<ThemeViewerPage />} />
+                  {/* <Route path="/theme-viewer" element={<ThemeViewerPage />} /> */}
                   <Route path="/unauthorized" element={<UnauthorizedPage />} />
                   <Route path="*" element={<NotFoundPage />} />
                 </Routes>
