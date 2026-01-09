@@ -7,7 +7,6 @@ import { AuthProvider } from './auth/AuthContext.tsx';
 import { UserProvider } from './contexts/UserContext.tsx';
 import { CatalogProvider } from './contexts/CatalogContext.tsx'
 import { InventoryProvider } from './contexts/InventoryContext.tsx';
-import ThemeViewerPage from "./pages/ThemeViewerPage";
 import { NotificationProvider } from './contexts/NotificationContext.tsx';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ProtectedRoute from './utils/ProtectedRoute.tsx';

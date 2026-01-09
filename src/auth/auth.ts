@@ -1,4 +1,4 @@
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, signOut } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import app from '../firebase';
 import type { User } from 'firebase/auth';
 import type { UserProfile, UserSettings } from '../types/user';
@@ -9,10 +9,10 @@ export const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 export const signInWithGoogle = () => {
-  if (import.meta.env.DEV) {
+  // if (import.meta.env.DEV) {
     return signInWithPopup(auth, provider);
-  }
-  return signInWithRedirect(auth, provider);
+  // }
+  // return signInWithRedirect(auth, provider);
 };
 
 export const signOutUser = () => {
