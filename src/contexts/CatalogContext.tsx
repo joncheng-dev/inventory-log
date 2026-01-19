@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { useAuth } from '../auth/AuthContext';
 import type { CatalogTemplate } from '../types/catalog';
 import {
   getCatalogTemplates,
@@ -23,6 +24,7 @@ interface CatalogContextType {
 const CatalogContext = createContext<CatalogContextType | null>(null);
 
 export const CatalogProvider = ({ children }: { children: React.ReactNode }) => {
+  const { isSignedIn } = useAuth();
   const [catalogItems, setCatalogItems] = useState<CatalogTemplate[]>([]);
   const [catalogLoading, setCatalogLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -106,8 +108,12 @@ export const CatalogProvider = ({ children }: { children: React.ReactNode }) => 
   };
 
   useEffect(() => {
+    if (!isSignedIn) {
+      setCatalogLoading(false);
+      return;
+    }
     fetchCatalogItems();
-  }, []);
+  }, [isSignedIn]);
 
   return (
     <CatalogContext.Provider
