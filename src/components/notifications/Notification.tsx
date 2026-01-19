@@ -61,13 +61,13 @@ export default function Notification({ notification, onClose }: NotificationProp
         isExiting ? 'animate-slide-out' : 'animate-slide-in'
       }`}
       role="alert"
+      onClick={onClose}
     >
       <div className={iconColor}>
         <Icon />
       </div>
       <p className="flex-1 text-sm font-medium">{message}</p>
       <button
-        onClick={onClose}
         className={`${textColor} hover:opacity-70 transition-opacity flex-shrink-0`}
         aria-label="Close notification"
       >
