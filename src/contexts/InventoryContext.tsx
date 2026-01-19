@@ -227,8 +227,13 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
   }, []);
 
   useEffect(() => {
-    if (inventoryItems.length > 0 && userProfile) fetchInventoryPageData();
-  }, [inventoryItems, userProfile]);
+    if (!userProfile) {
+      setInventoryLoading(false);
+      return;
+    }
+    
+    fetchInventoryPageData();
+  }, [catalogItems, inventoryItems, userProfile]);
 
   return (
     <InventoryContext.Provider
