@@ -41,7 +41,7 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
   const [checkedOutQty, setCheckedOutQty] = useState<Record<string, CheckedOutItemDataType>>({});
   const [filteredCheckedOutItems, setFilteredCheckedOutItems] = useState<Record<string, InventoryItemGroupedType>>({});
   const { catalogItems } = useCatalog();
-  const { userProfile } = useAuth();
+  const { isSignedIn, userProfile } = useAuth();
 
   // Selected Item Details
   const [selectedItemDetails, setSelectedItemDetails] = useState<InventoryItemGroupedType | null>(null);
@@ -223,17 +223,21 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode; }) 
   }
 
   useEffect(() => {
+    if (!isSignedIn) {
+      setInventoryLoading(false);
+      return;
+    }
     fetchInventoryItems();
-  }, []);
+  }, [isSignedIn]);
 
   useEffect(() => {
-    if (!userProfile) {
+    if (!isSignedIn) {
       setInventoryLoading(false);
       return;
     }
     
     fetchInventoryPageData();
-  }, [catalogItems, inventoryItems, userProfile]);
+  }, [catalogItems, inventoryItems, isSignedIn]);
 
   return (
     <InventoryContext.Provider
