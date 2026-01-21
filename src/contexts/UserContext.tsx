@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNotification } from './NotificationContext';
+import { useAuth } from '../auth/AuthContext';
 import type { UserProfile, UserRole } from '../types/user';
 import { listenToUserProfiles, updateUserRole } from '../utils/user';
 
@@ -14,6 +15,7 @@ const UserContext = createContext<UserContextType | null>(null);
 
 export const UserProvider = ({ children }: { children: React.ReactNode; }) => {
   const { success, error } = useNotification();
+  const { isSignedIn } = useAuth();
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [userLoading, setUserLoading] = useState<boolean>(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -31,13 +33,19 @@ export const UserProvider = ({ children }: { children: React.ReactNode; }) => {
   };
 
   useEffect(() => {
+    if (!isSignedIn) {
+      setUsers([]);
+      setUserLoading(false);
+      return;
+    }
+
     const unsubscribe = listenToUserProfiles((users) => {
       setUsers(users);
       setUserLoading(false);
     });
     
     return unsubscribe;
-  }, []);
+  }, [isSignedIn]);
 
   return (
     <UserContext.Provider
