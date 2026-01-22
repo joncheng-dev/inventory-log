@@ -11,6 +11,7 @@ export default function ExpandedUserCheckout({ userEmail, userId }: { userEmail:
     catalogItems
   );
 
+  const uniqueItemTemplates = Object.keys(filteredCheckedOutItems).length;
   const totalItems = Object.values(checkedOutQty).reduce((sum, item) => sum + item.quantityCheckedOut, 0);
 
   return (
@@ -19,7 +20,7 @@ export default function ExpandedUserCheckout({ userEmail, userId }: { userEmail:
         <div className="ml-8 mr-4">
           <div className="mb-3">
             <h3 className="text-sm font-semibold text-theme-primary">
-              Checked Out Items ({totalItems} total)
+              Checked Out Items ({uniqueItemTemplates})
             </h3>
           </div>
           
