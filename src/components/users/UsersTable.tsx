@@ -3,13 +3,16 @@ import type { UserProfile, UserRole } from "../../types/user";
 import { ChevronDown, ChevronRight, PackageIcon } from "../../assets/icons";
 import ExpandedUserCheckout from "./ExpandedUserCheckout";
 
+interface EnrichedUser extends UserProfile {
+  checkedOutCount: number;
+}
+
 interface UsersTableProps {
-  users: UserProfile[];
+  users: EnrichedUser[];
   allUsersCount: number;
   expandedUserId: string | null;
   onToggleExpand: (uid: string) => void;
   onRoleChange: (uid: string, newRole: UserRole) => void;
-  getUserCheckedOutCount: (email: string) => number;
 }
 
 export default function UsersTable({
@@ -18,7 +21,6 @@ export default function UsersTable({
   expandedUserId,
   onToggleExpand,
   onRoleChange,
-  getUserCheckedOutCount
 }: UsersTableProps) {
   return (
     <>
@@ -56,7 +58,6 @@ export default function UsersTable({
                 </tr>
               ) : (
                 users.map((user) => {
-                  const checkedOutCount = getUserCheckedOutCount(user.email);
                   const isExpanded = expandedUserId === user.uid;
 
                   return (
@@ -92,7 +93,7 @@ export default function UsersTable({
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center gap-2 text-sm text-theme-secondary">
                             <PackageIcon />
-                            <span>{checkedOutCount}</span>
+                            <span>{user.checkedOutCount}</span>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { useUser } from "../contexts/UserContext";
 import { useInventory } from "../contexts/InventoryContext";
@@ -11,26 +11,48 @@ import { buildInventoryView } from "../utils/inventory";
 
 export default function ManageUsersPage() {
   const { userProfile } = useAuth();
-  const { users, changeUserRole } = useUser();
-  const { inventoryItems } = useInventory();
-  const { catalogItems } = useCatalog();
+  const { users, userLoading, changeUserRole } = useUser();
+  const { inventoryItems, inventoryLoading } = useInventory();
+  const { catalogItems, catalogLoading } = useCatalog();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
  
-  let search = '';
-  if (searchTerm.length > 1) {
-    search = searchTerm.toLowerCase();
-  }  
+  const isFullyLoaded = !userLoading && !inventoryLoading && !catalogLoading;
 
-  const filteredUsers = users
-    .filter((user) => {
-      if (searchTerm === '') return true;
-      return (
-        user.displayName.toLowerCase().includes(search) ||
-        user.email.toLowerCase().includes(search)
-      );    
-    });
+  const enrichedUsers = useMemo(() => {
+    let search = '';
+    if (searchTerm.length > 1) {
+      search = searchTerm.toLowerCase();
+    }  
+    
+    return users
+      .filter((user) => {
+        if (!searchTerm) return true;
+        return (
+          user.displayName.toLowerCase().includes(search) ||
+          user.email.toLowerCase().includes(search)
+        );
+      })
+      .map((user) => {
+        // Run the heavy calculation here, once per user, only when data changes
+        const { checkedOutQty } = buildInventoryView(
+          user.email,
+          inventoryItems,
+          catalogItems
+        );
+        
+        const count = Object.values(checkedOutQty).reduce(
+          (sum, item) => sum + item.quantityCheckedOut, 
+          0
+        );
 
+        return {
+          ...user,
+          checkedOutCount: count,
+        };
+      });
+  }, [users, searchTerm, inventoryItems, catalogItems]);
+  
   const handleRoleChange = (uid: string, newRole: UserRole) => {
     if (uid === userProfile!.uid && userProfile!.role === 'admin' && newRole === 'user') {
       if (!confirm('Are you sure you want to remove your admin privileges?')) {
@@ -44,15 +66,15 @@ export default function ManageUsersPage() {
     setExpandedUserId(expandedUserId === uid ? null : uid);
   };
 
-  // Get total count of checked-out items for a user
-  const getUserCheckedOutCount = (userEmail: string) => {
-    const { checkedOutQty } = buildInventoryView(
-      userEmail,
-      inventoryItems,
-      catalogItems
+  if (!isFullyLoaded) {
+    return (
+      <PageLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-theme-secondary animate-pulse">Loading users...</div>
+        </div>
+      </PageLayout>
     );
-    return Object.values(checkedOutQty).reduce((sum, item) => sum + item.quantityCheckedOut, 0);
-  };
+  }
 
   return (
     <PageLayout>
@@ -72,12 +94,11 @@ export default function ManageUsersPage() {
         </div>
 
         <UsersTable
-          users={filteredUsers}
+          users={enrichedUsers}
           allUsersCount={users.length}
           expandedUserId={expandedUserId}
           onToggleExpand={toggleExpand}
           onRoleChange={handleRoleChange}
-          getUserCheckedOutCount={getUserCheckedOutCount}
         />
       </div>
     </PageLayout>
