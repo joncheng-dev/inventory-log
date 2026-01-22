@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { InventoryItem as InventoryItemType, InventoryItemGroupedType } from '../../types/inventory';
 import { useAuth } from '../../auth/AuthContext';
+import { formatDate } from '../../utils/formatters';
 
 interface InventoryItemDetailProps {
   selectedItemDetails: InventoryItemGroupedType;
@@ -64,14 +65,6 @@ export default function InventoryItemDetail({
   const myItems = checkedOutItems[userProfile.email] || [];
   const otherUsersItems = Object.entries(checkedOutItems)
     .filter(([user]) => user !== userProfile.email);
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  };
 
   const onCheckoutClick = () => {
     setCheckoutQuantity(1);
